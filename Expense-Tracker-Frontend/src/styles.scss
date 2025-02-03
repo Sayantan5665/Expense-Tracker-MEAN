@@ -1,4 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: "Muli-Regular";
+  src: url('../public/fonts/muli/Muli-Regular.ttf');
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@font-face {
+  font-family: "Muli-SemiBold";
+  src: url('../public/fonts/muli/Muli-SemiBold.ttf');
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Muli-Regular";
+  font-size: 14px;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+.error-field {
+  .error-msg {
+    color: rgb(255, 81, 81);
+    font-size: 10px;
+    margin-top: 3px;
+  }
+}
