@@ -1,0 +1,71 @@
+import { Component, inject, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { AlertService, ApiService, EventService, StorageService } from '@services';
+import { ILogin } from '@types';
+
+@Component({
+  selector: 'app-login',
+  imports: [ReactiveFormsModule, MatIcon],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.scss'
+})
+export class LoginComponent {
+  private readonly api = inject(ApiService);
+  private readonly alert = inject(AlertService);
+  private readonly event = inject(EventService);
+  private readonly storage = inject(StorageService);
+
+  protected form: FormGroup = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,4}$/)]),
+    password: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9!@#$%^&*())]{6,}/)]),
+    rememberMe: new FormControl(true)
+  });
+  protected tooglePassword = signal<'text' | 'password'>('password');
+
+  protected submit(form: FormGroup): void {
+    if (form.valid) {
+      const data: ILogin = form.value;
+      this.login(data);
+    } else {
+      form.markAllAsTouched();
+
+      /**Scroll to the first invalid field */
+      let _form = document.getElementById('login-form');
+      if (_form) {
+        let firstInvalidControl = _form.getElementsByClassName('ng-invalid')[0];
+        firstInvalidControl?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }
+
+  private login(data: ILogin): void {
+    data.email = data.email.toLowerCase();
+    this.api.post('', data).subscribe({
+      next: (res:any) => {
+        // console.log("res: ", res);
+        if (res.status === 200) {
+          this.setDataAfterLogin(res.data);
+          data.rememberMe ? this.saveCredential({ email: data.email, password: data.password, rememberMe: true }) : this.storage.clearCredential();
+          this.alert.toast('Logged in successfully', 'success');
+        } else {
+          this.alert.toast(res.message || 'Failed to login', 'warning');
+        }
+      },
+      error: (error: any) => {
+        // console.error("error: ", error);
+        this.alert.toast(error.message || 'Invalid email or password', 'error');
+      }
+    });
+  }
+
+  private setDataAfterLogin(res: any): void {
+    this.storage.setUser({ token: res.access_token });
+    this.event.isLoggedin.set(true);
+    this.event.userDetails.set(res);
+  }
+
+  private saveCredential(payload: { email: string, password: string, rememberMe: boolean }): void {
+    this.storage.setCredential(payload);
+  }
+}

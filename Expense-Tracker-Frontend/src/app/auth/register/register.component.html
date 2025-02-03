@@ -1,0 +1,104 @@
+<div class="auth-container">
+  <h2 class="auth_main_head">Create An Account</h2>
+  <div class="form-wrapper">
+    <form [formGroup]="form" id="register-form">
+
+      <div class="input-field"
+        [class.error-field]="form.controls['first_name'].touched && form.controls['first_name'].hasError('required')">
+        <div class="input_group">
+          <label for="first_name">First Name</label>
+          <input type="text" placeholder="Enter First Name" formControlName="first_name" required [maxlength]="50" />
+        </div>
+        <div class="error-msg">
+          @if(form.controls['first_name'].touched && form.controls['first_name'].hasError('required')) {
+          <p>First Name is required!</p>
+          }
+        </div>
+      </div>
+
+      <div class="input-field"
+        [class.error-field]=" form.controls['last_name'].touched && form.controls['last_name'].hasError('required') ">
+        <div class="input_group">
+          <label for="last_name">Last Name</label>
+          <input type="text" placeholder="Enter Last Name" formControlName="last_name" required [maxlength]="50" />
+        </div>
+        <div class="error-msg">
+          @if(form.controls['last_name'].touched && form.controls['last_name'].hasError('required')) {
+          <p>Last Name is required!</p>
+          }
+        </div>
+      </div>
+
+      <div class="input-field"
+        [class.error-field]=" form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('pattern')) ">
+        <div class="input_group">
+          <label for="email">Email</label>
+          <input type="email" placeholder="Enter Email Address" formControlName="email" required />
+        </div>
+        <div class="error-msg">
+          @if(form.controls['email'].touched && form.controls['email'].hasError('required')) {
+          <p>Email is required!</p>
+          }
+          @if(form.controls['email'].touched && form.controls['email'].hasError('pattern')) {
+          <p>Invalid Email!</p>
+          }
+        </div>
+      </div>
+
+      @let _tooglePassword = tooglePassword();
+      <div class="input-field"
+        [class.error-field]=" form.controls['password'].touched && (form.controls['password'].hasError('required') || form.controls['password'].hasError('pattern')) ">
+        <div class="input_group has_icon">
+          <label for="password">Create Password</label>
+          <input [type]="_tooglePassword" placeholder="Enter Password" formControlName="password" required />
+          <mat-icon (click)="tooglePassword.set(_tooglePassword=='text' ? 'password': 'text')"
+            class="material-symbols-outlined">
+            {{_tooglePassword == 'password' ? 'visibility' : 'visibility_off'}}
+          </mat-icon>
+        </div>
+        <div class="error-msg">
+          @if(form.controls['password'].touched && form.controls['password'].hasError('required')) {
+          <p>Password is required!</p>
+          }
+          @if(form.controls['password'].touched && form.controls['password'].hasError('pattern')) {
+          <p>Password atleast have 6 characters.</p>
+          }
+        </div>
+      </div>
+
+      @let _toogleConfirmPassword = toogleConfirmPassword();
+      <div class="input-field"
+        [class.error-field]=" form.controls['confirm_password'].touched && (form.controls['confirm_password'].hasError('required') || form.controls['confirm_password'].hasError('pattern') || form.controls['confirm_password'].hasError('passwordMismatch')) ">
+        <div class="input_group has_icon">
+          <label for="confirm_password">Confirm Password</label>
+          <input [type]="_toogleConfirmPassword" placeholder="Enter Password" formControlName="confirm_password"
+            required />
+          <mat-icon (click)="toogleConfirmPassword.set(_toogleConfirmPassword=='text' ? 'password': 'text')"
+            class="material-symbols-outlined">
+            {{_toogleConfirmPassword == 'password' ? 'visibility' : 'visibility_off'}}
+          </mat-icon>
+        </div>
+        <div class="error-msg">
+          @if(form.controls['confirm_password'].touched && form.controls['confirm_password'].hasError('required')) {
+          <p>Password is required!</p>
+          }
+          @if(form.controls['confirm_password'].touched && form.controls['confirm_password'].hasError('pattern')) {
+          <p>Password atleast have 6 characters.</p>
+          }
+          @if(form.controls['confirm_password'].touched &&
+          form.controls['confirm_password'].hasError('passwordMismatch')) {
+          <p>Password & Confirm Password must match.</p>
+          }
+        </div>
+      </div>
+
+      <div class="btn_wrap">
+        <button type="submit">Create Account</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="auth_btm">
+    <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="auth-container">
+  <h2 class="auth_main_head">Login to <span> your account</span></h2>
+  <div class="form-wrapper">
+    <form [formGroup]="form" id="login-form">
+      <div class="input-field" [class.error-field]=" form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('pattern')) ">
+        <div class="input_group">
+          <label for="email">Email</label>
+          <input type="text" placeholder="email" formControlName="email" required />
+        </div>
+        <div class="error-msg">
+          @if(form.controls['email'].touched && form.controls['email'].hasError('required')) {
+          <p>Email is required!</p>
+          }
+          @if(form.controls['email'].touched && form.controls['email'].hasError('pattern')) {
+          <p>Invalid Email!</p>
+          }
+        </div>
+      </div>
+
+      <div class="input-field" [class.error-field]="
+          form.controls['password'].touched &&
+          (form.controls['password'].hasError('required') ||
+            form.controls['password'].hasError('pattern'))
+        ">
+        @let _tooglePassword = tooglePassword();
+        <div class="input_group has_icon">
+          <label for="password">Password</label>
+          <input [type]="_tooglePassword" placeholder="Enter password" formControlName="password" required />
+          <mat-icon (click)="tooglePassword.set(_tooglePassword=='text' ? 'password': 'text')"
+            class="material-symbols-outlined">
+            {{_tooglePassword == 'password' ? 'visibility' : 'visibility_off'}}
+          </mat-icon>
+        </div>
+        <div class="error-msg">
+          @if(form.controls['password'].touched &&
+          form.controls['password'].hasError('required')) {
+          <p>Password is required!</p>
+          } @if(form.controls['password'].touched &&
+          form.controls['password'].hasError('pattern')) {
+          <p>Password atleast have 6 characters.</p>
+          <!-- <p>Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p> -->
+          }
+        </div>
+      </div>
+
+      <div class="remember_group">
+        <div class="remember_me">
+          <input type="checkbox" id="remember_me" formControlName="isRememberMe" />
+          <label for="remember_me">Remember Me</label>
+        </div>
+        <div class="forgot-password">
+          <a routerLink="/forgot-password">Forgot Password</a>
+        </div>
+      </div>
+      <div class="btn_wrap">
+        <button type="submit">
+          Login
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- <div class="auth_btm">
+    <p>Do not have an account? <a routerLink="/register">Create Account</a></p>
+  </div> -->
+</div>
