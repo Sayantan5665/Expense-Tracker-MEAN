@@ -18,18 +18,31 @@ export class RegisterComponent {
   private readonly router = inject(Router);
 
   protected form: FormGroup = new FormGroup({
-    first_name: new FormControl('', [Validators.required]),
-    last_name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
+    // last_name: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,4}$/)]),
     password: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9!@#$%^&*())]{6,}/)]),
     confirm_password: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9!@#$%^&*())]{6,}/)]),
   },
     [PasswordMatchValidator('password', 'confirm_password')]
   );
-
+  protected profile_pic: { file: File|undefined, url: string } = { file: undefined, url: '' };
   protected tooglePassword = signal<'text' | 'password'>('password');
   protected toogleConfirmPassword = signal<'text' | 'password'>('password');
 
+  handleImageUpload(file: any) {
+    console.log("file: ", file);
+    const img: File = file.target.files[0];
+    console.log("img: ", img);
+    if (img && this.checkType(img)) {
+      this.profile_pic.file = img;
+      this.profile_pic.url = URL.createObjectURL(img);
+    }
+  }
+
+  private checkType(file: File) {
+    return file.type.split('/')[0] === 'image' ? true : false;
+  }
 
   protected submit(form: FormGroup): void {
     if (form.valid) {
@@ -47,9 +60,21 @@ export class RegisterComponent {
     }
   }
 
-  private register(data: IRegister) {
+  private register(data: any) {
     data.email = data.email.toLowerCase();
-    this.api.post('', data).subscribe({
+    console.log("data=====: ", data);
+
+    const formData = new FormData();
+    this.profile_pic.file && formData.append('image', this.profile_pic.file);
+    Object.keys(data).forEach((key) => {
+      formData.append(key, data[key]);
+    })
+
+    for (let [key, value] of Object.entries(formData)) {
+      console.log(key, ": ", value, ";");
+    }
+
+    this.api.post('api/user/register', formData).subscribe({
       next: (res) => {
         this.alert.toast("Registration successful! Please login.", 'success');
         this.router.navigate(['/login']);

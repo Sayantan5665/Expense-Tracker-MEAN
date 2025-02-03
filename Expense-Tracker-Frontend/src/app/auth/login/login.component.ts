@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 import { AlertService, ApiService, EventService, StorageService } from '@services';
 import { ILogin } from '@types';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, MatIcon],
+  imports: [ReactiveFormsModule, MatIcon, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -41,7 +42,8 @@ export class LoginComponent {
 
   private login(data: ILogin): void {
     data.email = data.email.toLowerCase();
-    this.api.post('', data).subscribe({
+    console.log("data: ", data);
+    this.api.post('api/user/login', data).subscribe({
       next: (res:any) => {
         // console.log("res: ", res);
         if (res.status === 200) {

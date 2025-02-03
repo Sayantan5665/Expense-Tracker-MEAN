@@ -1,56 +1,12 @@
-<div class="auth-container">
+<!-- <div class="auth-container">
   <h2 class="auth_main_head">Login to <span> your account</span></h2>
   <div class="form-wrapper">
-    <form [formGroup]="form" id="login-form">
-      <div class="input-field" [class.error-field]=" form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('pattern')) ">
-        <div class="input_group">
-          <label for="email">Email</label>
-          <input type="text" placeholder="email" formControlName="email" required />
-        </div>
-        <div class="error-msg">
-          @if(form.controls['email'].touched && form.controls['email'].hasError('required')) {
-          <p>Email is required!</p>
-          }
-          @if(form.controls['email'].touched && form.controls['email'].hasError('pattern')) {
-          <p>Invalid Email!</p>
-          }
-        </div>
-      </div>
+    <form>
 
-      <div class="input-field" [class.error-field]="
-          form.controls['password'].touched &&
-          (form.controls['password'].hasError('required') ||
-            form.controls['password'].hasError('pattern'))
-        ">
-        @let _tooglePassword = tooglePassword();
-        <div class="input_group has_icon">
-          <label for="password">Password</label>
-          <input [type]="_tooglePassword" placeholder="Enter password" formControlName="password" required />
-          <mat-icon (click)="tooglePassword.set(_tooglePassword=='text' ? 'password': 'text')"
-            class="material-symbols-outlined">
-            {{_tooglePassword == 'password' ? 'visibility' : 'visibility_off'}}
-          </mat-icon>
-        </div>
-        <div class="error-msg">
-          @if(form.controls['password'].touched &&
-          form.controls['password'].hasError('required')) {
-          <p>Password is required!</p>
-          } @if(form.controls['password'].touched &&
-          form.controls['password'].hasError('pattern')) {
-          <p>Password atleast have 6 characters.</p>
-          <!-- <p>Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p> -->
-          }
-        </div>
-      </div>
 
-      <div class="remember_group">
-        <div class="remember_me">
-          <input type="checkbox" id="remember_me" formControlName="isRememberMe" />
-          <label for="remember_me">Remember Me</label>
-        </div>
-        <div class="forgot-password">
-          <a routerLink="/forgot-password">Forgot Password</a>
-        </div>
+
+
+
       </div>
       <div class="btn_wrap">
         <button type="submit">
@@ -60,7 +16,77 @@
     </form>
   </div>
 
-  <!-- <div class="auth_btm">
-    <p>Do not have an account? <a routerLink="/register">Create Account</a></p>
-  </div> -->
+
+</div> -->
+
+<div class="wrapper">
+  <div class="inner">
+    <img src="images/auth-page-img1.png" alt="" class="image-1">
+    <form [formGroup]="form" id="login-form">
+      <h3>Login to Your Account</h3>
+      <div class="form-holder">
+        <div class="input-field"
+          [class.error-field]=" form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('pattern')) ">
+          <div class="input_group">
+            <span class="lnr lnr-envelope"></span>
+            <input type="text" class="form-control" placeholder="Email" formControlName="email" required />
+          </div>
+          <div class="error-msg">
+            @if(form.controls['email'].touched && form.controls['email'].hasError('required')) {
+            <p>Email is required!</p>
+            }
+            @if(form.controls['email'].touched && form.controls['email'].hasError('pattern')) {
+            <p>Invalid Email!</p>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="form-holder">
+        <div class="input-field" [class.error-field]="
+          form.controls['password'].touched &&
+          (form.controls['password'].hasError('required') ||
+            form.controls['password'].hasError('pattern'))
+        ">
+          @let _tooglePassword = tooglePassword();
+          <div class="input_group has_icon">
+            <span class="lnr lnr-lock"></span>
+            <div class="has-icon">
+              <input [type]="_tooglePassword" class="form-control" placeholder="Enter password"
+                formControlName="password" required />
+              <mat-icon (click)="tooglePassword.set(_tooglePassword=='text' ? 'password': 'text')"
+                class="material-symbols-outlined">
+                {{_tooglePassword == 'password' ? 'visibility' : 'visibility_off'}}
+              </mat-icon>
+            </div>
+          </div>
+          <div class="error-msg">
+            @if(form.controls['password'].touched &&
+            form.controls['password'].hasError('required')) {
+            <p>Password is required!</p>
+            } @if(form.controls['password'].touched &&
+            form.controls['password'].hasError('pattern')) {
+            <p>Password atleast have 6 characters.</p>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="remember_group">
+        <div class="remember_me">
+          <input type="checkbox" id="remember_me" formControlName="rememberMe" />
+          <label for="remember_me">Remember Me</label>
+        </div>
+        <div class="forgot-password">
+          <a routerLink="/forgot-password">Forgot Password</a>
+        </div>
+      </div>
+      <button (click)="submit(form)">
+        <span>Login</span>
+      </button>
+      <div class="auth_btm">
+        <p>Do not have an account? <a routerLink="/register">Create Account</a></p>
+      </div>
+    </form>
+    <img src="images/auth-page-img2.png" alt="" class="image-2">
+  </div>
+
 </div>

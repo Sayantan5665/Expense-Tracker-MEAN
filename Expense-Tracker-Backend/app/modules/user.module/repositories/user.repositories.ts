@@ -100,17 +100,8 @@ class userRepo {
         ]);
     }
 
-    async addUser(req: Request, body: any, token?: string): Promise<IUser> {
+    async addUser(req: Request, body: any): Promise<IUser> {
         try {
-            // if(token?.length) {
-            // const creator: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
-            // if (!(creator?.role === 'super-admin')) {;
-            //     throw new Error(`Only super admins can create ${body.role}`);
-            // }
-            // } else {
-            //     throw new Error(`Token is not provided!`);
-            // }
-
             const existUser: IUser | null = await this.findOneBy({email: body.email});
             if (existUser) {
                 throw new Error("Email already exists!");
@@ -134,14 +125,13 @@ class userRepo {
                         body['role'] = (role._id as any).toString();
                     }
                 } 
-            } else  body['role'] = '67850496d40709a6b61e69e7';  // by default user role
+            }
 
             const file: any = req.file || (req?.files as any || [])[0];
             const basePath: string = `${req.protocol}://${req.get('host')}`;
             let imagePath: string = `${basePath}/uploads/blank-profile-pic.jpg`;
             if (file) {
                 imagePath = `${basePath}/uploads/${file.filename}`;
-                // console.log("imagePath: ", imagePath);
             }
             body.image = imagePath;
 

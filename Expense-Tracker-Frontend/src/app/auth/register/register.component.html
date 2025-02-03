@@ -27,23 +27,31 @@
     <img src="images/auth-page-img1.png" alt="" class="image-1">
     <form [formGroup]="form" id="register-form">
       <h3>New Account?</h3>
-      <div class="single-line">
+      <div class="form-holder ">
+        <div class="input-field">
+          <div class="input_group">
+            <span class="lnr lnr-user"></span>
+            <input type="file" class="form-control" placeholder=" Enter Name" (change)="handleImageUpload($event)"/>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="single-line"> -->
         <div class="form-holder ">
           <div class="input-field"
-            [class.error-field]="form.controls['first_name'].touched && form.controls['first_name'].hasError('required')">
+            [class.error-field]="form.controls['name'].touched && form.controls['name'].hasError('required')">
             <div class="input_group">
               <span class="lnr lnr-user"></span>
-              <input type="text" class="form-control" placeholder="First Name" formControlName="first_name" required
+              <input type="text" class="form-control" placeholder=" Enter Name" formControlName="name" required
                 [maxlength]="50" />
             </div>
             <div class="error-msg">
-              @if(form.controls['first_name'].touched && form.controls['first_name'].hasError('required')) {
-              <p>First Name is required!</p>
+              @if(form.controls['name'].touched && form.controls['name'].hasError('required')) {
+              <p>Name is required!</p>
               }
             </div>
           </div>
         </div>
-        <div class="form-holder ">
+        <!-- <div class="form-holder ">
           <div class="input-field"
             [class.error-field]=" form.controls['last_name'].touched && form.controls['last_name'].hasError('required') ">
             <div class="input_group">
@@ -58,7 +66,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="form-holder">
         <div class="input-field"
           [class.error-field]=" form.controls['email'].touched && (form.controls['email'].hasError('required') || form.controls['email'].hasError('pattern')) ">
@@ -130,7 +138,7 @@
           </div>
         </div>
       </div>
-      <button>
+      <button (click)="submit(form)">
         <span>Register</span>
       </button>
       <div class="auth_btm">
