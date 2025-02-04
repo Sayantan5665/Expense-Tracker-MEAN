@@ -99,7 +99,8 @@ class userController {
 
     async getUserProfile(req: Request, res: Response): Promise<any> {
         try {
-            const userId: string = req.params.id;
+            const _user = req.user as IUser;
+            const userId: string = _user.id || '';
             const user: IUser | null = await userRepo.fetchProfile(userId);
 
             if (!user) {

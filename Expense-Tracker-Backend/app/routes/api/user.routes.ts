@@ -83,10 +83,9 @@ route.post('/register', upload.single('image'), userController.createUser);
 */
 route.post('/login', userController.loginUser);
 
-
 /**
   * @swagger
-  * /api/user/fetch/profile/{id}:
+  * /api/user/fetch/profile:
   *   get:
   *     summary: User details
   *     tags:
@@ -95,11 +94,6 @@ route.post('/login', userController.loginUser);
   *       - token: []
   *     produces:
   *       - application/json
-  *     parameters:
-  *       - in: path
-  *         name: id
-  *         type: string
-  *         required: true
   *     responses:
   *       200: 
   *         description: User details fetched successfully
@@ -116,7 +110,7 @@ route.post('/login', userController.loginUser);
   *       500:
   *         description: Server Error
 */
-route.get('/fetch/profile/:id', auth, userController.getUserProfile);
+route.get('/fetch/profile', auth, userController.getUserProfile);
 
 /**
  * @swagger

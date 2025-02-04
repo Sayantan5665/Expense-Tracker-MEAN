@@ -27,8 +27,6 @@ export class ApiService {
   }
 
   public post(url:string, data: any) {
-    console.log("url: ", `${this.BASE_API_ENDPOINT}/${url}`);
-    console.log("data: ", data);
     return this.http.post(`${this.BASE_API_ENDPOINT}/${url}`, data).pipe(catchError(this.errHandler));
   }
   public put(url:string, data: any) {

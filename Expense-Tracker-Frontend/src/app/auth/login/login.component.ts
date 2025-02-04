@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AlertService, ApiService, EventService, StorageService } from '@services';
 import { ILogin } from '@types';
 
@@ -15,6 +15,7 @@ export class LoginComponent {
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
   private readonly event = inject(EventService);
+  private readonly router = inject(Router);
   private readonly storage = inject(StorageService);
 
   protected form: FormGroup = new FormGroup({
@@ -42,7 +43,6 @@ export class LoginComponent {
 
   private login(data: ILogin): void {
     data.email = data.email.toLowerCase();
-    console.log("data: ", data);
     this.api.post('api/user/login', data).subscribe({
       next: (res:any) => {
         // console.log("res: ", res);
@@ -50,19 +50,20 @@ export class LoginComponent {
           this.setDataAfterLogin(res.data);
           data.rememberMe ? this.saveCredential({ email: data.email, password: data.password, rememberMe: true }) : this.storage.clearCredential();
           this.alert.toast('Logged in successfully', 'success');
+          this.router.navigate(['/']);
         } else {
           this.alert.toast(res.message || 'Failed to login', 'warning');
         }
       },
       error: (error: any) => {
-        // console.error("error: ", error);
+        console.error("error: ", error);
         this.alert.toast(error.message || 'Invalid email or password', 'error');
       }
     });
   }
 
   private setDataAfterLogin(res: any): void {
-    this.storage.setUser({ token: res.access_token });
+    this.storage.setUser({ token: res.token });
     this.event.isLoggedin.set(true);
     this.event.userDetails.set(res);
   }

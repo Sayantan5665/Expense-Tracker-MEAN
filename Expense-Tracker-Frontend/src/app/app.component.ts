@@ -19,29 +19,29 @@ export class AppComponent {
   protected pageLoad = computed(() => this.event.pageLoad());
   protected isLoggedin = computed(() => this.event.isLoggedin());
   private routerEvent = toSignal(this.router.events);
-  // private userDetails = rxResource({
-  //   request: (this.isLoggedin, this.routerEvent),
-  //   loader: () => {
-  //     return this.isLoggedin() ? this.api.get(``) : of(false);
-  //   },
-  // });
+  private userDetails = rxResource({
+    request: (this.isLoggedin, this.routerEvent),
+    loader: () => {
+      return this.isLoggedin() ? this.api.get(`api/user/fetch/profile`) : of(false);
+    },
+  });
 
   constructor() {
-    // effect(() => {
-    //   const userDetails = this.userDetails;
-    //   if (userDetails.error()) {
-    //     setTimeout(() => {
-    //       this.event.logout()
-    //     }, 500);
-    //   }
-    //   if (userDetails.value()) {
-    //     const details:any = userDetails.value();
-    //     if (details) {
-    //       setTimeout(() => {
-    //         (details?.data ? this.event.userDetails.set(details.data) : this.event.logout());
-    //       }, 800);
-    //     }
-    //   }
-    // })
+    effect(() => {
+      const userDetails = this.userDetails;
+      if (userDetails.error()) {
+        setTimeout(() => {
+          this.event.logout()
+        }, 900);
+      }
+      if (userDetails.value()) {
+        const details:any = userDetails.value();
+        if (details) {
+          setTimeout(() => {
+            (details?.data ? this.event.userDetails.set(details.data) : this.event.logout());
+          }, 800);
+        }
+      }
+    })
   }
 }

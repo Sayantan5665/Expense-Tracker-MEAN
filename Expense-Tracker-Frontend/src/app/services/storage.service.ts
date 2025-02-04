@@ -10,15 +10,15 @@ export class StorageService {
   private readonly cookie = inject(CookieService);
 
   USER = {
-    KEY: 'property_zilla_agent_user',
+    KEY: 'expense_tracker_user',
     PASSWORD: '!##47344*()?:}950sdfgsd%es12323?UERSklso'
   };
   TEMP = {
-    KEY: 'property_zilla_agent_temp',
+    KEY: 'expense_tracker_temp',
     PASSWORD: '9d485!##64564*()?:}34YYIU!@00adsf@£sxfcdf'
   };
   REMEMBER = {
-    KEY: 'property_zilla_agent_remember',
+    KEY: 'expense_tracker_remember',
     PASSWORD: '!##54674*()?:}9504783ilyas%:fg23?REMEkmbr'
   };
 

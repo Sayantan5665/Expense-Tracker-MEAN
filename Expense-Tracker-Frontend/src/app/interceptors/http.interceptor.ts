@@ -5,9 +5,12 @@ import { StorageService } from '@services';
 export const httpInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
   const storage = inject(StorageService);
   const token = storage.getUserDataField('token');
-  let tokenizedReq = req.clone({
-    headers: req.headers.set('x-access-token', token)
-  });
+  let tokenizedReq = req.clone();
+  if (token) {
+    tokenizedReq = tokenizedReq.clone({
+      headers: tokenizedReq.headers.append('x-access-token', token)
+    });
+  }
 
   return next(tokenizedReq);
 };
