@@ -1,0 +1,82 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+
+
+
+html,
+body {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Roboto, sans-serif;
+  background: linear-gradient(#8b9da9, #fff6e4)
+}
+
+.calculator {
+  background-color: #8596b3;
+  max-width: 320px;
+  box-shadow: 0 0 75px 30px rgba(#cdcdcd, 0.7);
+}
+
+.calculator__display {
+  input {
+    width: 100%;
+    padding: 20px 10px;
+    color: rgba(#fff, 0.7);
+    font-size: 4em;
+    text-align: right;
+    background-color: #8596B3;
+    border: none;
+    outline: none;
+
+    &.has-result {
+      font-size: 2em;
+      padding: 20px 10px 5px 10px;
+    }
+  }
+
+  .result {
+    font-size: 3em;
+    color: #fff;
+    margin: 0px;
+    text-align: end;
+  }
+}
+
+.calculator__functions {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid rgba(#fff, 0.4);
+  mix-blend-mode: overlay;
+
+  button {
+    flex: 0 1 25%;
+    height: 70px;
+    color: #111;
+    font-size: 2em;
+    mix-blend-mode: overlay;
+    background: rgba(#fff, 0.4);
+    border: 1px solid rgba(#fff, 0.4);
+
+    &.btn--large {
+      flex: 0 1 50%;
+    }
+
+    &.btn--opaque {
+      background: rgba(#fff, 0.2);
+      &:hover {
+        background: rgba(255, 255, 255, 0);
+        transition: ease .3s;
+      }
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transition: ease .3s;
+    }
+  }
+}

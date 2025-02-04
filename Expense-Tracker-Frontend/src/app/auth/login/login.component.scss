@@ -38,7 +38,11 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #accffe;
+  background: rgb(254,254,254);
+  background: -moz-radial-gradient(circle, rgba(254,254,254,1) 0%, rgba(172,207,254,1) 100%);
+  background: -webkit-radial-gradient(circle, rgba(254,254,254,1) 0%, rgba(172,207,254,1) 100%);
+  background: radial-gradient(circle, rgba(254,254,254,1) 0%, rgba(172,207,254,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fefefe",endColorstr="#accffe",GradientType=1);
 }
 
 .inner {
@@ -96,25 +100,16 @@ h3 {
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 15px;
+    font-size: 20px;
     color: #333;
 
     &.lnr-lock {
       left: 2px;
     }
-  }
 
-  .has-icon {
-    display: flex;
-    align-items: center;
-
-    .mat-icon {
-      position: absolute !important;
+    &.right-icon {
       right: 5px !important;
-      font-size: 16px !important;
-      height: 16px !important;
-      margin-top: 8px;
-      color: #333;
+      left: auto !important;
     }
   }
 }

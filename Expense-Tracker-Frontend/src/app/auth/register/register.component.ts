@@ -4,11 +4,10 @@ import { Router, RouterLink } from '@angular/router';
 import { AlertService, ApiService } from '@services';
 import { IRegister } from '@types';
 import { PasswordMatchValidator } from '@utils';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, MatIcon, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })

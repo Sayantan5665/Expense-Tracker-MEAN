@@ -1,13 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService, ApiService, EventService, StorageService } from '@services';
 import { ILogin } from '@types';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, MatIcon, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
