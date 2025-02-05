@@ -1,12 +1,8 @@
-import { DOCUMENT } from '@angular/common';
 import { Component, computed, effect, inject } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterOutlet } from '@angular/router';
 import { ApiService, EventService } from '@services';
 import { of } from 'rxjs';
-import { CalculatorComponent } from './modals/calculator/calculator.component';
-
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
@@ -17,7 +13,6 @@ export class AppComponent {
   private readonly event = inject(EventService);
   private readonly router = inject(Router);
   private readonly api = inject(ApiService);
-  private readonly dialog = inject(MatDialog);
 
   protected pageLoad = computed(() => this.event.pageLoad());
   protected isLoggedin = computed(() => this.event.isLoggedin());
@@ -48,12 +43,4 @@ export class AppComponent {
     })
   }
 
-  openCalculator(button: HTMLElement) {
-    this.dialog.open(CalculatorComponent, {
-      panelClass: 'calculator-panel',
-      data: {
-        element: button,
-      }
-    });
-  }
 }

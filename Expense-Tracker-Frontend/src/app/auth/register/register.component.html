@@ -4,9 +4,14 @@
     <form [formGroup]="form" id="register-form">
       <h3>New Account?</h3>
       <div class="form-holder ">
+        @let _profile_pic = this.profile_pic().url;
         <div class="input-field">
-          <div class="input_group">
-            <input type="file" class="form-control" placeholder=" Enter Name" (change)="handleImageUpload($event)" />
+          <div class="input_group image-wrap">
+            @if(_profile_pic?.length) {
+              <img [src]="_profile_pic" alt="" class="profile-image" />
+            } @else {
+            <input class="profile-image" type="file" placeholder=" Enter Name" (change)="handleImageUpload($event)" />
+            }
           </div>
         </div>
       </div>
@@ -96,7 +101,7 @@
         <span>Register</span>
       </button>
       <div class="auth_btm">
-        <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+        <p>Already have an account? <a class="link" routerLink="/login">Sign In</a></p>
       </div>
     </form>
     <img src="images/auth-page-img2.png" alt="" class="image-2">

@@ -6,6 +6,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { httpInterceptor } from './interceptors/http.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,5 +23,6 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }), provideAnimationsAsync(),
+    provideEnvironmentNgxMask()
   ]
 };

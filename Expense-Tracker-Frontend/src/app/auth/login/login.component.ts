@@ -56,7 +56,7 @@ export class LoginComponent {
       },
       error: (error: any) => {
         console.error("error: ", error);
-        this.alert.toast(error.message || 'Invalid email or password', 'error');
+        this.alert.toast(error.error.message || 'Invalid email or password', 'error');
       }
     });
   }

@@ -3,30 +3,30 @@
 <div class="calculator" #calculator>
   <div class="calculator__wrap">
     <div class="calculator__display">
-      <input type="text" [class.has-result]="_result.length" [(ngModel)]="currentInput">
+      <input #calcInput type="text" [class.has-result]="_result.length" [(ngModel)]="currentInput" (keydown)="numbersOnly($event)">
       @if(_result.length) {
       <p class="result">{{ _result }}</p>
       }
     </div>
     <div class="calculator__functions">
-      <button (click)="clear('all')" class="btn--opaque">AC</button>
-      <button (click)="appendValue('%')" class="btn--opaque">%</button>
-      <button (click)="appendValue('/')" class="btn--opaque">/</button>
-      <button (click)="clear('single')" class="btn--opaque"><mat-icon class="material-symbols-outlined">backspace</mat-icon></button>
-      <button (click)="appendValue('7')">7</button>
-      <button (click)="appendValue('8')">8</button>
-      <button (click)="appendValue('9')">9</button>
-      <button (click)="appendValue('*')" class="btn--opaque">*</button>
-      <button (click)="appendValue('4')">4</button>
-      <button (click)="appendValue('5')">5</button>
-      <button (click)="appendValue('6')">6</button>
-      <button (click)="appendValue('-')" class="btn--opaque">-</button>
-      <button (click)="appendValue('1')">1</button>
-      <button (click)="appendValue('2')">2</button>
-      <button (click)="appendValue('3')">3</button>
-      <button (click)="appendValue('+')" class="btn--opaque">+</button>
-      <button (click)="appendValue('0')" class="btn--large">0</button>
-      <button (click)="appendValue('.')">.</button>
+      <button (click)="clear('all', calcInput)" class="btn--opaque">AC</button>
+      <button (click)="appendValue('%', calcInput)" class="btn--opaque">%</button>
+      <button (click)="appendValue('/', calcInput)" class="btn--opaque">/</button>
+      <button (click)="clear('single', calcInput)" class="btn--opaque"><mat-icon class="material-symbols-outlined">backspace</mat-icon></button>
+      <button (click)="appendValue('7', calcInput)">7</button>
+      <button (click)="appendValue('8', calcInput)">8</button>
+      <button (click)="appendValue('9', calcInput)">9</button>
+      <button (click)="appendValue('*', calcInput)" class="btn--opaque">*</button>
+      <button (click)="appendValue('4', calcInput)">4</button>
+      <button (click)="appendValue('5', calcInput)">5</button>
+      <button (click)="appendValue('6', calcInput)">6</button>
+      <button (click)="appendValue('-', calcInput)" class="btn--opaque">-</button>
+      <button (click)="appendValue('1', calcInput)">1</button>
+      <button (click)="appendValue('2', calcInput)">2</button>
+      <button (click)="appendValue('3', calcInput)">3</button>
+      <button (click)="appendValue('+', calcInput)" class="btn--opaque">+</button>
+      <button (click)="appendValue('0', calcInput)" class="btn--large">0</button>
+      <button (click)="appendValue('.', calcInput)">.</button>
       <button (click)="calculate()" class="btn--opaque">=</button>
     </div>
   </div>

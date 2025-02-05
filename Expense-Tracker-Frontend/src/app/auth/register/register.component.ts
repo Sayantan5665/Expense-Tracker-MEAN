@@ -25,7 +25,7 @@ export class RegisterComponent {
   },
     [PasswordMatchValidator('password', 'confirm_password')]
   );
-  protected profile_pic: { file: File|undefined, url: string } = { file: undefined, url: '' };
+  protected profile_pic = signal<{ file: File | undefined, url: string }>({ file: undefined, url: '' });
   protected tooglePassword = signal<'text' | 'password'>('password');
   protected toogleConfirmPassword = signal<'text' | 'password'>('password');
 
@@ -34,8 +34,7 @@ export class RegisterComponent {
     const img: File = file.target.files[0];
     console.log("img: ", img);
     if (img && this.checkType(img)) {
-      this.profile_pic.file = img;
-      this.profile_pic.url = URL.createObjectURL(img);
+      this.profile_pic.set({ file: img, url: URL.createObjectURL(img) })
     }
   }
 
@@ -60,11 +59,11 @@ export class RegisterComponent {
   }
 
   private register(data: any) {
+    const _profile_pic = this.profile_pic();
     data.email = data.email.toLowerCase();
-    console.log("data=====: ", data);
 
     const formData = new FormData();
-    this.profile_pic.file && formData.append('image', this.profile_pic.file);
+    _profile_pic.file && formData.append('image', _profile_pic.file);
     Object.keys(data).forEach((key) => {
       formData.append(key, data[key]);
     })

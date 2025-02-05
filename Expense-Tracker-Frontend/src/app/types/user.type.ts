@@ -1,9 +1,10 @@
 export interface IUser {
-  first_name: string,
-  last_name: string,
+  name: string,
   email: string,
   image: string
   password?: string,
+  role?: string,
+  createdAt?: string,
 }
 
 
@@ -14,8 +15,7 @@ export interface ILogin {
 }
 
 export interface IRegister {
-  first_name: string,
-  last_name: string,
+  name: string,
   email: string,
   password: string,
   confirm_password?: string,

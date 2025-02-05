@@ -78,23 +78,10 @@ class userRepo {
                     name: 1,
                     email: 1,
                     password: 1,
-                    // role: "$roleDetails",
-                    role: {
-                        $cond: {
-                            if: { $ne: ["$roleDetails", null] }, // Check if roleDetails exists
-                            then: {
-                                role: "$roleDetails.role",
-                                roleDisplayName: "$roleDetails.roleDisplayName",
-                                rolegroup: "$roleDetails.rolegroup",
-                                description: "$roleDetails.description"
-                            },
-                            else: null
-                        }
-                    },
+                    role: "$roleDetails.roleDisplayName",
                     isVarified: 1,
                     timeZone: 1,
                     createdAt: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
-                    // updatedAt: { $dateToString: { format: '%Y-%m-%d', date: '$updatedAt' } }
                 }
             }
         ]);
@@ -248,24 +235,36 @@ class userRepo {
         try {
             const userId = new Types.ObjectId(id);
 
-            const users: Array<IUser | null> = await userModel.aggregate([
+            const user: Array<IUser> = await userModel.aggregate([
+                { $match: {
+                    _id: userId
+                } },
                 {
-                    $match: {
-                        _id: userId
+                    $lookup: {
+                        from: "roles",
+                        localField: "role",
+                        foreignField: "_id",
+                        as: "roleDetails"
                     }
                 },
                 {
+                    $unwind: "$roleDetails"
+                },
+                {
                     $project: {
-                        "isActive": 0,
-                        "isVarified": 0,
-                        "updatedAt": 0,
-                        "password": 0
+                        _id: 1,
+                        image: 1,
+                        name: 1,
+                        email: 1,
+                        role:  "$roleDetails.roleDisplayName",
+                        timeZone: 1,
+                        createdAt: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }
                     }
                 }
-            ])
-            return users.length > 0 ? users[0] : null;
-        } catch (error) {
-            throw error;
+            ]);
+            return user.length > 0 ? user[0] : null;
+        } catch (error: any) {
+            throw new Error(error.message || 'Something went wrong while finding user!');
         }
     }
 }

@@ -8,7 +8,7 @@ import { evaluate, format } from 'mathjs';
   selector: 'app-calculator',
   imports: [MatDialogModule, FormsModule, MatIcon],
   templateUrl: './calculator.component.html',
-  styleUrl: './calculator.component.scss'
+  styleUrl: './calculator.component.scss',
 })
 export class CalculatorComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<CalculatorComponent>);
@@ -21,13 +21,12 @@ export class CalculatorComponent implements OnInit {
   ngOnInit(): void {
     const matDialogConfig = new MatDialogConfig()
     const rect: DOMRect = this.data.element.getBoundingClientRect();
-    console.log("rect: ", rect);
 
     matDialogConfig.position = { right: `10px`, top: `${rect.bottom + 2}px` }
     this.dialogRef.updatePosition(matDialogConfig.position)
   }
 
-  appendValue(value: string) {
+  appendValue(value: string, inputElement: HTMLElement): void {
     this.currentInput.update((data) => data + value);
 
     if (this.result().length) {
@@ -37,25 +36,43 @@ export class CalculatorComponent implements OnInit {
         this.calculate();
       }
     }
+    inputElement.focus();
   }
 
-  clear(type: 'single' | 'all') {
+  clear(type: 'single' | 'all', inputElement: HTMLElement) {
     if (type === 'single') {
       this.currentInput.update((data) => data.slice(0, -1));
     } else if (type === 'all') {
       this.currentInput.set('');
       this.result.set('');
     }
+    inputElement.focus();
   }
 
   protected calculate() {
     const _currentInput = this.currentInput();
     try {
       let _result = evaluate(_currentInput).toString() || '';
-      _result.length > 13 && (_result = format(Number(_result), {notation: 'exponential', precision: 2}));
+      _result.length > 13 && (_result = format(Number(_result), { notation: 'exponential', precision: 2 }));
       this.result.set(_result);
     } catch (error) {
       this.result.set('Error');
     }
+  }
+
+  protected numbersOnly(event: any) {
+    const key = event.key;
+    const allowedKeys = ['*', '/', '+', '-', '%', 'Backspace', 'ArrowRight', 'ArrowLeft'];
+
+    if (/[0-9]/.test(key) || allowedKeys.includes(key)) {
+      return true;
+    }
+
+    // Allow only one dot (.) in the input
+    if (key === '.' && !this.currentInput().includes('.')) {
+      return true;
+    }
+
+    return false;
   }
 }

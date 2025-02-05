@@ -1,3 +1,5 @@
+@let _isLoggedin = isLoggedin();
+@let _userdetails = userdetails();
 @let _isMobileMenuOpen = isMobileMenuOpen();
 
 <header class="absolute inset-x-0 top-0 z-50">
@@ -19,12 +21,30 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
       <a routerLink="/" class="text-sm/6 font-semibold text-gray-900">Home</a>
+      <a routerLink="/dashboard" class="text-sm/6 font-semibold text-gray-900">Dashboard</a>
       <a routerLink="/about" class="text-sm/6 font-semibold text-gray-900">About</a>
       <a routerLink="/contact" class="text-sm/6 font-semibold text-gray-900">Contact Us</a>
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+      <a #CalculatorBtn class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer"
+        (click)="openCalculator(CalculatorBtn)">Calculator</a>
+      @if(!_isLoggedin) {
       <a routerLink="/login" class="text-sm/6 font-semibold text-gray-900">Log in <span
           aria-hidden="true">&rarr;</span></a>
+      } @else {
+      <button class="example-menu-bar-item -mt-2" cdkMenuItem [cdkMenuTriggerFor]="profileMenu">
+        <img class="w-10 h-10 object-cover border-none rounded-full"
+          [src]="_userdetails && _userdetails?.image ? _userdetails.image : '/images/add_picture.jpg'"
+          alt="Profile picture">
+      </button>
+      <ng-template #profileMenu>
+        <div class="example-menu" cdkMenu>
+          <button routerLink="/profile" class="example-menu-item" cdkMenuItem>Profile</button>
+          <!-- <hr /> -->
+          <button class="example-menu-item" cdkMenuItem (click)="event.logout()">Log out</button>
+        </div>
+      </ng-template>
+      }
     </div>
   </nav>
 
@@ -60,9 +80,21 @@
               (click)="isMobileMenuOpen.set(false)">Contact Us</a>
           </div>
           <div class="py-6">
+            <a #CalculatorBtn1
+              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
+              (click)="openCalculator(CalculatorBtn1); isMobileMenuOpen.set(false);">Calculator</a>
+            @if(!_isLoggedin) {
             <a routerLink="/login"
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
               (click)="isMobileMenuOpen.set(false)">Log in</a>
+            } @else {
+            <a routerLink="/profile"
+              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
+              (click)="isMobileMenuOpen.set(false)">Profile</a>
+            <a (click)="event.logout()"
+              class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
+              (click)="isMobileMenuOpen.set(false)">Log out</a>
+            }
           </div>
         </div>
       </div>
