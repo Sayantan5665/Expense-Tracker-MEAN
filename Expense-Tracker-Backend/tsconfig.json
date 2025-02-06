@@ -17,7 +17,7 @@
       "@interfaces": ["app/interfaces"],
       "@utils": ["app/utils"],
       "@middlewares": ["app/middlewares"],
-      "@configs": ["app/configs/db.config"],
+      "@configs": ["app/configs"],
       "@routes": ["app/routes/main.routes"],
     }
   }

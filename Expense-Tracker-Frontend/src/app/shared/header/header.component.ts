@@ -27,9 +27,6 @@ export class HeaderComponent {
       if (_isMobileMenuOpen) this.document.body.style.overflow = 'hidden';
       else this.document.body.style.overflow = 'auto';
     });
-
-    effect(() => { console.log("===> ", this.userdetails()); });
-
   }
 
   openCalculator(button: HTMLElement) {

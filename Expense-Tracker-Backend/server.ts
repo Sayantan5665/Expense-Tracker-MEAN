@@ -9,7 +9,8 @@ import routes from '@routes';
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerOptions from './swagger.json';
-const swaggerDocument = swaggerJSDoc(SwaggerOptions as any);
+import { agenda } from "@configs";
+
 
 // Initialize Express app
 const app: Express = express();
@@ -37,9 +38,16 @@ app.use('/uploads', express.static(join(__dirname, 'uploads')))
 app.use(routes);
 
 // Swagger documentation
+const swaggerDocument = swaggerJSDoc(SwaggerOptions as any);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const port = process.env.PORT || 5503;
 app.listen(port, () => {
     console.log(`Server running on  http://localhost:${port}  🔥`);
+});
+
+// Graceful shutdown agenda
+process.on('SIGTERM', async () => {
+    await agenda.stop();
+    process.exit(0);
 });

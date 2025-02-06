@@ -17,7 +17,7 @@ export const mailTransporter = async ():Promise<Transporter<any>> => {
     }
 }
 
-export const sendVerificationEmail = async (mailOptions:IMailOptions): Promise<void> => {
+export const sendEmail = async (mailOptions:IMailOptions): Promise<void> => {
     try {
         const transporter = await mailTransporter();
         const info = await transporter.sendMail(mailOptions);

@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { comparePassword, deleteUploadedFile, generateToken, hashPassword, sendVerificationEmail, verifyToken } from "@utils";
+import { comparePassword, deleteUploadedFile, generateToken, hashPassword, sendEmail, verifyToken } from "@utils";
 import { IUser, IMailOptions, IVerificationToken, ITokenUser, IRole } from "@interfaces";
 import { userModel, userValidator } from "../models/user.model";
 import { verify } from "jsonwebtoken";
@@ -142,7 +142,7 @@ class userRepo {
             `
             };
 
-            await sendVerificationEmail(mailOptions);
+            await sendEmail(mailOptions);
 
             const data = new userModel(body);
             const newUser: IUser = await data.save();

@@ -19,8 +19,16 @@
                 "description": "Authentication APIs"
             },
             {
-                "name": "Other",
-                "description": "Other APIs"
+                "name": "Category",
+                "description": "Category APIs"
+            },
+            {
+                "name": "Category-color",
+                "description": "Color of Categories API"
+            },
+            {
+                "name": "Expenses",
+                "description": "Expenses APIs"
             }
         ],
         "schemes": [
