@@ -29,7 +29,7 @@ export class RegisterComponent {
   protected tooglePassword = signal<'text' | 'password'>('password');
   protected toogleConfirmPassword = signal<'text' | 'password'>('password');
 
-  handleImageUpload(file: any) {
+  protected handleImageUpload(file: any) {
     console.log("file: ", file);
     const img: File = file.target.files[0];
     console.log("img: ", img);

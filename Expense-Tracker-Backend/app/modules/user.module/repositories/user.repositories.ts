@@ -211,7 +211,7 @@ class userRepo {
 
                 const existingImageName: string | undefined = existingUser.image.split('/').pop();
                 if (existingImageName && existingImageName !== 'blank-profile-pic.jpg') {
-                    unlink(path.join(__dirname, '..', '..', 'uploads', existingImageName), (err) => {
+                    unlink(path.join(__dirname, '..', '..', '..', '..', 'uploads', existingImageName), (err) => {
                         if (err) console.error(`Error deleting image: ${err}`);
                         else {
                             console.log('Old images deleted successfully');
@@ -222,7 +222,7 @@ class userRepo {
 
             body.role && delete body.role;
 
-            const user: IUser = await userModel.findByIdAndUpdate(userId, body, { new: true }).select('-isActive -isVarified -updated_at -password');
+            const user: IUser | null = await userModel.findByIdAndUpdate(userId, body, { new: true }).select('-isActive -isVarified -updated_at -password').populate('role', 'roleDisplayName');
             return user;
         } catch (error) {
             const file: any = req.file || (req?.files as any || [])[0];

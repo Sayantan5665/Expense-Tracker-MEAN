@@ -1,0 +1,27 @@
+.img-wrapper {
+  position: relative;
+
+  .edit_pic {
+    position: absolute;
+    top: 83%;
+    left: 85%;
+    transform: translate(-50%, -50%);
+    height: 40px;
+    width: 40px;
+    background: linear-gradient(-21deg, #9fcfff, white);
+    border-radius: 50%;
+    color: #0362aa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 2;
+    border: none;
+    outline: none;
+
+    span {
+      font-size: 25px;
+    }
+  }
+}

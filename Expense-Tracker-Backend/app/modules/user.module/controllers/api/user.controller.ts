@@ -135,6 +135,12 @@ class userController {
             body.isActive && delete body.isActive;
 
             const user: IUser | null = await userRepo.editUser(req, userId, body);
+            if (!user) {
+                return res.status(404).json({
+                    status: 400,
+                    message: "Something went wrong!",
+                });
+            }
 
             return res.status(200).json({
                 status: 200,
