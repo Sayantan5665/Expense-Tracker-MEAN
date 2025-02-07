@@ -14,8 +14,7 @@ const categoryValidator: ObjectSchema<ICategory> = joi.object({
 const categorySchema: Schema<ICategory> = new Schema({
     name: {
         type: String,
-        required: true,
-        unique: true,
+        required: true
     },
     userId: {
         type: Schema.Types.ObjectId,
@@ -37,7 +36,7 @@ const categorySchema: Schema<ICategory> = new Schema({
     },
 }, { timestamps: true, versionKey: false });
 
-const categoryModel: Model<ICategory> = model('Role', categorySchema);
+const categoryModel: Model<ICategory> = model('Category', categorySchema);
 
 export { categoryModel, categoryValidator };
 export default categoryModel;

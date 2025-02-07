@@ -9,9 +9,9 @@ class categoryController {
     async createCategory(req: Request, res: Response): Promise<any> {
         try {
             const user: ITokenUser = req.user!;
-            const body: ICategory = req.body;
+            const body = req.body;
             
-            const category: ICategory | null = (await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }, { name: body.name }]))[0];
+            const category: ICategory | null = (await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }, { name: body.name }], [{ isDefault: true }, { name: body.name }]))[0];
             if (category) {
                 return res.status(409).json({
                     status: 409,
@@ -26,7 +26,7 @@ class categoryController {
                     message: "Color not found!",
                 });
             }
-            body.userId = new Types.ObjectId(user.id);
+            body.userId = user.id;
 
             if (user.role.role == 'user') {
                 body?.isDefault && (body.isDefault = false);
@@ -49,11 +49,11 @@ class categoryController {
         }
     }
 
-    async getAllCategorys(req: Request, res: Response): Promise<any> {
+    async getAllCategories(req: Request, res: Response): Promise<any> {
         try {
             const user: ITokenUser = req.user!;
 
-            const categories: Array<ICategory | null> = await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }]);
+            const categories: Array<ICategory | null> = await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }], [{ isDefault: true }]);
             if (!categories.length) {
                 return res.status(404).json({
                     status: 404,
@@ -80,35 +80,8 @@ class categoryController {
         try {
             const user: ITokenUser = req.user!;
             const categoryId: string = req.params.id || "";
-            const category: ICategory | null = (await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }, { _id: new Types.ObjectId(categoryId) }]))[0];
+            const category: ICategory | null = (await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }, { _id: new Types.ObjectId(categoryId) }], [{ isDefault: true }, { _id: new Types.ObjectId(categoryId) }]))[0];
 
-            if (!category) {
-                return res.status(404).json({
-                    status: 404,
-                    message: "Category not found!",
-                });
-            }
-
-            return res.status(200).json({
-                status: 200,
-                message: "Category fetched successfully!",
-                data: category
-            });
-        } catch (error: any) {
-            console.log("error: ", error);
-            return res.status(500).json({
-                status: 500,
-                message: error.message || "Something went wrong! Please try again.",
-                error: error,
-            })
-        }
-    }
-
-    async getCategoryByName(req: Request, res: Response): Promise<any> {
-        try {
-            const user: ITokenUser = req.user!;
-            const categoryName: string = req.params.name || "";
-            const category: ICategory | null = (await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }, { name: categoryName }]))[0];
             if (!category) {
                 return res.status(404).json({
                     status: 404,

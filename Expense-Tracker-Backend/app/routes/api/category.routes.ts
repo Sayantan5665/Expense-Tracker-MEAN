@@ -1,57 +1,62 @@
 import { Router } from 'express';
-import colorController from 'app/modules/color.module/controllers/api/color.controller';
+import categoryController from 'app/modules/category.module/controllers/api/category.controller';
 import { auth, authorize } from "@middlewares";
 const route = Router();
 
 /**
  * @swagger
- * /api/color/create:
+ * /api/category/create:
  *   post:
- *     summary: Create Colours (Admin only)
+ *     summary: Create Categories
  *     tags:
- *       - Category-color
+ *       - Category
  *     security:
  *       - token: []
  *     produces:
  *       - application/json
  *     parameters:
  *       - in: body
- *         name: Create Colour
- *         description: Create Colours.
+ *         name: Create Category
+ *         description: Create Categories.
  *         schema:
  *           type: object
  *           required:
  *             - name
- *             - hexCode
+ *             - colorId
+ *             - description
  *           properties:
  *             name:
  *               type: string
- *             hexCode:
+ *             colorId:
+ *               type: string
+ *             isDefault:
+ *               type: boolean
+ *             description:
  *               type: string
  *     responses:
  *        200:
- *          description: Color created successfully
+ *          description: Category created successfully
  *        400:
  *          description: Bad Request
  *        500:
  *          description: Server Error
 */
-route.post('/create', auth, authorize('admin'), colorController.createColor);
+route.post('/create', auth, categoryController.createCategory);
 
 
 /**
  * @swagger
- * /api/color/fetch/all:
+ * /api/category/fetch/all:
  *   get:
- *     summary: Fetch all the colors
+ *     summary: Fetch all the categories
  *     tags: 
- *       - Category-color
+ *       - Category
  *     security:
  *       - token: []
  *     produces: application/json
  *     responses:
  *       200: 
- *         description: All colors fetched successfully
+ *         description: All categories fetched successfully
  *         content:
  *           application/json:
  *             schema:
@@ -59,21 +64,21 @@ route.post('/create', auth, authorize('admin'), colorController.createColor);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: All colors fetched
+ *                   example: All categories fetched
  *       400:
  *         description: Bad Request
  *       500:
  *         description: Server Error
  */
-route.get('/fetch/all', auth, colorController.getAllColors);
+route.get('/fetch/all', auth, categoryController.getAllCategories);
 
 /**
  * @swagger
- * /api/color/fetch-by-id/{id}:
+ * /api/category/fetch-by-id/{id}:
  *   get:
- *     summary: Fetch color by id
+ *     summary: Fetch category by id
  *     tags: 
- *       - Category-color
+ *       - Category
  *     security:
  *       - token: []
  *     produces: application/json
@@ -84,7 +89,7 @@ route.get('/fetch/all', auth, colorController.getAllColors);
  *         required: true
  *     responses:
  *       200: 
- *         description: Colour fetched successfully
+ *         description: Category fetched successfully
  *         content:
  *           application/json:
  *             schema:
@@ -92,54 +97,21 @@ route.get('/fetch/all', auth, colorController.getAllColors);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Colour fetched
+ *                   example: Category fetched
  *       400:
  *         description: Bad Request
  *       500:
  *         description: Server Error
  */
-route.get('/fetch-by-id/:id', auth, colorController.getColorById);
+route.get('/fetch-by-id/:id', auth, categoryController.getCategoryById);
 
 /**
  * @swagger
- * /api/color/fetch-by-name/{name}:
- *   get:
- *     summary: Fetch color by name
- *     tags: 
- *       - Category-color
- *     security:
- *       - token: []
- *     produces: application/json
- *     parameters:
- *       - in: path
- *         name: name
- *         type: string
- *         required: true
- *     responses:
- *       200: 
- *         description: Colour fetched successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Colour fetched
- *       400:
- *         description: Bad Request
- *       500:
- *         description: Server Error
- */
-route.get('/fetch-by-name/:name', auth, colorController.getColorByName);
-
-/**
- * @swagger
- * /api/color/delete/{id}:
+ * /api/category/delete/{id}:
  *   delete:
- *     summary: Delete Roles (Admin only)
+ *     summary: Delete Categories (Only themselves)
  *     tags: 
- *       - Category-color
+ *       - Category
  *     security:
  *       - token: []
  *     produces: application/json
@@ -150,7 +122,7 @@ route.get('/fetch-by-name/:name', auth, colorController.getColorByName);
  *         required: true
  *     responses:
  *       200: 
- *         description: Role deleted successfully
+ *         description: Category deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -158,12 +130,12 @@ route.get('/fetch-by-name/:name', auth, colorController.getColorByName);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Role deleted successfully
+ *                   example: Category deleted successfully
  *       400:
  *         description: Bad Request
  *       500:
  *         description: Server Error
  */
-route.delete('/delete/:id', auth, authorize('admin'), colorController.deleteColor);
+route.delete('/delete/:id', auth, categoryController.deleteCategory);
 
 export default route;

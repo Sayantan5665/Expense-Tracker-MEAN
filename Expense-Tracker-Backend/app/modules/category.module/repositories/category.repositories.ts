@@ -19,14 +19,14 @@ class categoryRepository {
     }
 
 
-    async getCategoryBy(obj: [{ userId: Types.ObjectId }, ...QueryCondition[]]): Promise<Array<ICategory | null>> {
+    async getCategoryBy(firstCondition: [{ userId: Types.ObjectId }, ...QueryCondition[]], secondCondition: [{ isDefault: boolean }, ...QueryCondition[]]): Promise<Array<ICategory | null>> {
         try {
             const category: Array<ICategory | null> = await categoryModel.aggregate([
                 {
                     $match: {
                         $or: [
-                          { $and: obj },
-                          { isDefault: true }
+                          { $and: firstCondition },
+                          { $and: secondCondition}
                         ]
                       }
                 },
