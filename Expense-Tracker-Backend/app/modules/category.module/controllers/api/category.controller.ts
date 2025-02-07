@@ -1,7 +1,7 @@
-import { ICategory, IColor, ITokenUser } from "@interfaces";
+import { ICategory, IColor, ITokenUser } from "../../../../interfaces/index";
 import { Request, Response } from "express";
 import categoryRepo from "../../repositories/category.repositories";
-import colorRepo from "app/modules/color.module/repositories/color.repositories";
+import colorRepo from "../../../color.module/repositories/color.repositories";
 import { Types } from "mongoose";
 
 class categoryController {

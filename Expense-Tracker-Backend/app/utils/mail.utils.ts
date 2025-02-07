@@ -1,4 +1,4 @@
-import { IMailOptions } from "@interfaces";
+import { IMailOptions } from "../interfaces/index";
 import { createTransport, Transporter } from "nodemailer";
 
 export const mailTransporter = async ():Promise<Transporter<any>> => {

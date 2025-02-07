@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import userController from 'app/modules/user.module/controllers/api/user.controller';
-import { auth, authorize } from "@middlewares";
-import { upload } from '@utils';
+import userController from '../../modules/user.module/controllers/api/user.controller';
+import { auth, authorize } from "../../middlewares/index";
+import { upload } from '../../utils/index';
 const route = Router();
 
 /**

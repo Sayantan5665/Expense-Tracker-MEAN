@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import colorController from 'app/modules/color.module/controllers/api/color.controller';
-import { auth, authorize } from "@middlewares";
+import colorController from '../../modules/color.module/controllers/api/color.controller';
+import { auth, authorize } from "../../middlewares/index";
 const route = Router();
 
 /**

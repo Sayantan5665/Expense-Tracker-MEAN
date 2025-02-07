@@ -1,5 +1,5 @@
 import { connect } from "mongoose";
-import { agenda } from "@configs";
+import { agenda } from "./index";
 
 export const connectDB = () => {
     const pass = ':' + (process.env.MONGO_PASS)  //?.replace(/[\/\\-]/g, '')

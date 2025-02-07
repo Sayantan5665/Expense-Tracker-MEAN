@@ -1,4 +1,4 @@
-import { IRole } from "@interfaces";
+import { IRole } from "../../../../interfaces/index";
 import { Request, Response } from "express";
 import roleRepo from "../../repositories/role.repositories";
 

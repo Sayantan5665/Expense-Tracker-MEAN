@@ -1,6 +1,6 @@
 import { Model, Schema, model } from "mongoose";
 import joi, { ObjectSchema } from "joi";
-import { ICategory } from "@interfaces";
+import { ICategory } from "../../../interfaces/index";
 
 
 const categoryValidator: ObjectSchema<ICategory> = joi.object({

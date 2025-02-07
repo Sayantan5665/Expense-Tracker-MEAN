@@ -1,9 +1,9 @@
 
-import userRepositories from 'app/modules/user.module/repositories/user.repositories';
+import userRepositories from '../modules/user.module/repositories/user.repositories';
 // import Expense from '../models/Expense.js';
 import { Types } from 'mongoose';
-import { IMailOptions, IUser } from '@interfaces';
-import { sendEmail } from '@utils';
+import { IMailOptions, IUser } from '../interfaces/index';
+import { sendEmail } from './index';
 
 export const sendDailyExpenseReport = async (userId: string) => {
     const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId) });

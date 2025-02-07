@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ITokenUser } from '../interfaces/user.interface';
-import userRepositories from 'app/modules/user.module/repositories/user.repositories';
+import userRepositories from '../modules/user.module/repositories/user.repositories';
 
 
 declare global {

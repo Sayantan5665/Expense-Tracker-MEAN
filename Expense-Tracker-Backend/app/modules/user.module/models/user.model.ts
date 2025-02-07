@@ -1,6 +1,6 @@
 import { Model, Schema, Types, model } from "mongoose";
 import joi, { ObjectSchema } from "joi";
-import { IUser } from "@interfaces";
+import { IUser } from "../../../interfaces/index";
 
 
 const userValidator: ObjectSchema<IUser> = joi.object({

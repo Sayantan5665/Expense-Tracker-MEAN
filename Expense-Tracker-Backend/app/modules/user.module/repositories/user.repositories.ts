@@ -1,12 +1,11 @@
 import { Request } from "express";
-import { comparePassword, deleteUploadedFile, generateToken, hashPassword, sendEmail, verifyToken } from "@utils";
-import { IUser, IMailOptions, IVerificationToken, ITokenUser, IRole } from "@interfaces";
+import { comparePassword, deleteUploadedFile, generateToken, hashPassword, sendEmail, verifyToken } from "../../../utils/index";
+import { IUser, IMailOptions, IVerificationToken, IRole } from "../../../interfaces/index";
 import { userModel, userValidator } from "../models/user.model";
-import { verify } from "jsonwebtoken";
 import { unlink } from "fs";
 import path from "path";
 import { Types } from "mongoose";
-import roleRepositories from "app/modules/role.module/repositories/role.repositories";
+import roleRepositories from "../../role.module/repositories/role.repositories";
 
 class userRepo {
     async findOneBy(keyValue: any): Promise<IUser | null> {

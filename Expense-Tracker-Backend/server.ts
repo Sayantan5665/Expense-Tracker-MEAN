@@ -1,15 +1,15 @@
+import "tsconfig-paths/register";
 import express, { Express } from "express";
-import { connectDB } from "@configs";
+import { connectDB, agenda } from "./app/configs/index";
 import { json, urlencoded } from "body-parser";
 import cors from "cors";
 import { config } from "dotenv";
 import { join } from "path";
 import cookieParser from "cookie-parser";
-import routes from '@routes';
+import routes from './app/routes/main.routes';
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerOptions from './swagger.json';
-import { agenda } from "@configs";
 
 
 // Initialize Express app
@@ -32,6 +32,8 @@ app.use(cookieParser());
 app.use(cors());
 
 // static folder
+app.use(express.static(__dirname + '/public'));
+app.use('/views', express.static(join(__dirname, '/views')));
 app.use('/uploads', express.static(join(__dirname, 'uploads')))
 
 // routers

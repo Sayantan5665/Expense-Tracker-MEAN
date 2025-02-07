@@ -1,4 +1,4 @@
-import { IUser } from "@interfaces";
+import { IUser } from "../../../../interfaces/index";
 import userRepo from "../../repositories/user.repositories";
 import { Request, Response } from "express";
 

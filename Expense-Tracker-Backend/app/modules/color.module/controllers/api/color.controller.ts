@@ -1,7 +1,7 @@
-import { IColor } from "@interfaces";
+import { IColor } from "../../../../interfaces/index";
 import { Request, Response } from "express";
 import colorRepo from "../../repositories/color.repositories";
-import { isValidHexColor } from "@utils";
+import { isValidHexColor } from "../../../../utils/index";
 
 class colorController {
     /*** Admin only */

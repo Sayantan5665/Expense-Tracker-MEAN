@@ -1,6 +1,6 @@
 import { Model, Schema, model } from "mongoose";
 import joi, { ObjectSchema } from "joi";
-import { IRole } from "@interfaces";
+import { IRole } from "../../../interfaces/index";
 
 
 const roleValidator: ObjectSchema<IRole> = joi.object({

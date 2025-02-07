@@ -1,6 +1,6 @@
 import { Model, Schema, model } from "mongoose";
 import joi, { ObjectSchema } from "joi";
-import { IColor } from "@interfaces";
+import { IColor } from "../../../interfaces/index";
 
 
 const colorValidator: ObjectSchema<IColor> = joi.object({

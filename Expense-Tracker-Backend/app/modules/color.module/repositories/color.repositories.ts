@@ -1,4 +1,4 @@
-import { IColor } from "@interfaces";
+import { IColor } from "../../../interfaces/index";
 import { colorModel, colorValidator } from "../models/color.model";
 
 class colorRepository {

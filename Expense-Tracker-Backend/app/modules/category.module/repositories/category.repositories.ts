@@ -1,4 +1,4 @@
-import { ICategory } from "@interfaces";
+import { ICategory } from "../../../interfaces/index";
 import { categoryModel, categoryValidator } from "../models/category.model";
 import { Types } from "mongoose";
 

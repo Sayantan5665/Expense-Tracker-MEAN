@@ -1,4 +1,4 @@
-import { IRole } from "@interfaces";
+import { IRole } from "../../../interfaces/index";
 import { roleModel, roleValidator } from "../models/role.model";
 
 class roleRepo {
