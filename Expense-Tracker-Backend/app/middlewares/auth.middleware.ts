@@ -17,6 +17,8 @@ export const auth = async (req: Request, res: Response, next: NextFunction): Pro
     const token = req.headers["x-access-token"] || req.cookies['x-access-token'] || req.body['x-access-token'] || req.query['x-access-token'];
 
     if (!token) {
+      // req.flash('message', [{msg:`Please login first!`, type:'warning'}]);
+      // res.redirect('/login');
       res.status(401).json({ message: 'No authentication token provided. Please login first.' });
       return;
     }
