@@ -10,6 +10,8 @@ import routes from './app/routes/main.routes';
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerOptions from './swagger.json';
+import flash from 'connect-flash';
+import session from 'express-session';
 
 
 // Initialize Express app
@@ -20,16 +22,28 @@ config();
 
 // Connect to MongoDB
 connectDB();
-
 // Middleware to parse JSON and URL-encoded data
 app.use(json());
 app.use(urlencoded({ extended: true }));
+
+// configuration for connect-flash
+app.use(
+    session({
+        secret: 'mysecretkey',
+        saveUninitialized: true,
+        resave: true,
+    })
+);
+app.use(flash());
 
 // Middleware to parse cookies
 app.use(cookieParser());
 
 // Enable CORS for cross-origin requests
 app.use(cors());
+
+// Set up EJS as the templating engine for views.
+app.set('view engine', 'ejs');
 
 // static folder
 app.use(express.static(__dirname + '/public'));
