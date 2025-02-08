@@ -73,25 +73,25 @@
       <div class="form-holder">
         @let _toogleConfirmPassword = toogleConfirmPassword();
         <div class="input-field"
-          [class.error-field]=" form.controls['confirm_password'].touched && (form.controls['confirm_password'].hasError('required') || form.controls['confirm_password'].hasError('pattern') || form.controls['confirm_password'].hasError('passwordMismatch')) ">
+          [class.error-field]=" form.controls['confirmPassword'].touched && (form.controls['confirmPassword'].hasError('required') || form.controls['confirmPassword'].hasError('pattern') || form.controls['confirmPassword'].hasError('passwordMismatch')) ">
           <div class="input_group">
             <span class="material-symbols-outlined">lock</span>
             <input [type]="_toogleConfirmPassword" class="form-control" placeholder="Confirm Password"
-              formControlName="confirm_password" required />
+              formControlName="confirmPassword" required />
             <span (click)="toogleConfirmPassword.set(_toogleConfirmPassword=='text' ? 'password': 'text')"
               class="material-symbols-outlined right-icon">
               {{_toogleConfirmPassword == 'password' ? 'visibility' : 'visibility_off'}}
             </span>
           </div>
           <div class="error-msg">
-            @if(form.controls['confirm_password'].touched && form.controls['confirm_password'].hasError('required')) {
+            @if(form.controls['confirmPassword'].touched && form.controls['confirmPassword'].hasError('required')) {
             <p>Password is required!</p>
             }
-            @if(form.controls['confirm_password'].touched && form.controls['confirm_password'].hasError('pattern')) {
+            @if(form.controls['confirmPassword'].touched && form.controls['confirmPassword'].hasError('pattern')) {
             <p>Password atleast have 6 characters.</p>
             }
-            @if(form.controls['confirm_password'].touched &&
-            form.controls['confirm_password'].hasError('passwordMismatch')) {
+            @if(form.controls['confirmPassword'].touched &&
+            form.controls['confirmPassword'].hasError('passwordMismatch')) {
             <p>Password & Confirm Password must match.</p>
             }
           </div>

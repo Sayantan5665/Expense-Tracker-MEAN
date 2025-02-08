@@ -35,10 +35,7 @@ class userController {
             await userRepo.emailVerify(verificationToken)
 
             // return res.redirect(`http://localhost:4200/login?verified=true`);
-            return res.status(200).json({
-                status: 200,
-                message: "Email verified successfully! You can now login.",
-            });
+            return res.redirect('/verified');
         } catch (error: any) {
             console.error("error: ", error);
             // return res.redirect(`http://localhost:4200/login?verified=false`);

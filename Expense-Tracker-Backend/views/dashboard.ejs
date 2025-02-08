@@ -10,12 +10,12 @@
 
     <div class="container-fluid page-body-wrapper">
       <!-- Flash message -->
-      <% if (messages.length != 0) { %>
-      <% for(let i=0; i<messages.length; i++) { console.log("=====> ", messages[i])%>
-      <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10 %>px;">
-        <div class="alert alert-<%=messages[i].type%> alert-dismissible fade show float-right" style="z-index: 999; width: auto; max-width: 40%;" id="flash-alert-<%= i * 2  %>" role="alert">
+      <% if (messages.length !=0) { %>
+      <% for(let i=0; i<messages.length; i++) { %>
+      <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
+        <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
           <%= messages[i].msg %>
-          <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish('#flash-alert-'+(i * 2))">
+          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%=(i * 2)%>`)">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -364,15 +364,9 @@
           </div>
         </div>
         <!-- content-wrapper ends -->
+
         <!-- partial:partials/_footer.html -->
-        <footer class="footer">
-          <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2023 <a href="https://www.bootstrapdash.com/" target="_blank">BootstrapDash</a>. All rights
-              reserved.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made
-              with <i class="mdi mdi-heart text-danger"></i></span>
-          </div>
-        </footer>
+        <%- include('layouts/footer.ejs') %>
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
@@ -382,7 +376,11 @@
   </div>
   <!-- container-scroller -->
 
+  <!-- scripts -->
   <%- include('layouts/scripts.ejs') %>
+  <!-- Custom js for this page -->
+  <script src="assets/js/dashboard.js"></script>
+  <!-- End custom js for this page -->
 </body>
 
 </html>

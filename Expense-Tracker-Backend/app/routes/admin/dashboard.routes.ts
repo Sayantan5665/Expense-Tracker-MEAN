@@ -1,16 +1,23 @@
+import { authAdminPanel } from "app/middlewares";
 import { Request, Response, Router } from "express";
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => {
-    res.render('dashboard', {
-        title: 'Dashboard',
-        data: {
-            url: req.url,
-            user: req.user
-        },
-        messages: req.flash('message')
-    });
+router.get('/', authAdminPanel, (req: Request, res: Response) => {
+    try {
+        res.render('dashboard', {
+            title: 'Dashboard',
+            data: {
+                url: req.url,
+                user: req.user
+            },
+            messages: req.flash('message')
+        });
+    } catch (error:any) {
+        console.log("error: ", error);
+        req.flash('message', [{ msg: error.message || 'Something went wrong!', type: 'danger' }] as any);
+        res.redirect('/')
+    }
 })
 
 export default router;

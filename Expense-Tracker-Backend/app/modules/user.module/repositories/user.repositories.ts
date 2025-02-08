@@ -111,6 +111,13 @@ class userRepo {
                         body['role'] = (role._id as any).toString();
                     }
                 } 
+            } else {
+                const userRole:IRole | null = await roleRepositories.getRoleByRole('user');
+                if (!userRole) {
+                    throw new Error("User role not found!");
+                } else {
+                    body['role'] = (userRole._id as any).toString();
+                }
             }
 
             const file: any = req.file || (req?.files as any || [])[0];
@@ -148,7 +155,7 @@ class userRepo {
             return newUser;
         } catch (error) {
             const file: any = req.file || (req?.files as any || [])[0];
-            deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
+            file && deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
             throw error
         }
     }
@@ -157,7 +164,7 @@ class userRepo {
         try {
             const tokenData: IVerificationToken = await verifyToken(token)
 
-            const user: IUser | null = await this.findOneBy({email: tokenData.email});
+            const user: IUser | null = await userModel.findOne({email: tokenData.email});
 
             if (!user) {
                 throw new Error("Invalid verification token!")
@@ -225,7 +232,7 @@ class userRepo {
             return user;
         } catch (error) {
             const file: any = req.file || (req?.files as any || [])[0];
-            deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
+            file && deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
             throw error;
         }
     }

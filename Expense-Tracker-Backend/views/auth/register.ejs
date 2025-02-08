@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../layouts/head.ejs') %>
+
+<body>
+  <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+      <!-- Flash message -->
+      <% if (messages.length !=0) { %>
+      <% for(let i=0; i<messages.length; i++) { %>
+      <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
+        <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
+          <%= messages[i].msg %>
+          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%=(i * 2)%>`)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+
+      <div class="content-wrapper d-flex align-items-center auth">
+        <div class="row flex-grow">
+          <div class="col-lg-4 mx-auto">
+            <div class="auth-form-light text-left p-5">
+              <div class="brand-logo mb-3">
+                <img src="../../assets/images/logo.png">
+              </div>
+              <h4>New here?</h4>
+              <h6 class="font-weight-light">Signing up now.</h6>
+              <form class="pt-2">
+                <div class="mb-2">
+                  <input type="text" class="form-control form-control-sm" id="exampleInputName1" placeholder="Name">
+                </div>
+                <div class="mb-2">
+                  <input type="email" class="form-control form-control-sm" id="exampleInputEmail1" placeholder="Email">
+                </div>
+                <div class="mb-2">
+                  <input type="password" class="form-control form-control-sm" id="exampleInputPassword1" placeholder="Password">
+                </div>
+                <div class="mb-2">
+                  <input type="password" class="form-control form-control-sm" id="exampleInputPassword2" placeholder="Confirm Password">
+                </div>
+                <!-- <div class="mb-2">
+                  <div class="form-check">
+                    <label class="form-check-label text-muted">
+                      <input type="checkbox" class="form-check-input"> I agree to all Terms & Conditions </label>
+                  </div>
+                </div> -->
+                <div class="mt-1 d-grid gap-2">
+                  <a class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn">SIGN UP</a>
+                </div>
+                <div class="text-center mt-2 font-weight-light"> Already have an account? <a href="/login" class="text-primary">Login</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- scripts -->
+  <%- include('../layouts/scripts.ejs') %>
+  <script>
+
+  </script>
+</body>
+
+</html>
