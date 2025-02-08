@@ -11,11 +11,17 @@ import categoryRouter from "./api/category.routes";
 import dashboardRouter from "./admin/dashboard.routes";
 import userAdminRouter from "./admin/user.router";
 
+
+
+
 /* +++++ for api +++++ */
 router.use("/api/user", userRouter);
 router.use("/api/user/role", roleRouter);
 router.use("/api/color", colorRouter);
 router.use("/api/category", categoryRouter);
+
+
+
 
 /* +++++ for admin panel +++++ */
 router.use(dashboardRouter);
