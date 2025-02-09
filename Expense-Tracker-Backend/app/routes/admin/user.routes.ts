@@ -7,12 +7,12 @@ const router = Router();
 /* ------- page routes ------- */
 router.get('/login', loggedInGuard, userController.loginPage);
 // router.get('/register', loggedInGuard, userController.registrationPage);
+router.get('/forgot-password', loggedInGuard, userController.forgotPasswordPage);
 
 /* ------- admin's api routes ------- */
 router.post('/admin/user/login', loggedInGuard, userController.login);
-// router.put('/admin/user/update/:id', authAdminPanel, userController.updateUser);
-// router.get('/admin/user/fetch/all', authAdminPanel, userController.fetchAllUsers);
-// router.get('/admin/user/fetch/:id', authAdminPanel, userController.fetchUserById);
+router.post('/admin/user/forgot-password', loggedInGuard, userController.forgotPassword);
+router.get('/admin/user/confirm/forgot-password/:token', userController.confirmPasswordChange);
 router.get('/admin/user/logout', authAdminPanel, userController.logout);
 
 export default router;
