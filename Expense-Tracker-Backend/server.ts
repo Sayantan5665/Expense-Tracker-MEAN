@@ -50,12 +50,13 @@ app.use(express.static(__dirname + '/public'));
 app.use('/views', express.static(join(__dirname, '/views')));
 app.use('/uploads', express.static(join(__dirname, 'uploads')))
 
-// routers
-app.use(routes);
 
 // Swagger documentation
 const swaggerDocument = swaggerJSDoc(SwaggerOptions as any);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// routers
+app.use(routes);
 
 const port = process.env.PORT || 5503;
 app.listen(port, () => {

@@ -22,7 +22,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction): Pro
     }
 
     const decoded: ITokenUser = jwt.verify(token, process.env.JWT_SECRET!) as ITokenUser;
-    const _user = await userRepositories.findOneBy({ email: decoded.email });
+    const _user = await userRepositories.findOneBy({ email: decoded.email, isActive: true });
     if (!_user) {
       res.status(401).json({ message: 'Invalid authentication token' });
       return
@@ -67,7 +67,7 @@ export const authAdminPanel = async (req: Request, res: Response, next: NextFunc
     }
 
     const decoded: ITokenUser = jwt.verify(token, process.env.JWT_SECRET!) as ITokenUser;
-    const _user = await userRepositories.findOneBy({ email: decoded.email });
+    const _user = await userRepositories.findOneBy({ email: decoded.email, isActive: true });
     if (!_user || _user.role.role !== 'admin') {
       req.flash('message', [{ msg: `Invalid authentication token!`, type: 'danger' }] as any);
       return res.redirect('/login');
@@ -85,7 +85,7 @@ export const loggedInGuard = async (req: Request, res: Response, next: NextFunct
     const token = req.headers["x-access-token"] || req.cookies['x-access-token'] || req.body['x-access-token'] || req.query['x-access-token'];
     if (token) {
       const decoded: ITokenUser = jwt.verify(token, process.env.JWT_SECRET!) as ITokenUser;
-      const _user = await userRepositories.findOneBy({ email: decoded.email });
+      const _user = await userRepositories.findOneBy({ email: decoded.email, isActive: true });
       if (_user) {
         req.user = { ...decoded };
         req.flash('message', [{ msg: `You are already loggedin!`, type: 'warning' }] as any);

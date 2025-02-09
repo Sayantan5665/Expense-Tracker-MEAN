@@ -258,4 +258,102 @@ route.get('/account/confirmation/:token', userController.verifyEmail);
 */
 route.get('/fetch/all', auth, authorize('admin'), userController.fetchAllUsers);
 
+/**
+ * @swagger
+ * /api/user/forgot-password:
+ *   post:
+ *     summary: Forgot password
+ *     tags:
+ *       - Auth
+ *     security: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: Forgot password
+ *         description: Forgot password.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - email
+ *             - password
+ *             - confirmPassword
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
+ *             confirmPassword:
+ *               type: string
+ *     responses:
+ *        200:
+ *          description: Successfully sent a verification mail
+ *        400:
+ *          description: Bad Request
+ *        500:
+ *          description: Server Error
+*/
+route.post('/forgot-password', userController.forgotPassword);
+
+/**
+  * @swagger
+  * /api/user/confirm/forgot-password/{token}:
+  *   get:
+  *     summary: Get userConfirmation for change password
+  *     tags:
+  *       - Auth
+  *     security: []
+  *     produces:
+  *       - application/json
+  *     parameters:
+  *       - in: path
+  *         name: token
+  *         type: string
+  *     responses:
+  *       200: 
+  *         description: Password changed successfully! You can now login.
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: object
+  *               properties:
+  *                 message:
+  *                   type: string
+  *                   example: Password changed successfully! You can now login.
+  *       400:
+  *         description: Bad Request
+  *       500:
+  *         description: Server Error
+*/
+route.get('/confirm/forgot-password/:token', userController.confirmPasswordChange);
+
+/**
+  * @swagger
+  * /api/user/deactivate-account:
+  *   delete:
+  *     summary: fetch all users (Admin only)
+  *     tags:
+  *       - Auth
+  *     security: 
+  *       - token: []
+  *     produces:
+  *       - application/json
+  *     responses:
+  *       200: 
+  *         description: Fetched all users successfully.
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: object
+  *               properties:
+  *                 message:
+  *                   type: string
+  *                   example: Fetched all users successfully.
+  *       400:
+  *         description: Bad Request
+  *       500:
+  *         description: Server Error
+*/
+route.delete('/deactivate-account', auth, userController.deleteUser);
+
 export default route;

@@ -1,4 +1,4 @@
-import { IUser } from "../../../../interfaces/index";
+import { ITokenUser, IUser } from "../../../../interfaces/index";
 import userRepo from "../../repositories/user.repositories";
 import { Request, Response } from "express";
 
@@ -38,7 +38,6 @@ class userController {
             return res.redirect('/verified');
         } catch (error: any) {
             console.error("error: ", error);
-            // return res.redirect(`http://localhost:4200/login?verified=false`);
             return res.status(500).json({
                 status: 500,
                 message: error.message || "Something went wrong! Please try again.",
@@ -165,6 +164,105 @@ class userController {
             });
         } catch (error: any) {
             console.log("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
+        }
+    }
+
+    async fetchAllActiveUsers(req: Request, res: Response): Promise<any> {
+        try {
+            const users: Array<IUser> = await userRepo.fetchAllUsers({ isActive: true });
+
+            return res.status(200).json({
+                status: 200,
+                message: "Users fetched successfully!",
+                data: users,
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
+        }
+    }
+
+    async forgotPassword(req: Request, res: Response): Promise<any> {
+        try {
+            const { email, password, confirmPassword } = req.body;
+            if (!email || !password || !confirmPassword) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Please provide all required fields!",
+                });
+            }
+            if (password !== confirmPassword) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Passwords do not match!",
+                });
+            }
+            await userRepo.forgotPassword(req, { email, password });
+            return res.redirect('/verified');
+        } catch (error: any) {
+            console.error("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
+        }
+    }
+    async confirmPasswordChange(req: Request, res: Response): Promise<any> {
+        try {
+            const token = req.params.token;
+            if (!token) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Token is not provided!",
+                });
+            }
+            const user = await userRepo.confirmPasswordChange(token);
+            if (!user) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Invalid token! Please request a new password reset link.",
+                });
+            }
+            return res.status(200).json({
+                status: 200,
+                message: "Password changed successfully! Please login with your new password.",
+            });
+        } catch (error: any) {
+            console.error("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
+        }
+    }
+
+    async deleteUser(req: Request, res: Response): Promise<any> {
+        try {
+            const loggedUser: ITokenUser = req.user!;
+            const user: IUser | null = await userRepo.deteteUser(loggedUser.id);
+            if (!user) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "User not found!",
+                });
+            }
+            return res.status(200).json({
+                status: 200,
+                message: "User deleted successfully!",
+            });
+        } catch (error: any) {
+            console.error("error: ", error);
             return res.status(500).json({
                 status: 500,
                 message: error.message || "Something went wrong! Please try again.",

@@ -32,9 +32,9 @@ export const generateToken = async (user: ITokenUser | IVerificationToken): Prom
     }
 }
 
-export const verifyToken = async (token: string): Promise<ITokenUser | IVerificationToken> => {
+export const verifyToken = async (token: string): Promise<ITokenUser | IVerificationToken | null> => {
     try {
-        const user: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
+        const user: ITokenUser | IVerificationToken | null = verify(token, process.env.JWT_SECRET!) as any ;
         return user;
     } catch (error: any) {
         throw new Error(error.message || 'Invalid or expired token!');

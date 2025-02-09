@@ -57,8 +57,11 @@ class userRepo {
         }
     }
 
-    fetchAllUsers(): Promise<Array<IUser>> {
+    fetchAllUsers(matchConditions:any = {}): Promise<Array<IUser>> {
         return userModel.aggregate([
+            {
+                $match: matchConditions
+            },
             {
                 $lookup: {
                     from: "roles",
@@ -88,7 +91,7 @@ class userRepo {
 
     async addUser(req: Request, body: any): Promise<IUser> {
         try {
-            const existUser: IUser | null = await this.findOneBy({email: body.email});
+            const existUser: IUser | null = await this.findOneBy({ email: body.email });
             if (existUser) {
                 throw new Error("Email already exists!");
             }
@@ -101,18 +104,18 @@ class userRepo {
             body.password = hashedPassword;
             delete body.confirmPassword;
             if (body?.role && body.role?.length) {
-                if(body.role === 'admin') {
+                if (body.role === 'admin') {
                     throw new Error("Cannot rergister as admin!");
                 } else {
-                    const role:IRole | null = await roleRepositories.getRoleByRole(body.role);
+                    const role: IRole | null = await roleRepositories.getRoleByRole(body.role);
                     if (!role) {
                         throw new Error("Role not found!");
                     } else {
                         body['role'] = (role._id as any).toString();
                     }
-                } 
+                }
             } else {
-                const userRole:IRole | null = await roleRepositories.getRoleByRole('user');
+                const userRole: IRole | null = await roleRepositories.getRoleByRole('user');
                 if (!userRole) {
                     throw new Error("User role not found!");
                 } else {
@@ -144,6 +147,7 @@ class userRepo {
                 <h1>Hello, ${body.name}</h1>
                 <p>Please verify your account by clicking the link below:</p>
                 <a href="${verification_mail}" style="color: blue;">${verification_mail}</a>
+                <br>
                 <p>Thank you!</p>
             `
             };
@@ -162,9 +166,12 @@ class userRepo {
 
     async emailVerify(token: string) {
         try {
-            const tokenData: IVerificationToken = await verifyToken(token)
+            const tokenData: IVerificationToken | null = await verifyToken(token);
+            if (!tokenData) {
+                throw new Error("Invalid verification token!")
+            }
 
-            const user: IUser | null = await userModel.findOne({email: tokenData.email});
+            const user: IUser | null = await this.findOneBy({ email: tokenData.email });
 
             if (!user) {
                 throw new Error("Invalid verification token!")
@@ -178,10 +185,10 @@ class userRepo {
     async login(body: any): Promise<any> {
         try {
             const { email, password } = body;
-            const user: IUser | null = await this.findOneBy({email: email});
+            const user: IUser | null = await this.findOneBy({ email: email, isActive: true });
 
             if (!user || !user.isVarified || !(await comparePassword(password, user.password))) {
-                throw new Error(!user ? "Invalid email or password!" :
+                throw new Error(!user ? "User not found!" :
                     (!user.isVarified ? "Your account is not verified. Please check your email for the verification link." :
                         "Invalid email or password!"))
             }
@@ -194,7 +201,7 @@ class userRepo {
                 role: user.role,
                 timeZone: user.timeZone,
             });
-            
+
             return { user, token }
         } catch (error) {
             throw error;
@@ -203,7 +210,7 @@ class userRepo {
 
     async editUser(req: Request, userId: string, body: any): Promise<IUser | null> {
         try {
-            const existingUser = await userModel.findById(userId).select('-isActive -isVarified');
+            const existingUser = await this.findOneBy({ _id: new Types.ObjectId(userId), isActive: true });
 
             if (!existingUser) {
                 throw new Error("User not found!");
@@ -242,9 +249,12 @@ class userRepo {
             const userId = new Types.ObjectId(id);
 
             const user: Array<IUser> = await userModel.aggregate([
-                { $match: {
-                    _id: userId
-                } },
+                {
+                    $match: {
+                        _id: userId, 
+                        isActive: true
+                    }
+                },
                 {
                     $lookup: {
                         from: "roles",
@@ -262,7 +272,7 @@ class userRepo {
                         image: 1,
                         name: 1,
                         email: 1,
-                        role:  "$roleDetails.roleDisplayName",
+                        role: "$roleDetails.roleDisplayName",
                         timeZone: 1,
                         createdAt: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }
                     }
@@ -271,6 +281,57 @@ class userRepo {
             return user.length > 0 ? user[0] : null;
         } catch (error: any) {
             throw new Error(error.message || 'Something went wrong while finding user!');
+        }
+    }
+
+    async forgotPassword(req: Request, body: { email: string, password: string }): Promise<void> {
+        try {
+            const verificationToken: string = await generateToken(body);
+
+            let forgotPasswordMail: string = `http://${req.headers.host}/api/user/confirm/forgot-password/${verificationToken}`;
+            const mailOptions: IMailOptions = {
+                from: 'no-reply@sayantan.com',
+                to: body.email,
+                subject: 'Account Verification',
+                html: `
+                <h1>Hello,</h1>
+                <p>We have recieved a change password request. Please click the link below to confirm that it's You.</p>
+                <a href="${forgotPasswordMail}" style="color: blue;">${forgotPasswordMail}</a>
+                <br>
+                <p>This link will expire in 24 hours. If you didn't request a password change, please ignore this email.</p>
+                <br>
+                <p>Thank you!</p>
+            `};
+
+            await sendEmail(mailOptions);
+        } catch (error: any) {
+            console.log("error: ", error);
+            throw new Error(error.message || 'Something went wrong!');
+        }
+    }
+    async confirmPasswordChange(token: string): Promise<IUser | null> {
+        try {
+            const tokenData: IVerificationToken | null = await verifyToken(token);
+            if (!tokenData) {
+                throw new Error("Invalid verification token!");
+            }
+            if (!tokenData.password) {
+                throw new Error("Password is required!");
+            }
+            const user: IUser | null = await userModel.findOneAndUpdate({ email: tokenData.email, isActive: true }, { password: await hashPassword(tokenData.password) }, { new: true }).select('-isActive -isVarified -updated_at -password');
+            return user;
+        } catch (error: any) {
+            console.log("error: ", error);
+            throw new Error(error.message || 'Something went wrong while resetting password!');
+        }
+    }
+
+    async deteteUser(userId: string): Promise<IUser | null> {
+        try {
+            const user: IUser | null = await userModel.findOneAndUpdate({ _id: userId, isActive: true }, { isActive: false }, { new: true }).select('-isActive -isVarified -updated_at -password').populate('role');
+            return user;
+        } catch (error: any) {
+            throw new Error(error.message || 'Something went wrong while fetching all users!');
         }
     }
 }

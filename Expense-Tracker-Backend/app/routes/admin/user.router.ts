@@ -13,5 +13,6 @@ router.post('/admin/user/login', loggedInGuard, userController.login);
 // router.put('/admin/user/update/:id', authAdminPanel, userController.updateUser);
 // router.get('/admin/user/fetch/all', authAdminPanel, userController.fetchAllUsers);
 // router.get('/admin/user/fetch/:id', authAdminPanel, userController.fetchUserById);
+router.get('/admin/user/logout', authAdminPanel, userController.logout);
 
 export default router;

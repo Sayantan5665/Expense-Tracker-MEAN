@@ -37,7 +37,21 @@ class UserAdminController {
     //     }
     // }
 
-    async forgotPasswordPage(req: Request, res: Response): Promise<any> { }
+    async forgotPasswordPage(req: Request, res: Response): Promise<any> {
+        try {
+            res.render('auth/forgot-password', {
+                title: 'Forgot Password',
+                data: {
+                    url: req.url,
+                    user: {}
+                },
+                messages: req.flash('message')
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            res.redirect('/error');
+        }
+    }
 
 
     async login(req: Request, res: Response): Promise<any> {

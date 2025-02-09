@@ -36,4 +36,5 @@ export interface IMailOptions {
 
 export interface IVerificationToken {
     email: string;
+    password?: string;
 }

@@ -6,7 +6,7 @@ import { IMailOptions, IUser } from '../interfaces/index';
 import { sendEmail } from './index';
 
 export const sendDailyExpenseReport = async (userId: string) => {
-    const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId) });
+    const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId), isActive: true });
     if (!user) return;
 
     const today = new Date();
@@ -35,7 +35,7 @@ export const sendDailyExpenseReport = async (userId: string) => {
 };
 
 export const sendMonthlyExpenseReport = async (userId:string) => {
-    const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId) });
+    const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId), isActive: true });
     if (!user) return;
 
     const firstDayOfMonth = new Date();
