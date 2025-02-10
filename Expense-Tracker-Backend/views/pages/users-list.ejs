@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../layouts/head.ejs') %>
+
+<body>
+  <div class="container-scroller">
+    <!-- navbar -->
+    <%- include('../layouts/navbar.ejs') %>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- Flash message -->
+      <% if (messages.length !=0) { %>
+      <% for(let i=0; i<messages.length; i++) { %>
+      <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
+        <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
+          <%= messages[i].msg %>
+          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%=(i * 2)%>`)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <% } %>
+      <% } %>
+
+      <!-- sidebar -->
+      <%- include('../layouts/sidebar.ejs') %>
+
+      <!-- main-panel starts -->
+      <div class="content-wrapper" style="padding: 2.75rem 2.25rem 0;">
+        <div class="page-header">
+          <h3 class="page-title">
+            <span class="page-title-icon bg-gradient-warning text-white me-2">
+              <i class="mdi mdi-account-multiple"></i>
+            </span> All Users
+          </h3>
+          <!-- <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item active"><a href="/users-list">Users</a></li>
+            </ol>
+          </nav> -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card users-list-card">
+                <div class="card-body">
+                  <!-- <h4 class="card-title">All Users</h4>-->
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th> User </th>
+                        <th> Name </th>
+                        <th> Status </th>
+                        <th> Member Since </th>
+                        <th> Action </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% for(let user of data?.usersList || []) { %>
+                      <tr>
+                        <td class="py-1">
+                          <img src="<%= user?.image || '../../uploads/blank-profile-pic.jpg'%>" alt="image">
+                        </td>
+                        <td> <%= user?.name || '_' %> </td>
+                        <td><%= user?.isActive ? 'Active' : 'Deactive' %></td>
+                        <td> <%= user?.createdAt?.length ?  new Date(user.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", }) : 'Unknown' %> </td>
+                        <td> <button class="btn btn-sm text-light <%= user?.isActive ? 'bg-gradient-danger' : 'bg-gradient-success' %>" style="width: 100px;"><%= user?.isActive ? 'Deactivate' : 'Active' %></button> </td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <!-- main-panel ends -->
+
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- scripts -->
+  <%- include('../layouts/scripts.ejs') %>
+</body>
+
+</html>

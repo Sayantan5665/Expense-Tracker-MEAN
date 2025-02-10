@@ -1,6 +1,8 @@
 import { ITokenUser, IUser } from "app/interfaces";
 import userRepo from "../../repositories/user.repositories";
 import { Request, Response } from "express";
+import { Types } from "mongoose";
+import { generateToken } from "app/utils";
 
 class UserAdminController {
     async loginPage(req: Request, res: Response): Promise<any> {
@@ -70,10 +72,31 @@ class UserAdminController {
         }
     }
 
+    async fetchAllUsers(req: Request, res: Response): Promise<any> {
+        try {
+            const users: Array<IUser> = await userRepo.fetchAllUsers();
+            // req.flash('message', [{ msg: "Users fetched successfully", type: 'success' }] as any);
+            res.render('pages/users-list', {
+                title: 'Users List',
+                data: {
+                    url: req.url,
+                    user: req.user,
+                    totalUsers: users.length,
+                    usersList: users
+                },
+                messages: req.flash('message')
+            })
+        } catch (error: any) {
+            console.log("error: ", error);
+            req.flash('message', [{ msg: error.message || "Something went wrong! Please try again.", type: 'danger' }] as any);
+            return res.redirect('/login');
+        }
+    }
 
 
 
-    
+
+
 
 
     async login(req: Request, res: Response): Promise<any> {
@@ -109,25 +132,6 @@ class UserAdminController {
         res.redirect('/login');
     }
 
-    async getUserProfile(req: Request, res: Response): Promise<any> {
-        try {
-            const _user = req.user as IUser;
-            const userId: string = _user.id || '';
-            const user: IUser | null = await userRepo.fetchProfile(userId);
-
-            if (!user) {
-                req.flash('message', [{ msg: "User not found!", type: 'danger' }] as any);
-                return res.redirect('/login');
-            }
-
-            req.flash('message', [{ msg: "User profile fetched successfully", type: 'danger' }] as any);
-            return res.redirect('/login');
-        } catch (error: any) {
-            console.log("error: ", error);
-            req.flash('message', [{ msg: error.message || "Something went wrong! Please try again.", type: 'success' }] as any);
-            return res.redirect('/login');
-        }
-    }
 
     async updateUserProfile(req: Request, res: Response): Promise<any> {
         try {
@@ -141,27 +145,33 @@ class UserAdminController {
             const user: IUser | null = await userRepo.editUser(req, userId, body);
             if (!user) {
                 req.flash('message', [{ msg: "User not found!", type: 'danger' }] as any);
-                return res.redirect('/login');
+                return res.redirect('/');
             }
 
-            req.flash('message', [{ msg: "Profile updated successfully", type: 'success' }] as any);
-            return res.redirect('/login');
-        } catch (error: any) {
-            console.log("error: ", error);
-            req.flash('message', [{ msg: error.message || "Something went wrong! Please try again.", type: 'danger' }] as any);
-            return res.redirect('/login');
-        }
-    }
+            const _user = {
+                id: user._id.toString(),
+                name: user.name,
+                image: user.image,
+                email: user.email,
+                role: user.role,
+                timeZone: user.timeZone,
+                createdAt: user.createdAt,
+            };
+            req.user = _user;
+            /* need to do it because token has previous data and in admin panel we are showing 
+            user data from req.user, which is getting data from token */
+            res.cookie('x-access-token', await generateToken(_user), {
+                expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production'
+            });
 
-    async fetchAllUsers(req: Request, res: Response): Promise<any> {
-        try {
-            const users: Array<IUser> = await userRepo.fetchAllUsers();
-            req.flash('message', [{ msg: "Users fetched successfully", type: 'success' }] as any);
-            return res.redirect('/login');
+            req.flash('message', [{ msg: "Profile updated successfully", type: 'success' }] as any);
+            return res.redirect('/profile');
         } catch (error: any) {
             console.log("error: ", error);
             req.flash('message', [{ msg: error.message || "Something went wrong! Please try again.", type: 'danger' }] as any);
-            return res.redirect('/login');
+            return res.redirect('/');
         }
     }
 
@@ -227,7 +237,7 @@ class UserAdminController {
                 req.flash('message', [{ msg: "User not found!", type: 'danger' }] as any);
                 return res.redirect('/');
             }
-            
+
             req.flash('message', [{ msg: "Account deleted successfully!", type: 'danger' }] as any);
             return res.redirect('/login');
         } catch (error: any) {

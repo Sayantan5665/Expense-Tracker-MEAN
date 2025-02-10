@@ -82,6 +82,7 @@ class userRepo {
                     password: 1,
                     role: "$roleDetails.roleDisplayName",
                     isVarified: 1,
+                    isActive: 1,
                     timeZone: 1,
                     createdAt: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
                 }
@@ -236,7 +237,7 @@ class userRepo {
 
             body.role && delete body.role;
 
-            const user: IUser | null = await userModel.findByIdAndUpdate(userId, body, { new: true }).select('-isActive -isVarified -updated_at -password').populate('role', 'roleDisplayName');
+            const user: IUser | null = await userModel.findByIdAndUpdate(userId, body, { new: true }).select('-isActive -isVarified -updatedAt -password').populate('role', '-_id role roleDisplayName rolegroup description');
             return user;
         } catch (error) {
             const file: any = req.file || (req?.files as any || [])[0];

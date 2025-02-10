@@ -13,14 +13,59 @@
 <script src="assets/js/jquery.cookie.js"></script>
 <!-- endinject -->
 
-<!-- for connect-flash message -->
+
 <script>
-    function vanish(key) {
-      $(key).fadeOut('fast');
+  /* for connect-flash message */
+  function vanish(key) {
+    $(key).fadeOut('fast');
+  }
+  $(document).ready(function() {
+    setTimeout(function() {
+      $('[id^=flash-alert-]').fadeOut('fast');
+    }, 3000);
+  })
+
+  /* for image preview when choosing image [page: profile]*/
+  function previewImage(inputElementId, previewElementId) {
+    const file = document.getElementById(inputElementId).files[0];
+    const preview = document.getElementById(previewElementId);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = function() {
+        preview.src = reader.result;
+      };
+      reader.readAsDataURL(file);
     }
-    $(document).ready(function() {
-      setTimeout(function() {
-        $('[id^=flash-alert-]').fadeOut('fast');
-      }, 3000);
+  }
+
+  /* make the date in format "Feb 10, 2025" */
+  function formatDate(date) {
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     })
+  }
+
+
+
+
+  /*
+  This function initializes the date picker for the element with the id 'datePicker'.
+  It uses the Bootstrap Datepicker plugin to provide a user-friendly date selection interface.
+
+  Parameters:
+  - format: A string representing the date format. The default value is 'yyyy-mm-dd'.
+  - todayHighlight: A boolean indicating whether to highlight the current date. The default value is true.
+  - autoclose: A boolean indicating whether to automatically close the date picker after selecting a date. The default value is true.
+
+  Return:
+  - None. The function initializes the date picker and applies the specified options.
+  */
+  $('#datePicker').datepicker({
+    format: 'yyyy-mm-dd',
+    todayHighlight: true,
+    autoclose: true,
+  });
 </script>

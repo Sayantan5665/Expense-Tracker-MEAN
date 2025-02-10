@@ -27,49 +27,60 @@
       <%- include('../layouts/sidebar.ejs') %>
 
       <!-- main-panel starts -->
-      <div class="col-12 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">Horizontal Form</h4>
-            <p class="card-description"> Horizontal form layout </p>
-            <form class="forms-sample">
-              <div class="form-group row">
-                <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Email</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Username">
-                </div>
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title">
+            <span class="page-title-icon bg-gradient-success text-white me-2">
+              <i class="mdi mdi-account"></i>
+            </span> Profile
+          </h3>
+          <!-- <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item active"><a href="/profile">Profile</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Form elements</li>
+            </ol>
+          </nav> -->
+        </div>
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Profile Details</h4>
+                <!-- <p class="card-description"> Edit your profile details here. </p> -->
+                <form class="forms-sample" action="/admin/user/update/profile/<%= data?.user.id %>" method="post" enctype="multipart/form-data">
+                  <div class="position-relative profile-image-wrapper">
+                    <input type="file" class="form-control d-none" id="user-image" accept="image/*" onchange="previewImage('user-image', 'image-preview')" name="image" value="<%= data?.user?.image %>">
+                    <img id="image-preview" class="rounded-circle w-100 h-100 object-fit-cover mb-3" src="<%= data?.user?.image || '../../uploads/blank-profile-pic.jpg' %>" alt="Profile Picture" onclick="document.getElementById('user-image').click();">
+                    <span class="edit-btn mdi mdi-pencil bg-gradient-primary rounded-circle fs-5 d-flex justify-content-center align-items-center" onclick="document.getElementById('user-image').click();"></span>
+                  </div>
+                  <div class="mb-3 row">
+                    <label for="exampleInputEmail2" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="exampleInputName" placeholder="Name" name="name" value="<%= data?.user?.name || '' %>">
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label for="exampleInputEmail2" class="col-sm-2 col-form-label">Email</label>
+                    <div class="col-sm-10">
+                      <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email" name="email" value="<%= data?.user?.email || '' %>">
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label for="exampleInputPassword2" class="col-sm-2 col-form-label">Role</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="exampleInputRole" placeholder="Role" aria-label="Disabled input example"  value="<%= data?.user?.role?.roleDisplayName || '' %>" disabled readonly>
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label for="exampleInputConfirmPassword2" class="col-sm-2 col-form-label">Member Since</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="exampleInputSimce" placeholder="Member Since" aria-label="Disabled input example" value="<%= data?.user?.createdAt?.length ?  new Date(data.user.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", }) : 'Unknown' %>" disabled readonly>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-gradient-primary me-2">Save</button>
+                </form>
               </div>
-              <div class="form-group row">
-                <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Email</label>
-                <div class="col-sm-9">
-                  <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="exampleInputMobile" class="col-sm-3 col-form-label">Mobile</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="exampleInputMobile" placeholder="Mobile number">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Password</label>
-                <div class="col-sm-9">
-                  <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Re Password</label>
-                <div class="col-sm-9">
-                  <input type="password" class="form-control" id="exampleInputConfirmPassword2" placeholder="Password">
-                </div>
-              </div>
-              <div class="form-check form-check-flat form-check-primary">
-                <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input"> Remember me <i class="input-helper"></i></label>
-              </div>
-              <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-              <button class="btn btn-light">Cancel</button>
-            </form>
+            </div>
           </div>
         </div>
       </div>
