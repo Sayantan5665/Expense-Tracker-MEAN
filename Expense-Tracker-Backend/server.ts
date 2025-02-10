@@ -1,5 +1,5 @@
 import "tsconfig-paths/register";
-import express, { Express } from "express";
+import express, { Express, Request, Response } from "express";
 import { connectDB, agenda } from "./app/configs/index";
 import { json, urlencoded } from "body-parser";
 import cors from "cors";
@@ -12,7 +12,7 @@ import swaggerJSDoc from "swagger-jsdoc";
 import SwaggerOptions from './swagger.json';
 import flash from 'connect-flash';
 import session from 'express-session';
-
+import createMemoryStore from 'memorystore';
 
 // Initialize Express app
 const app: Express = express();
@@ -26,15 +26,35 @@ connectDB();
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
+
 // configuration for connect-flash
+const MemoryStore = createMemoryStore(session);
 app.use(
     session({
-        secret: 'mysecretkey',
-        saveUninitialized: true,
-        resave: true,
+        secret: process.env.SESSION_KEY || 'MyVerySecretKey.IWontLetYouKnow.',  // Used to sign session ID cookie
+        resave: false,             // Avoid resaving session if unmodified
+        saveUninitialized: true,   // Save new sessions unmodified
+        store: new MemoryStore({   // Use memoryStore to store session data
+            checkPeriod: 86400000  // prune expired entries every 24h
+        }) as any,
+        cookie: { secure: false, maxAge: 86400000 }  // Set true for HTTPS
     })
 );
 app.use(flash());
+/* this code for checking session START*/
+// declare module 'express-session' {
+//     interface SessionData {
+//         views?: number;
+//     }
+// }
+// app.get('/', (req: Request, res: Response) => {
+//     if (!req.session.views) req.session.views = 1;
+//     else req.session.views++;
+
+//     res.send(`You have visited this page ${req.session.views} times`);
+// });
+/* this code for checking session END*/
+
 
 // Middleware to parse cookies
 app.use(cookieParser());
