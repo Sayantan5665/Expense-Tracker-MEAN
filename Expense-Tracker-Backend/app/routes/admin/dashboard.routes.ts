@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/', authAdminPanel, (req: Request, res: Response) => {
     try {
-        res.render('dashboard', {
+        res.render('pages/dashboard', {
             title: 'Dashboard',
             data: {
                 url: req.url,
