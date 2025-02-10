@@ -200,6 +200,7 @@ class userRepo {
                 email: user.email,
                 role: user.role,
                 timeZone: user.timeZone,
+                createdAt: user.createdAt,
             });
 
             return { user, token }

@@ -8,6 +8,7 @@ const router = Router();
 router.get('/login', loggedInGuard, userController.loginPage);
 // router.get('/register', loggedInGuard, userController.registrationPage);
 router.get('/forgot-password', loggedInGuard, userController.forgotPasswordPage);
+router.get('/profile', authAdminPanel, userController.profilePage);
 
 /* ------- admin's api routes ------- */
 router.post('/admin/user/login', loggedInGuard, userController.login);

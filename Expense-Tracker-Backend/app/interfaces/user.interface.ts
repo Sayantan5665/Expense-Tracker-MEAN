@@ -24,6 +24,7 @@ export interface ITokenUser {
     email: string;
     role: IRole;
     isVarified?: boolean;
+    createdAt?: string;
     timeZone?: string;
 }
 

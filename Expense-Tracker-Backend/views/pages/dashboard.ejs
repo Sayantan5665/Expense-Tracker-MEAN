@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%- include('layouts/head.ejs') %>
+<%- include('../layouts/head.ejs') %>
 
 <body>
   <div class="container-scroller">
     <!-- navbar -->
-    <%- include('layouts/navbar.ejs') %>
+    <%- include('../layouts/navbar.ejs') %>
 
     <div class="container-fluid page-body-wrapper">
       <!-- Flash message -->
@@ -24,7 +24,7 @@
       <% } %>
 
       <!-- sidebar -->
-      <%- include('layouts/sidebar.ejs') %>
+      <%- include('../layouts/sidebar.ejs') %>
 
       <!-- main-panel starts -->
       <div class="main-panel">
@@ -366,7 +366,7 @@
         <!-- content-wrapper ends -->
 
         <!-- partial:partials/_footer.html -->
-        <%- include('layouts/footer.ejs') %>
+        <%- include('../layouts/footer.ejs') %>
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
@@ -377,7 +377,7 @@
   <!-- container-scroller -->
 
   <!-- scripts -->
-  <%- include('layouts/scripts.ejs') %>
+  <%- include('../layouts/scripts.ejs') %>
   <!-- Custom js for this page -->
   <script src="assets/js/dashboard.js"></script>
   <!-- End custom js for this page -->
