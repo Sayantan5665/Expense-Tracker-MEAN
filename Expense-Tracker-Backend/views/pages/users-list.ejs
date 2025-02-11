@@ -41,38 +41,45 @@
           </nav> -->
         </div>
         <div class="row">
-            <div class="col-lg-12 grid-margin stretch-card">
-              <div class="card users-list-card">
-                <div class="card-body">
-                  <!-- <h4 class="card-title">All Users</h4>-->
-                  <table class="table table-striped">
-                    <thead>
-                      <tr>
-                        <th> User </th>
-                        <th> Name </th>
-                        <th> Status </th>
-                        <th> Member Since </th>
-                        <th> Action </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% for(let user of data?.usersList || []) { %>
-                      <tr>
-                        <td class="py-1">
-                          <img src="<%= user?.image || '../../uploads/blank-profile-pic.jpg'%>" alt="image">
-                        </td>
-                        <td> <%= user?.name || '_' %> </td>
-                        <td><%= user?.isActive ? 'Active' : 'Deactive' %></td>
-                        <td> <%= user?.createdAt?.length ?  new Date(user.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", }) : 'Unknown' %> </td>
-                        <td> <button class="btn btn-sm text-light <%= user?.isActive ? 'bg-gradient-danger' : 'bg-gradient-success' %>" style="width: 100px;"><%= user?.isActive ? 'Deactivate' : 'Active' %></button> </td>
-                      </tr>
-                      <% } %>
-                    </tbody>
-                  </table>
-                </div>
+          <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card users-list-card">
+              <div class="card-body">
+                <!-- <h4 class="card-title">All Users</h4>-->
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th> User </th>
+                      <th> Name </th>
+                      <th> Email </th>
+                      <th> Status </th>
+                      <th> Member Since </th>
+                      <th> Action </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(let user of data?.usersList || []) { %>
+                    <tr>
+                      <td class="py-1">
+                        <img src="<%= user?.image || '../../uploads/blank-profile-pic.jpg'%>" alt="image">
+                      </td>
+                      <td> <%= user?.name || '_' %> </td>
+                      <td> <%= user?.email || '_' %> </td>
+                      <td><%= user?.isActive ? 'Active' : 'Deactive' %></td>
+                      <td> <%= user?.createdAt?.length ?  new Date(user.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", }) : 'Unknown' %> </td>
+                      <td>
+                        <a class="btn btn-sm text-light <%= user?.isActive ? 'bg-gradient-danger' : 'bg-gradient-success' %>" style="width: 100px;"
+                          href="/admin/change/user/status/<%= user?._id.toString() %>">
+                          <%= user?.isActive ? 'Deactive' : 'Active' %>
+                        </a>
+                      </td>
+                    </tr>
+                    <% } %>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
+        </div>
       </div>
       <!-- main-panel ends -->
 

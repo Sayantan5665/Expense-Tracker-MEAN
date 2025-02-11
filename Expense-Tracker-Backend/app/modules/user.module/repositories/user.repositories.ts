@@ -195,7 +195,7 @@ class userRepo {
             }
 
             const token: string = await generateToken({
-                id: user._id,
+                id: user._id?.toString(),
                 name: user.name,
                 image: user.image,
                 email: user.email,
@@ -331,6 +331,16 @@ class userRepo {
     async deteteUser(userId: string): Promise<IUser | null> {
         try {
             const user: IUser | null = await userModel.findOneAndUpdate({ _id: userId, isActive: true }, { isActive: false }, { new: true }).select('-isActive -isVarified -updated_at -password').populate('role');
+            return user;
+        } catch (error: any) {
+            throw new Error(error.message || 'Something went wrong while fetching all users!');
+        }
+    }
+
+    /*** For admin panel only */
+    async activeDeactiveUser(userId: string, changedStatus:boolean): Promise<IUser | null> {
+        try {
+            const user: IUser | null = await userModel.findOneAndUpdate({ _id: userId }, { isActive: changedStatus  }, { new: true }).select('-isActive -isVarified -updated_at -password').populate('role');
             return user;
         } catch (error: any) {
             throw new Error(error.message || 'Something went wrong while fetching all users!');

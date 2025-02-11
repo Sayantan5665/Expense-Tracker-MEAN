@@ -72,7 +72,7 @@ class UserAdminController {
         }
     }
 
-    async fetchAllUsers(req: Request, res: Response): Promise<any> {
+    async usrListPage(req: Request, res: Response): Promise<any> {
         try {
             const users: Array<IUser> = await userRepo.fetchAllUsers();
             // req.flash('message', [{ msg: "Users fetched successfully", type: 'success' }] as any);
@@ -229,17 +229,24 @@ class UserAdminController {
         }
     }
 
-    async deleteUser(req: Request, res: Response): Promise<any> {
+    async activeDeactiveUser(req: Request, res: Response): Promise<any> {
         try {
-            const loggedUser: ITokenUser = req.user!;
-            const user: IUser | null = await userRepo.deteteUser(loggedUser.id);
+            const userId:string = req.params.userId;
+
+            const user: IUser | null = await userRepo.findOneBy({_id: new Types.ObjectId(userId)});
             if (!user) {
                 req.flash('message', [{ msg: "User not found!", type: 'danger' }] as any);
-                return res.redirect('/');
+                return res.redirect('/users-list');
             }
 
-            req.flash('message', [{ msg: "Account deleted successfully!", type: 'danger' }] as any);
-            return res.redirect('/login');
+            const userWithChangedStatus: IUser | null = await userRepo.activeDeactiveUser(userId, !user.isActive);
+            if (!userWithChangedStatus) {
+                req.flash('message', [{ msg: "Failed to update user status!", type: 'danger' }] as any);
+                return res.redirect('/users-list');
+            }
+
+            req.flash('message', [{ msg: `Account ${userWithChangedStatus.isActive ? 'activated' : 'deactivated'} successfully!`, type: 'success' }] as any);
+            return res.redirect('/users-list');
         } catch (error: any) {
             console.error("error: ", error);
             req.flash('message', [{ msg: error.message || "Something went wrong! Please try again.", type: 'danger' }] as any);
