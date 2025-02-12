@@ -10,6 +10,8 @@ import categoryRouter from "./api/category.routes";
 /* +++++ admin panel's imports +++++ */
 import dashboardRouter from "./admin/dashboard.routes";
 import userAdminRouter from "./admin/user.routes";
+import aboutAdminRouter from "./admin/about.routes";
+import contactAdminRouter from "./admin/contact-us.routes";
 
 
 
@@ -26,6 +28,11 @@ router.use("/api/category", categoryRouter);
 /* +++++ for admin panel +++++ */
 router.use(dashboardRouter);
 router.use(userAdminRouter);
+router.use(aboutAdminRouter);
+router.use(contactAdminRouter);
+
+
+
 
 router.use('/verified', async (req: Request, res: Response) => {
     try {
