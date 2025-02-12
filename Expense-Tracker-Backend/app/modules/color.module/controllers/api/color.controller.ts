@@ -9,16 +9,16 @@ class colorController {
         try {
             const body: IColor = req.body;
 
-            const colorWithName: IColor | null = await colorRepo.getColorBy({name: body.name});
-            const colorWithhexCode: IColor | null = await colorRepo.getColorBy({hexCode: body.hexCode});
-            if(colorWithName) {
+            const colorWithName: IColor | null = await colorRepo.getColorBy({ name: body.name });
+            const colorWithhexCode: IColor | null = await colorRepo.getColorBy({ hexCode: body.hexCode });
+            if (colorWithName) {
                 throw new Error(`Color with name '${body.name}' already exists`);
             }
-            if(colorWithhexCode) {
+            if (colorWithhexCode) {
                 throw new Error(`Color with hex code '${body.hexCode}' already exists`);
             }
 
-            if(!isValidHexColor(body.hexCode)) {
+            if (!isValidHexColor(body.hexCode)) {
                 throw new Error("Invalid hex color code");
             }
 
@@ -39,111 +39,115 @@ class colorController {
         }
     }
 
-        async getAllColors(req: Request, res: Response): Promise<any> {
-            try {
-                const colors: IColor[] = await colorRepo.fetchAllColors();
+    async getAllColors(req: Request, res: Response): Promise<any> {
+        try {
+            const { colorName, hexCode } = req.query;
+            const matchCond: any = {};
+            if (colorName && colorName.length) matchCond['name'] = colorName;
+            if (hexCode && hexCode.length) matchCond['hexCode'] = hexCode;
+            const colors: IColor[] = await colorRepo.fetchAllColors(matchCond);
 
-                if (!colors.length) {
-                    return res.status(404).json({
-                        status: 404,
-                        message: "No colours found!",
-                    });
-                }
-
-                return res.status(200).json({
-                    status: 200,
-                    message: "Colours fetched successfully!",
-                    data: colors
+            if (!colors.length) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "No colours found!",
                 });
-            } catch (error: any) {
-                console.log("error: ", error);
-                return res.status(500).json({
-                    status: 500,
-                    message: error.message || "Something went wrong! Please try again.",
-                    error: error,
-                })
             }
+
+            return res.status(200).json({
+                status: 200,
+                message: "Colours fetched successfully!",
+                data: colors
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
         }
+    }
 
-        async getColorByName(req: Request, res: Response): Promise<any> {
-            try {
-                const colorName: string = req.params.name || "";
-                const color: IColor | null = await colorRepo.getColorBy({ name: colorName });
+    async getColorByName(req: Request, res: Response): Promise<any> {
+        try {
+            const colorName: string = req.params.name || "";
+            const color: IColor | null = await colorRepo.getColorBy({ name: colorName });
 
-                if (!color) {
-                    return res.status(404).json({
-                        status: 404,
-                        message: "Colour not found!",
-                    });
-                }
-
-                return res.status(200).json({
-                    status: 200,
-                    message: "Colour fetched successfully!",
-                    data: color
+            if (!color) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "Colour not found!",
                 });
-            } catch (error: any) {
-                console.log("error: ", error);
-                return res.status(500).json({
-                    status: 500,
-                    message: error.message || "Something went wrong! Please try again.",
-                    error: error,
-                })
             }
+
+            return res.status(200).json({
+                status: 200,
+                message: "Colour fetched successfully!",
+                data: color
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
         }
+    }
 
-        async getColorById(req: Request, res: Response): Promise<any> {
-            try {
-                const colorId: string = req.params.id || "";
-                const color: IColor | null = await colorRepo.getColorBy({ _id: colorId });
+    async getColorById(req: Request, res: Response): Promise<any> {
+        try {
+            const colorId: string = req.params.id || "";
+            const color: IColor | null = await colorRepo.getColorBy({ _id: colorId });
 
-                if (!color) {
-                    return res.status(404).json({
-                        status: 404,
-                        message: "Colour not found!",
-                    });
-                }
-
-                return res.status(200).json({
-                    status: 200,
-                    message: "Colour fetched successfully!",
-                    data: color
+            if (!color) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "Colour not found!",
                 });
-            } catch (error: any) {
-                console.log("error: ", error);
-                return res.status(500).json({
-                    status: 500,
-                    message: error.message || "Something went wrong! Please try again.",
-                    error: error,
-                })
             }
+
+            return res.status(200).json({
+                status: 200,
+                message: "Colour fetched successfully!",
+                data: color
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
         }
+    }
 
-        /*** Admin only */
-        async deleteColor(req: Request, res: Response): Promise<any> {
-            try {
-                const ColorId: string = req.params.id || "";
-                const deletedColor = await colorRepo.deleteColor(ColorId);
-                if (!deletedColor) {
-                    return res.status(404).json({
-                        status: 404,
-                        message: "Colour not found!",
-                    });
-                }
-
-                return res.status(200).json({
-                    status: 200,
-                    message: "Colour deleted successfully!",
+    /*** Admin only */
+    async deleteColor(req: Request, res: Response): Promise<any> {
+        try {
+            const ColorId: string = req.params.id || "";
+            const deletedColor = await colorRepo.deleteColor(ColorId);
+            if (!deletedColor) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "Colour not found!",
                 });
-            } catch (error: any) {
-                console.log("error: ", error);
-                return res.status(500).json({
-                    status: 500,
-                    message: error.message || "Something went wrong! Please try again.",
-                    error: error,
-                })
             }
+
+            return res.status(200).json({
+                status: 200,
+                message: "Colour deleted successfully!",
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            })
         }
+    }
 
 }
 

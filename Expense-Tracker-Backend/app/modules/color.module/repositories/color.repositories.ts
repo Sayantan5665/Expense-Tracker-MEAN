@@ -15,9 +15,9 @@ class colorRepository {
         }
     }
 
-    async fetchAllColors(): Promise<Array<IColor>> {
+    async fetchAllColors(matchCond:Object = {}): Promise<Array<IColor>> {
         try {
-            const colors: Array<IColor> = await colorModel.find();
+            const colors: Array<IColor> = await colorModel.find(matchCond);
             return colors;
         } catch (error) {
             throw error;

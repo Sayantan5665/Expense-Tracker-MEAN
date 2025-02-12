@@ -12,6 +12,7 @@ import dashboardRouter from "./admin/dashboard.routes";
 import userAdminRouter from "./admin/user.routes";
 import aboutAdminRouter from "./admin/about.routes";
 import contactAdminRouter from "./admin/contact-us.routes";
+import colorAdminRouter from "./admin/color.routes";
 
 
 
@@ -30,6 +31,7 @@ router.use(dashboardRouter);
 router.use(userAdminRouter);
 router.use(aboutAdminRouter);
 router.use(contactAdminRouter);
+router.use(colorAdminRouter);
 
 
 

@@ -12,6 +12,15 @@
     }
 }
 
+.sidebar {
+    max-height: calc(100vh - 70px) !important;
+    /* overflow-y: auto; */
+}
+.sidebar .nav {
+    height: 100%;
+    overflow-y: auto;
+}
+
 .sidebar-icon-only {
     .brand-logo-mini {
         margin-left: -10px !important;
@@ -41,7 +50,7 @@
 }
 
 .users-list-card {
-    height: calc(100vh - 214px);
+    height: calc(100vh - 374px);
     overflow: auto;
 }
 /* For Chrome, Edge, Safari, and Opera */

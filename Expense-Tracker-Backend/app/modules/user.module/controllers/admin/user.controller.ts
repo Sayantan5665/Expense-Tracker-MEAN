@@ -245,7 +245,7 @@ class UserAdminController {
                 return res.redirect('/users-list');
             }
 
-            req.flash('message', [{ msg: `Account ${userWithChangedStatus.isActive ? 'activated' : 'deactivated'} successfully!`, type: 'success' }] as any);
+            req.flash('message', [{ msg: `Account ${!user.isActive ? 'activated' : 'deactivated'} successfully!`, type: 'success' }] as any);
             return res.redirect('/users-list');
         } catch (error: any) {
             console.error("error: ", error);
