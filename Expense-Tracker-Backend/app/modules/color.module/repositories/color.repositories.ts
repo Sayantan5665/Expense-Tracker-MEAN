@@ -15,9 +15,15 @@ class colorRepository {
         }
     }
 
-    async fetchAllColors(matchCond:Object = {}): Promise<Array<IColor>> {
+    async fetchAllColors(search: string = ""): Promise<Array<IColor>> {
         try {
-            const colors: Array<IColor> = await colorModel.find(matchCond);
+            const colors: Array<IColor> = await colorModel.find({
+                $or: [
+                    { name: { $regex: search, $options: "i" } },
+                    { hexCode: { $regex: search, $options: "i" } },
+                ]
+            });
+            console.log("colors: ", colors);
             return colors;
         } catch (error) {
             throw error;
@@ -25,7 +31,7 @@ class colorRepository {
     }
 
 
-    async getColorBy(obj:any): Promise<IColor | null> {
+    async getColorBy(obj: any): Promise<IColor | null> {
         try {
             const color: IColor | null = await colorModel.findOne(obj);
             return color;
@@ -36,7 +42,7 @@ class colorRepository {
 
     async deleteColor(id: string): Promise<IColor | null> {
         try {
-            const color:IColor | null = await colorModel.findByIdAndDelete(id);
+            const color: IColor | null = await colorModel.findByIdAndDelete(id);
             return color;
         } catch (error) {
             throw error;

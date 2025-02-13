@@ -41,18 +41,8 @@ class colorController {
 
     async getAllColors(req: Request, res: Response): Promise<any> {
         try {
-            const { colorName, hexCode } = req.query;
-            const matchCond: any = {};
-            if (colorName && colorName.length) matchCond['name'] = colorName;
-            if (hexCode && hexCode.length) matchCond['hexCode'] = hexCode;
-            const colors: IColor[] = await colorRepo.fetchAllColors(matchCond);
-
-            if (!colors.length) {
-                return res.status(404).json({
-                    status: 404,
-                    message: "No colours found!",
-                });
-            }
+            const search: any = req.query.search || '';
+            const colors: IColor[] = await colorRepo.fetchAllColors(search?.length ? search : '');
 
             return res.status(200).json({
                 status: 200,

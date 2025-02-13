@@ -27,11 +27,14 @@ export class CalculatorComponent implements OnInit {
   }
 
   appendValue(value: string, inputElement: HTMLElement): void {
-    this.currentInput.update((data) => data + value);
+    const _currentInput = this.currentInput();
+    if (!(value === '.' && (_currentInput as any).split(/[\+\-\*\%\/]/).pop().includes('.'))) {
+      this.currentInput.update((data) => data + value);
+    }
 
     if (this.result().length) {
       // Check the last character before appending the new value
-      const lastChar = this.currentInput().slice(-1); // Second last character
+      const lastChar = this.currentInput().slice(-1); // last character
       if (/\d|%/.test(lastChar)) {
         this.calculate();
       }
@@ -64,15 +67,15 @@ export class CalculatorComponent implements OnInit {
     const key = event.key;
     const allowedKeys = ['*', '/', '+', '-', '%', 'Backspace', 'ArrowRight', 'ArrowLeft'];
 
-    if (/[0-9]/.test(key) || allowedKeys.includes(key)) {
+    if (/[0-9.]/.test(key) || allowedKeys.includes(key)) {
+      const display: any = event.target as HTMLInputElement;
+      if (key === '.' && (display.value).split(/[\+\-\*\%\/]/).pop().includes('.')) {
+        return false;
+      }
       return true;
+    } else {
+      event.preventDefault();
+      return false;
     }
-
-    // Allow only one dot (.) in the input
-    if (key === '.' && !this.currentInput().includes('.')) {
-      return true;
-    }
-
-    return false;
   }
 }

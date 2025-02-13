@@ -6,11 +6,7 @@ import { Types } from "mongoose";
 class colorAdminController {
     async colorListPage(req: Request, res: Response): Promise<any> {
         try {
-            const { colorName, hexCode } = req.query;
-            const matchCond:any = {};
-            if (colorName && colorName.length) matchCond['name'] = colorName;
-            if (hexCode && hexCode.length) matchCond['hexCode'] = hexCode;
-            const colors: IColor[] = await colorRepo.fetchAllColors(matchCond);
+            const colors: IColor[] = await colorRepo.fetchAllColors('');
 
             res.render('pages/color/list', {
                 title: 'Colour',
@@ -29,6 +25,22 @@ class colorAdminController {
         }
     }
 
+    async colorCreatePage(req: Request, res: Response): Promise<any> {
+        try {
+            res.render('pages/color/create', {
+                title: 'Colour',
+                data: {
+                    url: req.url,
+                    user: req.user
+                },
+                messages: req.flash('message')
+            });
+        } catch (error: any) {
+            console.log("error: ", error);
+            req.flash('message', [{ msg: error.message || 'Something went wrong!', type: 'danger' }] as any);
+            res.redirect('/error');
+        }
+    }
 }
 
 export default new colorAdminController();

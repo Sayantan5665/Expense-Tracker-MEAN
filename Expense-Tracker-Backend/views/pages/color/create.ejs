@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%- include('../layouts/head.ejs') %>
+<%- include('../../layouts/head.ejs') %>
 
 <body>
   <div class="container-scroller">
     <!-- navbar -->
-    <%- include('../layouts/navbar.ejs') %>
+    <%- include('../../layouts/navbar.ejs') %>
 
     <div class="container-fluid page-body-wrapper">
       <!-- Flash message -->
@@ -24,7 +24,7 @@
       <% } %>
 
       <!-- sidebar -->
-      <%- include('../layouts/sidebar.ejs') %>
+      <%- include('../../layouts/sidebar.ejs') %>
 
       <!-- main-panel starts -->
       <div class="content-wrapper">
@@ -36,7 +36,7 @@
           </h3>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/color/list">Colour</a></li>
+              <li class="breadcrumb-item"><a href="/expense/colors">Colour</a></li>
               <li class="breadcrumb-item active" aria-current="page">Create</li>
             </ol>
           </nav>
@@ -53,7 +53,7 @@
   <!-- container-scroller -->
 
   <!-- scripts -->
-  <%- include('../layouts/scripts.ejs') %>
+  <%- include('../../layouts/scripts.ejs') %>
 </body>
 
 </html>

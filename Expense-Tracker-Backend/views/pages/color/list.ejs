@@ -5,17 +5,17 @@
 
 <body>
   <div class="container-scroller">
-    <!-- navbar -->
+    <!-- Navbar -->
     <%- include('../../layouts/navbar.ejs') %>
 
     <div class="container-fluid page-body-wrapper">
-      <!-- Flash message -->
-      <% if (messages.length !=0) { %>
-      <% for(let i=0; i<messages.length; i++) { %>
-      <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
-        <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
+      <!-- Flash Messages -->
+      <% if (messages.length != 0) { %>
+      <% for (let i = 0; i < messages.length; i++) { %>
+      <div class="position-absolute" style="width: 100%; top: <%= (i * 60) + 10 + 'px' %>;">
+        <div class="alert alert-<%= messages[i].type %> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
           <%= messages[i].msg %>
-          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%=(i * 2)%>`)">
+          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%= (i * 2) %>`);">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -23,10 +23,10 @@
       <% } %>
       <% } %>
 
-      <!-- sidebar -->
+      <!-- Sidebar -->
       <%- include('../../layouts/sidebar.ejs') %>
 
-      <!-- main-panel starts -->
+      <!-- Main Content -->
       <div class="content-wrapper" style="padding: 2.75rem 2.25rem 0;">
         <div class="page-header">
           <h3 class="page-title">
@@ -34,27 +34,30 @@
               <i class="mdi mdi-information-variant fs-3"></i>
             </span> Colours
           </h3>
-          <!-- <nav aria-label="breadcrumb">
+          <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="/expense/colors">Colour</a></li>
               <li class="breadcrumb-item active" aria-current="page">List</li>
             </ol>
-          </nav> -->
+          </nav>
         </div>
+
         <div class="row">
           <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
               <div class="card-body">
-                <!-- Search & Add button -->
+                <!-- Search & Add Button -->
                 <div class="d-flex flex-wrap flex-md-nowrap flex-lg-row justify-content-between align-items-center d-md-block d-lg-flex">
                   <h4 class="card-title">All Colours</h4>
                   <div class="d-flex flex-column flex-sm-row">
-                    <input type="text" class="form-control me-2 mb-2 mb-md-0" placeholder="Search colours">
-                    <button class="btn btn-gradient-primary" style="width: 220px !important;">Add Colour</button>
+                    <input type="text" id="searchInput" class="form-control me-2 mb-2 mb-md-0" placeholder="Search colours" oninput="searchFn('searchInput', 'colorTableBody', '/api/color/fetch/all')">
+                    <a class="btn btn-gradient-primary" href="/expense/color/add" style="width: 220px !important;">Add Colour</a>
                   </div>
                 </div>
 
                 <hr>
+
+                <!-- Colour List Table -->
                 <div class="users-list-card">
                   <table class="table table-striped">
                     <thead>
@@ -65,15 +68,15 @@
                         <th> Action </th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <% for(let color of data?.colorList || []) { %>
+                    <tbody id="colorTableBody">
+                      <% for (let color of data?.colorList || []) { %>
                       <tr>
                         <td class="py-1">
                           <div style="width: 25px; height: 25px; border-radius: 5px; background-color: <%= color?.hexCode %>;"></div>
                         </td>
                         <td> <%= color?.name || '_' %> </td>
                         <td> <%= color?.hexCode || '_' %> </td>
-                        <td>
+                        <td style="width: 150px;">
                           <a class="btn btn-sm text-light bg-danger" style="width: 100px;" href="/">
                             Delete
                           </a>
@@ -83,20 +86,68 @@
                     </tbody>
                   </table>
                 </div>
+
               </div>
             </div>
           </div>
         </div>
+
       </div>
       <!-- main-panel ends -->
-
     </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
 
-  <!-- scripts -->
+  <!-- Scripts -->
   <%- include('../../layouts/scripts.ejs') %>
+
+  <script>
+    function searchFn(searchInputId, tbodyId, url) {
+      let searchText = document.getElementById(searchInputId).value;
+
+      // Send AJAX request to the server
+      fetch(`${url}?search=${searchText}`)
+        .then(response => response.json())
+        .then(res => {
+          updateTable(res.data || [], tbodyId);
+        })
+        .catch(error => {
+          console.error("Error fetching colors:", error);
+          let tbody = document.getElementById("colorTableBody");
+          tbody.innerHTML = "";
+          tbody.innerHTML = `<td class="py-3 text-center" colspan="4">Something went worng!</td>`;
+        });
+    }
+
+    function updateTable(dataList, tbodyId) {
+      let tbody = document.getElementById(tbodyId);
+      tbody.innerHTML = ""; // Clear previous results
+
+      if (dataList.length > 0) {
+        dataList.forEach(data => {
+          let row = `<tr>
+          <td class="py-1">
+            <div style="width: 25px; height: 25px; border-radius: 5px; background-color: ${data.hexCode};"></div>
+          </td>
+          <td>${data.name || '_'}</td>
+          <td>${data.hexCode || '_'}</td>
+          <td>
+            <a class="btn btn-sm text-light bg-danger" style="width: 100px;" href="/">
+              Delete
+            </a>
+          </td>
+        </tr>`;
+          tbody.innerHTML += row;
+        });
+      } else {
+        let tbody = document.getElementById("colorTableBody");
+        tbody.innerHTML = "";
+        tbody.innerHTML = `<td class="py-3 text-center" colspan="4">No data found!</td>`;
+      }
+    }
+  </script>
+
 </body>
 
 </html>

@@ -7,6 +7,7 @@ const router = Router();
 
 /* ------- page routes ------- */
 router.get('/expense/colors', authAdminPanel, colorController.colorListPage);
+router.get('/expense/color/add', authAdminPanel, colorController.colorCreatePage);
 
 
 /* ------- admin's api routes ------- */
