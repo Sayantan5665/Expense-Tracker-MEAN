@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%- include('../layouts/head.ejs') %>
+<%- include('../../layouts/head.ejs') %>
 
 <body>
   <div class="container-scroller">
     <!-- navbar -->
-    <%- include('../layouts/navbar.ejs') %>
+    <%- include('../../layouts/navbar.ejs') %>
 
     <div class="container-fluid page-body-wrapper">
       <!-- Flash message -->
@@ -24,7 +24,7 @@
       <% } %>
 
       <!-- sidebar -->
-      <%- include('../layouts/sidebar.ejs') %>
+      <%- include('../../layouts/sidebar.ejs') %>
 
       <!-- main-panel starts -->
       <div class="content-wrapper">
@@ -32,17 +32,61 @@
           <h3 class="page-title">
             <span class="page-title-icon bg-gradient-info text-white me-2">
               <i class="mdi mdi-information-variant fs-3"></i>
-            </span> Category
+            </span> Categories
           </h3>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/category/list">Category</a></li>
+              <li class="breadcrumb-item"><a href="/expense/categories">Category</a></li>
               <li class="breadcrumb-item active" aria-current="page">Create</li>
             </ol>
           </nav>
         </div>
         <div class="row">
-          Write your code
+          <div class="col-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Add New Category</h4>
+                <!-- <p class="card-description"> Edit your profile details here. </p> -->
+                <form class="forms-sample" action="/admin/category/add" method="post">
+                  <div class="mb-3 row">
+                    <label for="exampleInputEmail2" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="exampleInputName" placeholder="Name" name="name">
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label">Colour</label>
+                    <div class="col-sm-10">
+                      <select class="color-selection" style="width: 100%;" name="colorId">
+                        <% for(let color of data.colorList) { %>
+                        <option value="<%= color?._id?.toString() %>">
+                          <span style="width: 15px; height: 15px; border-radius: 5px; background-color: <%= color?.hexCodes %>;"></span> <!-- browser removing this automatically -->
+                          <%= color?.name %>
+                        </option>
+                        <% } %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label" for="exampleSelectIsDefault">Default</label>
+                    <div class="col-sm-10">
+                      <select class="form-select form-select-custom" id="exampleSelectIsDefault" name="isDefault">
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label for="exampleInputEmail2" class="col-sm-2 col-form-label">Description</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="exampleInputName" placeholder="Description" name="description">
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-gradient-primary me-2">Save</button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- main-panel ends -->
@@ -53,7 +97,17 @@
   <!-- container-scroller -->
 
   <!-- scripts -->
-  <%- include('../layouts/scripts.ejs') %>
+  <%- include('../../layouts/scripts.ejs') %>
+  <script>
+    (function($) {
+      'use strict';
+      $(document).ready(function() {
+        if ($(".color-selection").length) {
+          $(".color-selection").select2();
+        }
+      });
+    })(jQuery);
+  </script>
 </body>
 
 </html>

@@ -19,16 +19,17 @@ class categoryRepository {
     }
 
 
-    async getCategoryBy(firstCondition: [{ userId: Types.ObjectId }, ...QueryCondition[]], secondCondition: [{ isDefault: boolean }, ...QueryCondition[]]): Promise<Array<ICategory | null>> {
+    async getCategoryBy(firstCondition: [{ userId: Types.ObjectId }, ...QueryCondition[]], secondCondition: [{ isDefault: boolean }, ...QueryCondition[]], searchText: string = ""): Promise<Array<ICategory | null>> {
         try {
             const category: Array<ICategory | null> = await categoryModel.aggregate([
                 {
                     $match: {
                         $or: [
-                          { $and: firstCondition },
-                          { $and: secondCondition}
-                        ]
-                      }
+                            { $and: firstCondition },
+                            { $and: secondCondition }
+                        ],
+                        name: { $regex: searchText, $options: "i" }
+                    }
                 },
                 {
                     $lookup: {
@@ -77,12 +78,24 @@ class categoryRepository {
         }
     }
 
-    async deleteCategory(obj: {_id: Types.ObjectId, userId: Types.ObjectId}): Promise<ICategory | null> {
+    async deleteCategory(obj: { _id: Types.ObjectId, userId: Types.ObjectId, isDefault?: boolean }): Promise<ICategory | null> {
         try {
-            const category: ICategory | null = await categoryModel.findOneAndDelete({
-                ...obj,
-                isDefault: false
-            });
+            const category: ICategory | null = await categoryModel.findOneAndDelete(obj);
+            return category;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updateCategory(categoryId: Types.ObjectId, body: ICategory): Promise<ICategory | null> {
+        try {
+            const category: ICategory | null = await categoryModel.findOneAndUpdate(
+                {
+                    _id: categoryId,
+                },
+                body,
+                { new: true }
+            );
             return category;
         } catch (error) {
             throw error;

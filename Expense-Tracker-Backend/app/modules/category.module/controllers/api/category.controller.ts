@@ -10,7 +10,7 @@ class categoryController {
         try {
             const user: ITokenUser = req.user!;
             const body = req.body;
-            
+
             const category: ICategory | null = (await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }, { name: body.name }], [{ isDefault: true }, { name: body.name }]))[0];
             if (category) {
                 return res.status(409).json({
@@ -51,15 +51,10 @@ class categoryController {
 
     async getAllCategories(req: Request, res: Response): Promise<any> {
         try {
+            const search: any = req.query.search || '';
             const user: ITokenUser = req.user!;
 
-            const categories: Array<ICategory | null> = await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }], [{ isDefault: true }]);
-            if (!categories.length) {
-                return res.status(404).json({
-                    status: 404,
-                    message: "No categories found!",
-                });
-            }
+            const categories: Array<ICategory | null> = await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }], [{ isDefault: true }], search?.length ? search : '');
 
             return res.status(200).json({
                 status: 200,
@@ -108,7 +103,14 @@ class categoryController {
         try {
             const user: ITokenUser = req.user!;
             const categoryId: string = req.params.id || "";
-            const deletedCat = await categoryRepo.deleteCategory({ _id: new Types.ObjectId(categoryId), userId: new Types.ObjectId(user.id) });
+
+            const obj:any = { 
+                _id: new Types.ObjectId(categoryId), 
+                userId: new Types.ObjectId(user.id) 
+            }
+            user?.role?.role == 'user' && (obj.isDefault = false);
+
+            const deletedCat = await categoryRepo.deleteCategory(obj);
             if (!deletedCat) {
                 return res.status(404).json({
                     status: 404,

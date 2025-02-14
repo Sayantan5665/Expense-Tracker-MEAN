@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%- include('../layouts/head.ejs') %>
+<%- include('../../layouts/head.ejs') %>
 
 <body>
   <div class="container-scroller">
-    <!-- navbar -->
-    <%- include('../layouts/navbar.ejs') %>
+    <!-- Navbar -->
+    <%- include('../../layouts/navbar.ejs') %>
 
     <div class="container-fluid page-body-wrapper">
-      <!-- Flash message -->
-      <% if (messages.length !=0) { %>
-      <% for(let i=0; i<messages.length; i++) { %>
-      <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
-        <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
+      <!-- Flash Messages -->
+      <% if (messages.length != 0) { %>
+      <% for (let i = 0; i < messages.length; i++) { %>
+      <div class="position-absolute" style="width: 100%; top: <%= (i * 60) + 10 + 'px' %>;">
+        <div class="alert alert-<%= messages[i].type %> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
           <%= messages[i].msg %>
-          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%=(i * 2)%>`)">
+          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%= (i * 2) %>`);">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -23,37 +23,148 @@
       <% } %>
       <% } %>
 
-      <!-- sidebar -->
-      <%- include('../layouts/sidebar.ejs') %>
+      <!-- Sidebar -->
+      <%- include('../../layouts/sidebar.ejs') %>
 
-      <!-- main-panel starts -->
-      <div class="content-wrapper">
+      <!-- Main Content -->
+      <div class="content-wrapper" style="padding: 2.75rem 2.25rem 0;">
         <div class="page-header">
           <h3 class="page-title">
             <span class="page-title-icon bg-gradient-info text-white me-2">
               <i class="mdi mdi-information-variant fs-3"></i>
-            </span> Category
+            </span> Categories
           </h3>
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/category/list">Category</a></li>
+              <li class="breadcrumb-item"><a href="/expense/categories">Category</a></li>
               <li class="breadcrumb-item active" aria-current="page">List</li>
             </ol>
           </nav>
         </div>
+
         <div class="row">
-          Write your code
+          <div class="col-lg-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <!-- Search & Add Button -->
+                <div class="d-flex flex-wrap flex-md-nowrap flex-lg-row justify-content-between align-items-center d-md-block d-lg-flex">
+                  <h4 class="card-title">All Colours</h4>
+                  <div class="d-flex flex-column flex-sm-row">
+                    <input type="text" id="searchInput" class="form-control me-2 mb-2 mb-md-0" placeholder="Search colours" oninput="searchFn('searchInput', 'categoryTableBody', '/api/category/fetch/all')">
+                    <a class="btn btn-gradient-primary" href="/expense/category/add">Add</a>
+                  </div>
+                </div>
+
+                <hr>
+
+                <!-- Colour List Table -->
+                <div class="users-list-card">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th> Name </th>
+                        <th> Colour </th>
+                        <th> Default </th>
+                        <th> Description </th>
+                        <th> Action </th>
+                      </tr>
+                    </thead>
+                    <tbody id="categoryTableBody">
+                      <% for (let category of data?.categoryList || []) { %>
+                      <tr>
+                        <td> <%= category?.name || '_' %> </td>
+                        <td class="py-1">
+                          <div style="width: 25px; height: 25px; border-radius: 5px; background-color: <%= category?.color?.hexCode %>;"></div>
+                        </td>
+                        <td>
+                          <label class="badge <%= category?.isDefault ? 'badge-gradient-success' : 'badge-gradient-info' %>"><%= category?.isDefault %></label>
+                        </td>
+                        <td><span style="display: block; width: auto; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><%= category?.description || '_' %></span> </td>
+                        <td style="width: 150px;">
+                          <a class="btn btn-sm text-light bg-warning" style="width: 100px;" href="/expense/category/edit/<%= category?._id?.toString() %>">
+                            Edit
+                          </a>
+                          <a class="btn btn-sm text-light bg-danger" style="width: 100px;" href="/admin/category/delete/<%= category?._id?.toString() %>">
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
       <!-- main-panel ends -->
-
     </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
 
-  <!-- scripts -->
-  <%- include('../layouts/scripts.ejs') %>
+  <!-- Scripts -->
+  <%- include('../../layouts/scripts.ejs') %>
+
+  <script>
+    function searchFn(searchInputId, tbodyId, url) {
+      let searchText = document.getElementById(searchInputId).value;
+
+      // Send AJAX request to the server
+      fetch(`${url}?search=${searchText}`)
+        .then(response => response.json())
+        .then(res => {
+          console.log("res: ", res);
+          updateTable(res.data || [], tbodyId);
+        })
+        .catch(error => {
+          console.error("Error fetching colors:", error);
+          let tbody = document.getElementById(tbodyId);
+          tbody.innerHTML = "";
+          tbody.innerHTML = `<td class="py-3 text-center" colspan="5">Something went worng!</td>`;
+        });
+    }
+
+    function updateTable(dataList, tbodyId) {
+      let tbody = document.getElementById(tbodyId);
+      tbody.innerHTML = ""; // Clear previous results
+
+      if (dataList.length > 0) {
+        dataList.forEach(data => {
+          console.log("data: ", data?.name, data?.color?.hexCode, data?.isDefault, data?.description);
+          let row = `
+          <tr>
+            <td> ${ data?.name || '_' } </td>
+            <td class="py-1">
+              <div style="width: 25px; height: 25px; border-radius: 5px; background-color: ${ data?.color?.hexCode };"></div>
+            </td>
+            <td>
+              <label class="badge ${ data?.isDefault ? 'badge-gradient-success' : 'badge-gradient-info' }">${ data?.isDefault }</label>
+            </td>
+            <td> <span style="display: block; width: auto; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${ data?.description || '_' }</span> </td>
+            <td style="width: 150px;">
+              <a class="btn btn-sm text-light bg-warning" style="width: 100px;" href="/expense/category/edit/${ data?._id?.toString() }">
+                Edit
+              </a>
+              <a class="btn btn-sm text-light bg-danger" style="width: 100px;" href="/admin/category/delete/${ data?._id?.toString() }">
+                Delete
+              </a>
+            </td>
+          </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      } else {
+        let tbody = document.getElementById(tbodyId);
+        tbody.innerHTML = "";
+        tbody.innerHTML = `<td class="py-3 text-center" colspan="5">No data found!</td>`;
+      }
+    }
+  </script>
+
 </body>
 
 </html>

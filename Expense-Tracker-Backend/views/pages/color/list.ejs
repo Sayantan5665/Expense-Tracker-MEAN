@@ -51,7 +51,7 @@
                   <h4 class="card-title">All Colours</h4>
                   <div class="d-flex flex-column flex-sm-row">
                     <input type="text" id="searchInput" class="form-control me-2 mb-2 mb-md-0" placeholder="Search colours" oninput="searchFn('searchInput', 'colorTableBody', '/api/color/fetch/all')">
-                    <a class="btn btn-gradient-primary" href="/expense/color/add" style="width: 220px !important;">Add Colour</a>
+                    <a class="btn btn-gradient-primary" href="/expense/color/add">Add</a>
                   </div>
                 </div>
 
@@ -114,7 +114,7 @@
         })
         .catch(error => {
           console.error("Error fetching colors:", error);
-          let tbody = document.getElementById("colorTableBody");
+          let tbody = document.getElementById(tbodyId);
           tbody.innerHTML = "";
           tbody.innerHTML = `<td class="py-3 text-center" colspan="4">Something went worng!</td>`;
         });
@@ -133,7 +133,7 @@
           <td>${data.name || '_'}</td>
           <td>${data.hexCode || '_'}</td>
           <td style="width: 150px;">
-            <a class="btn btn-sm text-light bg-danger" style="width: 100px;" href="/admin/color/delete/<%= data?._id?.toString() %>">
+            <a class="btn btn-sm text-light bg-danger" style="width: 100px;" href="/admin/color/delete/${ data?._id?.toString() }">
               Delete
             </a>
           </td>
@@ -141,7 +141,7 @@
           tbody.innerHTML += row;
         });
       } else {
-        let tbody = document.getElementById("colorTableBody");
+        let tbody = document.getElementById(tbodyId);
         tbody.innerHTML = "";
         tbody.innerHTML = `<td class="py-3 text-center" colspan="4">No data found!</td>`;
       }

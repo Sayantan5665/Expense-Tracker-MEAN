@@ -23,7 +23,6 @@ class colorRepository {
                     { hexCode: { $regex: search, $options: "i" } },
                 ]
             });
-            console.log("colors: ", colors);
             return colors;
         } catch (error) {
             throw error;
