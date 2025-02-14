@@ -9,7 +9,8 @@ const router = Router();
 router.get('/expense/colors', authAdminPanel, colorController.colorListPage);
 router.get('/expense/color/add', authAdminPanel, colorController.colorCreatePage);
 
-
 /* ------- admin's api routes ------- */
+router.post('/admin/color/add', authAdminPanel, colorController.colorCreate);
+router.get('/admin/color/delete/:id', authAdminPanel, colorController.deleteColor);
 
 export default router;

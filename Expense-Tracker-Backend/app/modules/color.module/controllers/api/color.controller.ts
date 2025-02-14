@@ -12,22 +12,29 @@ class colorController {
             const colorWithName: IColor | null = await colorRepo.getColorBy({ name: body.name });
             const colorWithhexCode: IColor | null = await colorRepo.getColorBy({ hexCode: body.hexCode });
             if (colorWithName) {
-                throw new Error(`Color with name '${body.name}' already exists`);
+                return res.status(400).json({
+                    status: 400,
+                    message: `Color with name '${body.name}' already exists`,
+                });
             }
             if (colorWithhexCode) {
-                throw new Error(`Color with hex code '${body.hexCode}' already exists`);
+
+                return res.status(400).json({
+                    status: 400,
+                    message: `Color with hex code '${body.hexCode}' already exists`,
+                });
             }
 
             if (!isValidHexColor(body.hexCode)) {
                 throw new Error("Invalid hex color code");
             }
 
-            const newRole: IColor = await colorRepo.addColor(body);
+            const newColor: IColor = await colorRepo.addColor(body);
 
             return res.status(200).json({
                 status: 200,
-                message: `'${newRole.name}' added successfully`,
-                data: newRole,
+                message: `'${newColor.name}' added successfully`,
+                data: newColor,
             });
         } catch (error: any) {
             console.error("error: ", error);
