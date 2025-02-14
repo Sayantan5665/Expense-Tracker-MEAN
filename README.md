@@ -1,5 +1,5 @@
 # Expense Tracker - Cashlytics (*MEAN Project*)
-This project is final project of MEAN stack course at Webskitters.
+This project is my final project of MEAN stack course at Webskitters Academy.
 - Angular 19 is used for Frontend.
 - NodeJs with TypeScript is used in Backend
 
