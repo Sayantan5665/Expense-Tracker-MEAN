@@ -1,5 +1,5 @@
-import { authAdminPanel } from "app/middlewares";
 import { Request, Response, Router } from "express";
+import { authAdminPanel } from "../../middlewares";
 
 const router = Router();
 

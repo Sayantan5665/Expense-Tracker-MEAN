@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import colorController from '../../modules/color.module/controllers/admin/color.controller';
 import { authAdminPanel } from "../../middlewares/index";
-import { upload } from 'app/utils';
+import { upload } from '../../utils';
 
 const router = Router();
 

@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node -r tsconfig-paths/register dist/server.js",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register server.ts",
-    "build": "tsc"
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "cp -r public views uploads dist"
   },
   "author": "",
   "license": "ISC",

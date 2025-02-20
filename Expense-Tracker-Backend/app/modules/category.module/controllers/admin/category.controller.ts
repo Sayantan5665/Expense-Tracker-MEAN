@@ -1,8 +1,9 @@
-import { ICategory, IColor, ITokenUser } from "app/interfaces";
+import { ICategory, IColor, ITokenUser } from "../../../../interfaces";
+import colorRepositories from "../../../color.module/repositories/color.repositories";
 import categoryRepo from "../../repositories/category.repositories";
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import colorRepositories from "app/modules/color.module/repositories/color.repositories";
+
 
 class categoryAdminController {
     async categoryListPage(req: Request, res: Response): Promise<any> {

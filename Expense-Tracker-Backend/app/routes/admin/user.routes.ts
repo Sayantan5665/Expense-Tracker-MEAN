@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import userController from '../../modules/user.module/controllers/admin/user.controller';
 import { authAdminPanel, loggedInGuard } from "../../middlewares/index";
-import { upload } from 'app/utils';
+import { upload } from '../../utils';
 
 const router = Router();
 

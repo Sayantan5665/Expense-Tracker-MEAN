@@ -1,8 +1,9 @@
-import { IColor } from "app/interfaces";
 import colorRepo from "../../repositories/color.repositories";
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import { isValidHexColor } from "app/utils";
+import { IColor } from "../../../../interfaces";
+import { isValidHexColor } from "../../../../utils";
+
 
 class colorAdminController {
     async colorListPage(req: Request, res: Response): Promise<any> {

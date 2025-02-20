@@ -1,8 +1,8 @@
-import { ITokenUser, IUser } from "app/interfaces";
 import userRepo from "../../repositories/user.repositories";
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import { generateToken } from "app/utils";
+import { IUser } from "../../../../interfaces";
+import { generateToken } from "../../../../utils";
 
 class UserAdminController {
     async loginPage(req: Request, res: Response): Promise<any> {

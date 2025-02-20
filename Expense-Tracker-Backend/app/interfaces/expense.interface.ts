@@ -13,3 +13,12 @@ export interface ICategory extends Document {
     isDefault: boolean,
     description: string
 }
+
+export interface IExpense {
+    amount: number;
+    description: string;
+    categoryId: Types.ObjectId;
+    date: Date;
+    userId: Types.ObjectId;
+    type: 'cash-in' | 'cash-out';
+}
