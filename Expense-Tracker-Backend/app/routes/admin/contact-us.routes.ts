@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import contactController from '../../modules/contact-us.module/controllers/admin/contact-us.controller';
 import { authAdminPanel } from "../../middlewares/index";
-import { upload } from '../../utils';
+import { uploadImage } from '../../utils';
 
 const router = Router();
 

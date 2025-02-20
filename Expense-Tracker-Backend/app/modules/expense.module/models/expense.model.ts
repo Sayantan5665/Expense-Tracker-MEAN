@@ -9,7 +9,8 @@ const expenseValidator:ObjectSchema<IExpense> = Joi.object({
     categoryId: Joi.string().required(),
     date: Joi.date(),
     userId: Joi.string().required(),
-    type: Joi.string().required().valid('cash-in', 'cash-out')
+    type: Joi.string().required().valid('cash-in', 'cash-out'),
+    documents: Joi.array().items(Joi.string())
 });
 
 
@@ -42,7 +43,10 @@ const expenseSchema:Schema<IExpense> = new Schema({
         enum: ['cash-in', 'cash-out'],
         required: true,
         index: true
-    }
+    },
+    documents: [{
+        type: String
+    }]
 }, {timestamps: true, versionKey:false});
 
 

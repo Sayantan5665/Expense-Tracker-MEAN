@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import userController from '../../modules/user.module/controllers/admin/user.controller';
 import { authAdminPanel, loggedInGuard } from "../../middlewares/index";
-import { upload } from '../../utils';
+import { uploadImage } from '../../utils';
 
 const router = Router();
 
@@ -16,7 +16,7 @@ router.get('/users-list', authAdminPanel, userController.usrListPage);
 router.post('/admin/user/login', loggedInGuard, userController.login);
 router.post('/admin/user/forgot-password', loggedInGuard, userController.forgotPassword);
 router.get('/admin/user/confirm/forgot-password/:token', userController.confirmPasswordChange);
-router.post('/admin/user/update/profile/:id', authAdminPanel, upload.single('image'), userController.updateUserProfile);
+router.post('/admin/user/update/profile/:id', authAdminPanel, uploadImage.single('image'), userController.updateUserProfile);
 router.get('/admin/user/logout', authAdminPanel, userController.logout);
 router.get('/admin/change/user/status/:userId', authAdminPanel, userController.activeDeactiveUser)
 

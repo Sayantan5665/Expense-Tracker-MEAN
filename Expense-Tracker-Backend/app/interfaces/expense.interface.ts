@@ -21,4 +21,5 @@ export interface IExpense {
     date: Date;
     userId: Types.ObjectId;
     type: 'cash-in' | 'cash-out';
+    documents: Array<string>;
 }

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import userController from '../../modules/user.module/controllers/api/user.controller';
 import { auth, authorize } from "../../middlewares/index";
-import { upload } from '../../utils/index';
+import { uploadImage } from '../../utils/index';
 const route = Router();
 
 /**
@@ -47,7 +47,7 @@ const route = Router();
  *        500:
  *          description: Server Error
 */
-route.post('/register', upload.single('image'), userController.createUser);
+route.post('/register', uploadImage.single('image'), userController.createUser);
 
 /**
  * @swagger
@@ -167,7 +167,7 @@ route.get('/fetch/profile', auth, userController.getUserProfile);
  *        500:
  *          description: Server Error
 */
-route.put('/update/:id', auth, upload.single('image'), userController.updateUserProfile);
+route.put('/update/:id', auth, uploadImage.single('image'), userController.updateUserProfile);
 
 /**
   * @swagger

@@ -20,18 +20,47 @@ const storage:StorageEngine = diskStorage({
   }
 })
 
-const fileFilter = (req:Request, file:Express.Multer.File, cb:any) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/gif'  || file.mimetype === 'image/svg+xml') {
+const fileFilterImage = (req:Request, file:Express.Multer.File, cb:any) => {
+  const allowedFiles = ['image/jpeg', 'image/jpg', 'image/apng', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+  if (allowedFiles.includes(file.mimetype)) {
     cb(null, true)
   } else {
     cb(new Error('Only images are allowed!'));
   }
 }
+const fileFilterDoc = (req:Request, file:Express.Multer.File, cb:any) => {
+  const allowedFiles = [
+    'image/jpeg', 
+    'image/png', 
+    'image/jpg', 
+    'image/gif', 
+    'image/svg+xml', 
+    'image/webp', 
+    'image/apng', 
+    'application/pdf', 
+    'application/msword', 
+    'application/vnd.ms-excel',
+    'text/csv',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ];
+  if (allowedFiles.includes(file.mimetype)) {
+    cb(null, true)
+  } else {
+    cb(new Error('Image, PDF, DOC(X), XLS(X), CSV are allowed!'));
+  }
+}
 
-export const upload:Multer = multer({ 
+export const uploadImage:Multer = multer({ 
   storage: storage, 
   limits: { fileSize: 1024 * 1024 * 10 },   // limit 10MB
-  fileFilter: fileFilter 
+  fileFilter: fileFilterImage 
+});
+
+export const uploadDoc:Multer = multer({ 
+  storage: storage, 
+  limits: { fileSize: 1024 * 1024 * 50 },   // limit 50MB
+  fileFilter: fileFilterDoc 
 });
 
 
