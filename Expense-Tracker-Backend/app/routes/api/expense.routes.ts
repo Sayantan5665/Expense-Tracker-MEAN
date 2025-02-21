@@ -64,6 +64,38 @@ const route = Router();
  */
 route.post('/add', auth, uploadDoc.array('documents', 5), expenseController.createExpense);
 
+/**
+ * @swagger
+ * /api/expense/fetch-by-id/{id}:
+ *   get:
+ *     summary: fetch all expenses
+ *     tags:
+ *       - Expenses
+ *     security: 
+ *       - token: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200: 
+ *         description: Fetched all expenses successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Fetched all expenses successfully.
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Server Error
+ */
+route.get('/fetch-by-id/:id', auth, expenseController.getExpenseById);
 
 /**
  * @swagger
@@ -197,7 +229,7 @@ route.get('/fetch-by-filter-with-report', auth, expenseController.getExpensesAnd
  *         description: Expense updated successfully
  *       400:
  *         description: Bad Request
- *       401:
+ *       403:
  *         description: Unauthorized
  *       404:
  *         description: Expense not found
@@ -205,6 +237,40 @@ route.get('/fetch-by-filter-with-report', auth, expenseController.getExpensesAnd
  *         description: Server Error
  */
 route.put('/edit/:id', auth, uploadDoc.array('documents', 5), expenseController.editExpense);
+
+
+/**
+ * @swagger
+ * /api/expense/delete/{id}:
+ *   delete:
+ *     summary: Delete expenses (Only themselves)
+ *     tags: 
+ *       - Expenses
+ *     security:
+ *       - token: []
+ *     produces: application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *     responses:
+ *       200: 
+ *         description: Expense deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Expense deleted successfully
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Server Error
+ */
+route.delete('/delete/:id', auth, expenseController.deleteExpense);
 
 
 export default route;

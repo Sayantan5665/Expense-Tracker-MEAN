@@ -46,6 +46,34 @@ class expenseController {
         }
     }
 
+    async getExpenseById(req: Request, res: Response): Promise<any> {
+        try {
+            const expenseId:string = req.params.id;
+            const user: ITokenUser = req.user!;
+
+            const fetchedExpense: IExpense | null = (await expenseRepository.getExpenses({userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId)}))[0];
+            if (!fetchedExpense) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "Expense not found",
+                });
+            }
+            return res.status(200).json({
+                status: 200,
+                message: "Expense fetched successfully",
+                data: fetchedExpense
+            });
+
+        } catch (error: any) {
+            console.error("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            });
+        }
+    }
+
     async getAllExpenses(req: Request, res: Response): Promise<any> {
         try {
             const user: ITokenUser = req.user!;
@@ -181,7 +209,50 @@ class expenseController {
         }
     }
 
-    async deleteExpense(req: Request, res: Response): Promise<any> {}
+    async deleteExpense(req: Request, res: Response): Promise<any> {
+        try {
+            const expenseId:string = req.params.id;
+            const user: ITokenUser = req.user!;
+
+            const fetchedExpense: IExpense | null = (await expenseRepository.getExpenses({userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId)}))[0];
+            if (!fetchedExpense) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "Expense not found",
+                });
+            }
+            if(fetchedExpense.userId.toString() !== user.id.toString()) {
+                return res.status(403).json({
+                    status: 403,
+                    message: "You are not authorized to delete this expense",
+                });
+            }
+
+            const deletedExpense: IExpense | null = await expenseRepository.deleteExpenses({_id: new Types.ObjectId(expenseId), userId: new Types.ObjectId(user.id)});
+            if (!deletedExpense) {
+                return res.status(404).json({
+                    status: 404,
+                    message: "Expense not found",
+                });
+            }
+            // delete uploaded files
+            for (const file of fetchedExpense.documents) {
+                file && file.path && deleteUploadedDoc(user.id, file.path.split('/').pop() || '');
+            }
+            return res.status(200).json({
+                status: 200,
+                message: "Expense deleted successfully",
+            });
+
+        } catch (error: any) {
+            console.error("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            });
+        }
+    }
 }
 
 export default new expenseController();

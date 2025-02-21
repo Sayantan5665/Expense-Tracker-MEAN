@@ -16,18 +16,6 @@ class expenseRepository {
     }
   }
 
-  async updateExpenses(expenseId: Types.ObjectId, body: IExpense): Promise<IExpense | null> {
-    try {
-      const { error } = expenseValidator.validate(body);
-      if (error) throw error;
-
-      const updatedExpense: IExpense | null = await expenseModel.findByIdAndUpdate(expenseId, body, { new: true });
-      return updatedExpense;
-    } catch (error: any) {
-      throw new Error(error.message || "Something went wrong");
-    }
-  }
-
   async getExpenses(matchConditions: { userId: Types.ObjectId } & Record<string, any>): Promise<IExpense[]> {
     try {
       const expenses: IExpense[] = await expenseModel.aggregate([
@@ -297,6 +285,29 @@ class expenseRepository {
     }
   }
 
+
+  async updateExpenses(expenseId: Types.ObjectId, body: IExpense): Promise<IExpense | null> {
+    try {
+      const { error } = expenseValidator.validate(body);
+      if (error) throw error;
+
+      const updatedExpense: IExpense | null = await expenseModel.findByIdAndUpdate(expenseId, body, { new: true });
+      return updatedExpense;
+    } catch (error: any) {
+      throw new Error(error.message || "Something went wrong");
+    }
+  }
+
+
+
+  async deleteExpenses(matchCondition: {_id: Types.ObjectId, userId: Types.ObjectId}): Promise<IExpense | null> {
+    try {
+      const deletedExpense: IExpense | null = await expenseModel.findOneAndDelete(matchCondition);
+      return deletedExpense;
+    } catch (error: any) {
+      throw new Error(error.message || "Something went wrong");
+    }
+  }
 }
 
 export default new expenseRepository();
