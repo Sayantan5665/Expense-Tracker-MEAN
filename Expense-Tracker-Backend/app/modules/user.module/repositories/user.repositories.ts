@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { comparePassword, deleteUploadedFile, generateToken, hashPassword, sendEmail, verifyToken } from "../../../utils/index";
+import { comparePassword, deleteUploadedImage, generateToken, hashPassword, sendEmail, verifyToken } from "../../../utils/index";
 import { IUser, IMailOptions, IVerificationToken, IRole } from "../../../interfaces/index";
 import { userModel, userValidator } from "../models/user.model";
 import { unlink } from "fs";
@@ -160,7 +160,7 @@ class userRepo {
             return newUser;
         } catch (error) {
             const file: any = req.file || (req?.files as any || [])[0];
-            file && deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
+            file && deleteUploadedImage(file.filename, 'blank-profile-pic.jpg');
             throw error
         }
     }
@@ -241,7 +241,7 @@ class userRepo {
             return user;
         } catch (error) {
             const file: any = req.file || (req?.files as any || [])[0];
-            file && deleteUploadedFile(file.filename, 'blank-profile-pic.jpg');
+            file && deleteUploadedImage(file.filename, 'blank-profile-pic.jpg');
             throw error;
         }
     }

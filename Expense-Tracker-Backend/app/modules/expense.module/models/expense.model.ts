@@ -3,18 +3,21 @@ import { IExpense } from "../../../interfaces";
 import Joi, { ObjectSchema } from "joi";
 
 
-const expenseValidator:ObjectSchema<IExpense> = Joi.object({
-    amount: Joi.number().required().min(0),
+const expenseValidator: ObjectSchema<IExpense> = Joi.object({
+    amount: Joi.number().required(),
     description: Joi.string().required(),
     categoryId: Joi.string().required(),
     date: Joi.date(),
     userId: Joi.string().required(),
-    type: Joi.string().required().valid('cash-in', 'cash-out'),
-    documents: Joi.array().items(Joi.string())
+    type: Joi.string().valid('cash-in', 'cash-out').required(),
+    documents: Joi.array().items(Joi.object({
+        path: Joi.string().required(),
+        originalName: Joi.string().required()
+    }))
 });
 
 
-const expenseSchema:Schema<IExpense> = new Schema({
+const expenseSchema: Schema<IExpense> = new Schema({
     amount: {
         type: Number,
         required: true,
@@ -45,9 +48,10 @@ const expenseSchema:Schema<IExpense> = new Schema({
         index: true
     },
     documents: [{
-        type: String
+        path: { type: String, required: true },
+        originalName: { type: String, required: true }
     }]
-}, {timestamps: true, versionKey:false});
+}, { timestamps: true, versionKey: false });
 
 
 const expenseModel: Model<IExpense> = model('Expense', expenseSchema);

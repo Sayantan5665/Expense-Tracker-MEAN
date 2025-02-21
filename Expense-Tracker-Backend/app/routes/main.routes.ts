@@ -6,6 +6,7 @@ import userRouter from "./api/user.routes";
 import roleRouter from "./api/role.routes";
 import colorRouter from "./api/color.routes";
 import categoryRouter from "./api/category.routes";
+import expenseRouter from "./api/expense.routes";
 
 /* +++++ admin panel's imports +++++ */
 import dashboardRouter from "./admin/dashboard.routes";
@@ -23,6 +24,7 @@ router.use("/api/user", userRouter);
 router.use("/api/user/role", roleRouter);
 router.use("/api/color", colorRouter);
 router.use("/api/category", categoryRouter);
+router.use("/api/expense", expenseRouter);
 
 
 
