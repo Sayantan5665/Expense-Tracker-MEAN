@@ -131,6 +131,40 @@ class expenseController {
         }
     }
 
+    async getExpensesByCategoryWise(req: Request, res: Response): Promise<any> {
+        try {
+            const user: ITokenUser = req.user!;
+
+            const matchConditions: { userId: Types.ObjectId, type:'cash-in' | 'cash-out' } = { userId: new Types.ObjectId(user.id), type:'cash-out' };
+            if(req.query?.type) {
+                matchConditions.type = req.query.type as 'cash-in' | 'cash-out';
+            } else {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Type is required",
+                });
+            }
+
+            const dateRange:{startDate?: string, endDate?: string} = {};
+            req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
+            req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
+
+            const expenses: IExpense[] = await expenseRepository.getExpensesCategoryWise(matchConditions, dateRange);
+            return res.status(200).json({
+                status: 200,
+                message: "Expenses fetched successfully",
+                data: expenses,
+            });
+        } catch (error: any) {
+            console.error("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            });
+        }
+    }
+
 
     async editExpense(req: Request, res: Response): Promise<any> {
         try {

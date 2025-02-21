@@ -16,6 +16,25 @@ class expenseRepository {
     }
   }
 
+
+   /**
+   * Retrieves expenses based on the provided match conditions and performs aggregation operations to include category and color details.
+   *
+   * @param matchConditions - The conditions to match expenses. Must include userId and any additional conditions.
+   * @returns A promise that resolves to an array of IExpense objects.
+   *
+   * @throws Will throw an error if there is a database error or validation error.
+   *
+   * @remarks
+   * This function uses MongoDB aggregation pipeline to perform the following tasks:
+   * 1. Filters expenses based on the provided match conditions.
+   * 2. Performs a left join with the Category collection using the categoryId field.
+   * 3. Unwinds the category array to an object.
+   * 4. Sorts expenses by date in descending order.
+   * 5. Looks up color details from the Color collection using the category.colorId field.
+   * 6. Unwinds the color array to an object.
+   * 7. Optionally, projects the output to structure the response.
+   */
   async getExpenses(matchConditions: { userId: Types.ObjectId } & Record<string, any>): Promise<IExpense[]> {
     try {
       const expenses: IExpense[] = await expenseModel.aggregate([
@@ -90,6 +109,108 @@ class expenseRepository {
       return expenses;
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");
+    }
+  }
+
+
+  /**
+   * Retrieves expenses grouped by category, including total amount and category details.
+   *
+   * @param matchConditions - The conditions to match expenses. Must include userId and type ('cash-in' | 'cash-out').
+   * @param dateRange - The optional date range to filter expenses. Can include startDate and endDate (YYYY-MM-DD).
+   * @returns A promise that resolves to an array of objects containing category-wise expense details.
+   *
+   * @throws Will throw an error if there is a database error or validation error.
+   *
+   * @remarks
+   * This function uses MongoDB aggregation pipeline to perform the following tasks:
+   * 1. Filters expenses based on the provided match conditions and date range.
+   * 2. Looks up category details using the categoryId field.
+   * 3. Looks up color details from the Color collection using the category.colorId field.
+   * 4. Groups expenses by category and calculates total amount.
+   * 5. Projects the desired fields in the response.
+   */
+  async getExpensesCategoryWise(
+    matchConditions: { userId: Types.ObjectId; type: 'cash-in' | 'cash-out' },
+    dateRange: { startDate?: string; endDate?: string }
+  ): Promise<any[]> {
+    try {
+      const dateFilter = dateRange && (dateRange?.startDate || dateRange?.endDate)
+        ? {
+          ...(dateRange?.startDate && { $gte: new Date(dateRange?.startDate) }),
+          ...(dateRange?.endDate && {
+            // Add 1 day to endDate and use $lt to include the full day
+            $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
+          }),
+        }
+        : {};
+
+      const fullMatchConditions = {
+        ...matchConditions,
+        ...(Object.keys(dateFilter).length && { date: dateFilter }),
+      };
+
+      const expenses: IExpense[] = await expenseModel.aggregate([
+        // Match the expenses with conditions
+        { $match: fullMatchConditions },
+
+        // Lookup to fetch category details
+        {
+          $lookup: {
+            from: 'categories', // Collection name for categories
+            localField: 'categoryId',
+            foreignField: '_id',
+            as: 'category',
+          },
+        },
+
+        // Unwind the category array to a single object
+        { $unwind: '$category' },
+
+        // Lookup to fetch color details inside the category
+        {
+          $lookup: {
+            from: 'colors', // Collection name for colors
+            localField: 'category.colorId',
+            foreignField: '_id',
+            as: 'category.color',
+          },
+        },
+
+        // Unwind the color array to a single object
+        { $unwind: { path: '$category.color', preserveNullAndEmptyArrays: true } },
+
+        // Group by categoryId and calculate the total amount
+        {
+          $group: {
+            _id: '$categoryId',
+            totalAmount: { $sum: '$amount' },
+            categoryDetails: { $first: '$category' },
+          },
+        },
+
+        // Project the desired fields in the response
+        {
+          $project: {
+            _id: 1,
+            totalAmount: 1,
+            category: {
+              _id: '$categoryDetails._id',
+              name: '$categoryDetails.name',
+              description: '$categoryDetails.description',
+              color: {
+                _id: '$categoryDetails.color._id',
+                name: '$categoryDetails.color.name',
+                code: '$categoryDetails.color.code',
+              },
+            },
+          },
+        },
+      ]);
+
+      return expenses;
+    } catch (error: any) {
+      throw new Error(error.message || 'Something went wrong');
     }
   }
 
@@ -300,7 +421,7 @@ class expenseRepository {
 
 
 
-  async deleteExpenses(matchCondition: {_id: Types.ObjectId, userId: Types.ObjectId}): Promise<IExpense | null> {
+  async deleteExpenses(matchCondition: { _id: Types.ObjectId, userId: Types.ObjectId }): Promise<IExpense | null> {
     try {
       const deletedExpense: IExpense | null = await expenseModel.findOneAndDelete(matchCondition);
       return deletedExpense;

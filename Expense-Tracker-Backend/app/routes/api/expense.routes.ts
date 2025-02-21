@@ -176,6 +176,110 @@ route.get('/fetch-by-filter-with-report', auth, expenseController.getExpensesAnd
 
 /**
  * @swagger
+ * /api/expense/fetch-by-category-wise:
+ *   get:
+ *     summary: Fetch expenses by category wise
+ *     tags:
+ *       - Expenses
+ *     security:
+ *       - token: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: type
+ *         type: string
+ *         enum:
+ *           - cash-in
+ *           - cash-out
+ *         description: "Type of the expense (Required)"
+ *         required: true
+ *       - in: query
+ *         name: startDate
+ *         type: string
+ *         format: date
+ *         description: "Start date for filtering expenses (YYYY-MM-DD)"
+ *       - in: query
+ *         name: endDate
+ *         type: string
+ *         format: date
+ *         description: "End date for filtering expenses (YYYY-MM-DD)"
+ *     responses:
+ *       200:
+ *         description: Expenses fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Expenses fetched successfully
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "60c72b2f9b1d8e3f5a4d8f8b"
+ *                       amount:
+ *                         type: number
+ *                         example: 1000
+ *                       description:
+ *                         type: string
+ *                         example: "Grocery shopping"
+ *                       date:
+ *                         type: string
+ *                         format: date
+ *                         example: "2025-02-21"
+ *                       type:
+ *                         type: string
+ *                         enum: [cash-in, cash-out]
+ *                         example: "cash-out"
+ *                       category:
+ *                         type: object
+ *                         properties:
+ *                           _id:
+ *                             type: string
+ *                             example: "60c72b2f9b1d8e3f5a4d8f8c"
+ *                           name:
+ *                             type: string
+ *                             example: "Groceries"
+ *       400:
+ *         description: Bad Request - Type is required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 400
+ *                 message:
+ *                   type: string
+ *                   example: Type is required
+ *       500:
+ *         description: Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 500
+ *                 message:
+ *                   type: string
+ *                   example: Something went wrong! Please try again.
+ */
+route.get('/fetch-by-category-wise', auth, expenseController.getExpensesByCategoryWise);
+
+/**
+ * @swagger
  * /api/expense/edit/{id}:
  *   put:
  *     summary: Edit an existing expense

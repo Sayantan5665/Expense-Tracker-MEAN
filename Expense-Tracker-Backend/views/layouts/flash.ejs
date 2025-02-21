@@ -1,5 +1,5 @@
 <% if (messages.length !=0) { %>
-<% for(let i=0; i<messages.length; i++) { console.log(messages)%>
+<% for(let i=0; i<messages.length; i++) { %>
 <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
   <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right; display: flex; align-items: center; justify-content: space-between;" id="flash-alert-<%= i * 2  %>" role="alert">
     <span><%= messages[i].msg %></span>
