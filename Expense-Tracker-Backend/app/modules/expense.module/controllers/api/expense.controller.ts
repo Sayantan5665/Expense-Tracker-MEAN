@@ -108,7 +108,6 @@ class expenseController {
         try {
             const expenseId:string = req.params.id;
             const user: ITokenUser = req.user!;
-            const body: any = req.body;
 
             const fetchedExpense: any = (await expenseRepository.getExpenses({userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId)}))[0];
             if (!fetchedExpense) {
@@ -123,7 +122,17 @@ class expenseController {
                     message: "You are not authorized to edit this expense",
                 });
             }
-            body.userId = fetchedExpense.userId;
+
+            const body: IExpense = {
+                amount: req.body?.amount || fetchedExpense.amount,
+                description: req.body?.description || fetchedExpense.description,
+                categoryId: req.body?.categoryId || fetchedExpense?.category?._id.toString(),
+                date: req.body?.date || new Date(fetchedExpense.date),
+                userId: fetchedExpense?.userId?.toString(),
+                type: req.body?.type || fetchedExpense.type,
+                documents: fetchedExpense.documents.map((doc: any) => ({path: doc.path, originalName: doc.originalName})),
+            };
+            console.log("body: ", body);
 
             const files: any[] = req?.files as any || [];
             const basePath: string = `${req.protocol}://${req.get('host')}`;
@@ -131,8 +140,7 @@ class expenseController {
                 // upload new files
                 const fileArr: Array<{ path: string, originalName: string }> = [];
                 for (const file of files) {
-                    const fileName = Date.now() + '-' + file.originalname;
-                    const filePath = `${basePath}/uploads/expense/${user.id.toString()}/${fileName}`;
+                    const filePath = `${basePath}/uploads/expense/${user.id.toString()}/${file.filename}`;
                     fileArr.push({ path: filePath, originalName: file.originalname });
                 }
                 body.documents = fileArr;
@@ -144,6 +152,12 @@ class expenseController {
                     status: 404,
                     message: "Expense not found",
                 });
+            }
+            if(files.length > 0) {
+                // delete old files
+                for (const file of fetchedExpense.documents) {
+                    deleteUploadedDoc(user.id, file.path.split('/').pop());
+                }
             }
             return res.status(200).json({
                 status: 200,

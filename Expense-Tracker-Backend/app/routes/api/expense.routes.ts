@@ -142,5 +142,69 @@ route.get('/fetch/all', auth, expenseController.getAllExpenses);
  */
 route.get('/fetch-by-filter-with-report', auth, expenseController.getExpensesAndReport);
 
+/**
+ * @swagger
+ * /api/expense/edit/{id}:
+ *   put:
+ *     summary: Edit an existing expense
+ *     tags:
+ *       - Expenses
+ *     security:
+ *       - token: []
+ *     produces:
+ *       - application/json
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the expense to edit
+ *       - in: formData
+ *         name: documents
+ *         description: "Array of files to upload"
+ *         type: array
+ *         items:
+ *           type: file
+ *       - in: formData
+ *         name: date
+ *         description: "Date of the expense (YYYY-MM-DD)"
+ *         type: string
+ *         format: date
+ *       - in: formData
+ *         name: amount
+ *         description: "Expense amount"
+ *         type: number
+ *       - in: formData
+ *         name: description
+ *         description: "Description of the expense"
+ *         type: string
+ *       - in: formData
+ *         name: type
+ *         description: "Type of the expense"
+ *         type: string
+ *         enum:
+ *           - cash-in
+ *           - cash-out
+ *       - in: formData
+ *         name: categoryId
+ *         description: "Category ID (ObjectId)"
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Expense updated successfully
+ *       400:
+ *         description: Bad Request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Expense not found
+ *       500:
+ *         description: Server Error
+ */
+route.put('/edit/:id', auth, uploadDoc.array('documents', 5), expenseController.editExpense);
+
 
 export default route;

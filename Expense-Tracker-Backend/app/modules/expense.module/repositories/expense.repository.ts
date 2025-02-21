@@ -79,6 +79,7 @@ class expenseRepository {
             userId: 1,
             date: 1,
             amount: 1,
+            type: 1,
             description: 1,
             category: {
               _id: 1,
