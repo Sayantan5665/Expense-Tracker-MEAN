@@ -10,18 +10,7 @@
 
     <div class="container-fluid page-body-wrapper">
       <!-- Flash message -->
-      <% if (messages.length !=0) { %>
-      <% for(let i=0; i<messages.length; i++) { %>
-      <div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
-        <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right;" id="flash-alert-<%= i * 2  %>" role="alert">
-          <%= messages[i].msg %>
-          <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%=(i * 2)%>`)">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-      </div>
-      <% } %>
-      <% } %>
+      <%- include('../layouts/flash.ejs') %>
 
       <!-- sidebar -->
       <%- include('../layouts/sidebar.ejs') %>

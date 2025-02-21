@@ -243,7 +243,7 @@ route.put('/edit/:id', auth, uploadDoc.array('documents', 5), expenseController.
  * @swagger
  * /api/expense/delete/{id}:
  *   delete:
- *     summary: Delete expenses (Only themselves)
+ *     summary: Delete expenses
  *     tags: 
  *       - Expenses
  *     security:

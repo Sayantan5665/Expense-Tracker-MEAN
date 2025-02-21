@@ -1,0 +1,12 @@
+<% if (messages.length !=0) { %>
+<% for(let i=0; i<messages.length; i++) { console.log(messages)%>
+<div class="position-absolute" style="width: 100%; top: <%= (i * 60)+10+'px' %>;">
+  <div class="alert alert-<%=messages[i].type%> fade show" style="z-index: 99999; width: auto; max-width: 40%; float: right; display: flex; align-items: center; justify-content: space-between;" id="flash-alert-<%= i * 2  %>" role="alert">
+    <span><%= messages[i].msg %></span>
+    <button type="button" class="btn btn-sm close" id="close" data-dismiss="alert" aria-label="Close" onclick="vanish(`#flash-alert-<%=(i * 2)%>`)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</div>
+<% } %>
+<% } %>
