@@ -201,7 +201,7 @@ class expenseRepository {
               color: {
                 _id: '$categoryDetails.color._id',
                 name: '$categoryDetails.color.name',
-                code: '$categoryDetails.color.code',
+                hexCode: '$categoryDetails.color.hexCode',
               },
             },
           },

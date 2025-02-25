@@ -1,4 +1,5 @@
 @use "tailwindcss";
+@use '@splidejs/splide/dist/css/splide.min.css';
 
 @font-face {
   font-family: "Muli-Regular";
@@ -40,5 +41,15 @@ body {
 .calculator-panel {
   .mat-mdc-dialog-surface {
     border-radius: 3px !important;
+  }
+}
+
+.dashboardSelectOptions {
+  .mat-mdc-select-panel {
+    scrollbar-width: none !important;
+
+    .mat-mdc-option {
+      min-height: 35px !important;
+    }
   }
 }

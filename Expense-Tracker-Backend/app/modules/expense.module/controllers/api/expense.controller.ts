@@ -119,7 +119,7 @@ class expenseController {
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",
-                data: expenses,
+                data: expenses[0] || {},
             });
         } catch (error: any) {
             console.error("error: ", error);
