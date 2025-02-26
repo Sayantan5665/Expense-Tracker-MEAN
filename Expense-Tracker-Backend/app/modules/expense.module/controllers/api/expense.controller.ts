@@ -77,7 +77,7 @@ class expenseController {
     async getAllExpenses(req: Request, res: Response): Promise<any> {
         try {
             const user: ITokenUser = req.user!;
-            const expenses: IExpense[] = await expenseRepository.getExpenses({userId: new Types.ObjectId(user.id)});
+            const expenses: IExpense[] = await expenseRepository.getExpenses1({userId: new Types.ObjectId(user.id)}, {page: 1, limit:2});
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",

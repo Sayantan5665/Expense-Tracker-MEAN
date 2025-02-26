@@ -1,6 +1,6 @@
 import { expenseModel, expenseValidator } from "../models/expense.model";
 import { IExpense } from "../../../interfaces";
-import { Types } from "mongoose";
+import { AggregatePaginateResult, PaginateOptions, Types } from "mongoose";
 
 class expenseRepository {
   async addExpense(body: IExpense): Promise<IExpense> {
@@ -17,24 +17,24 @@ class expenseRepository {
   }
 
 
-   /**
-   * Retrieves expenses based on the provided match conditions and performs aggregation operations to include category and color details.
-   *
-   * @param matchConditions - The conditions to match expenses. Must include userId and any additional conditions.
-   * @returns A promise that resolves to an array of IExpense objects.
-   *
-   * @throws Will throw an error if there is a database error or validation error.
-   *
-   * @remarks
-   * This function uses MongoDB aggregation pipeline to perform the following tasks:
-   * 1. Filters expenses based on the provided match conditions.
-   * 2. Performs a left join with the Category collection using the categoryId field.
-   * 3. Unwinds the category array to an object.
-   * 4. Sorts expenses by date in descending order.
-   * 5. Looks up color details from the Color collection using the category.colorId field.
-   * 6. Unwinds the color array to an object.
-   * 7. Optionally, projects the output to structure the response.
-   */
+  /**
+  * Retrieves expenses based on the provided match conditions and performs aggregation operations to include category and color details.
+  *
+  * @param matchConditions - The conditions to match expenses. Must include userId and any additional conditions.
+  * @returns A promise that resolves to an array of IExpense objects.
+  *
+  * @throws Will throw an error if there is a database error or validation error.
+  *
+  * @remarks
+  * This function uses MongoDB aggregation pipeline to perform the following tasks:
+  * 1. Filters expenses based on the provided match conditions.
+  * 2. Performs a left join with the Category collection using the categoryId field.
+  * 3. Unwinds the category array to an object.
+  * 4. Sorts expenses by date in descending order.
+  * 5. Looks up color details from the Color collection using the category.colorId field.
+  * 6. Unwinds the color array to an object.
+  * 7. Optionally, projects the output to structure the response.
+  */
   async getExpenses(matchConditions: { userId: Types.ObjectId } & Record<string, any>): Promise<IExpense[]> {
     try {
       const expenses: IExpense[] = await expenseModel.aggregate([
@@ -107,6 +107,85 @@ class expenseRepository {
       ]);
 
       return expenses;
+    } catch (error: any) {
+      throw new Error(error.message || "Something went wrong");
+    }
+  }
+
+  async getExpenses1(
+    matchConditions: { userId: Types.ObjectId } & Record<string, any>,
+    options: PaginateOptions
+  ): Promise<any> {
+    try {
+      const aggregationPipeline:any = [
+        // Match expenses for the specific user
+        { $match: matchConditions },
+
+        // Perform a left join with the Category collection
+        {
+          $lookup: {
+            from: "categories",
+            localField: "categoryId",
+            foreignField: "_id",
+            as: "category"
+          }
+        },
+
+        // Unwind the category array to an object
+        {
+          $unwind: {
+            path: "$category",
+            preserveNullAndEmptyArrays: true
+          }
+        },
+
+        // Sort expenses by date in descending order
+        { $sort: { date: -1 } },
+
+        // Lookup color details from Color collection through category.colorId
+        {
+          $lookup: {
+            from: "colors",
+            localField: "category.colorId",
+            foreignField: "_id",
+            as: "category.color"
+          }
+        },
+
+        // Unwind the color array to an object
+        { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
+
+        // Optionally, project the output to structure the response
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            date: 1,
+            amount: 1,
+            type: 1,
+            description: 1,
+            category: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              isDefault: 1,
+              color: {
+                _id: 1,
+                name: 1,
+                hexCode: 1
+              }
+            },
+            documents: 1,
+            createdAt: 1,
+            updatedAt: 1
+          }
+        }
+      ];
+
+      const aggregateExpenses = expenseModel.aggregate(aggregationPipeline, options); 
+      console.log("aggregateExpenses: ", aggregateExpenses);
+
+      return aggregateExpenses;
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");
     }

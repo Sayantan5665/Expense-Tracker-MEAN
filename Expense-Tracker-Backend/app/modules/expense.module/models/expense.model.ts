@@ -1,6 +1,7 @@
-import { model, Model, Schema } from "mongoose";
+import { AggregatePaginateModel, model, Model, Schema } from "mongoose";
 import { IExpense } from "../../../interfaces";
 import Joi, { ObjectSchema } from "joi";
+import paginate from 'mongoose-aggregate-paginate-v2';
 
 
 const expenseValidator: ObjectSchema<IExpense> = Joi.object({
@@ -53,8 +54,10 @@ const expenseSchema: Schema<IExpense> = new Schema({
     }]
 }, { timestamps: true, versionKey: false });
 
+// paginate with this plugin
+expenseSchema.plugin(paginate);
 
-const expenseModel: Model<IExpense> = model('Expense', expenseSchema);
+const expenseModel:AggregatePaginateModel<IExpense> = model<IExpense, AggregatePaginateModel<IExpense>>('Expense', expenseSchema);
 
 export { expenseModel, expenseValidator };
 export default expenseModel;
