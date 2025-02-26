@@ -51,7 +51,7 @@ class expenseController {
             const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0 }))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false }))[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
@@ -79,8 +79,9 @@ class expenseController {
             const user: ITokenUser = req.user!;
             const page: number = parseInt(req.query.page as string, 10) || 1;
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
+            const pagination: boolean = (req.query.pagination as string) == 'true' ? true : false;
 
-            const expenses: any = await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id) }, { page, limit });
+            const expenses: any = await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id) }, { page, limit, pagination });
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",
@@ -174,7 +175,7 @@ class expenseController {
             const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0 }))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false }))[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
@@ -251,7 +252,7 @@ class expenseController {
             const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0 }))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false }))[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,

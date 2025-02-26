@@ -115,7 +115,7 @@ class expenseRepository {
   async getExpenses(
     matchConditions: { userId: Types.ObjectId } & Record<string, any>,
     options: PaginateOptions
-  ): Promise<any> {
+  ): Promise<AggregatePaginateResult<any>> {
     try {
       const aggregationPipeline: any = [
         // Match expenses for the specific user
@@ -182,24 +182,8 @@ class expenseRepository {
         }
       ];
 
-      let expenses: any;
-      if (options.page && options.limit && options.limit > 0) {
-        expenses = await expenseModel.aggregatePaginate(aggregationPipeline, options);
-      } else {
-        expenses = {
-          docs: [...await expenseModel.aggregate(aggregationPipeline)],
-          "totalDocs": null,
-          "limit": null,
-          "page": null,
-          "totalPages": null,
-          "pagingCounter": null,
-          "hasPrevPage": null,
-          "hasNextPage": null,
-          "prevPage": null,
-          "nextPage": null,
-          "allDocs": true
-        };
-      }
+      let expenses:AggregatePaginateResult<any> = await expenseModel.aggregatePaginate(aggregationPipeline, options);
+
       return expenses;
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");

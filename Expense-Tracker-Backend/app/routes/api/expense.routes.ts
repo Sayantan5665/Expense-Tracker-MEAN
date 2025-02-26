@@ -119,6 +119,11 @@ route.get('/fetch-by-id/:id', auth, expenseController.getExpenseById);
  *         schema:
  *           type: integer
  *         description: Number of items per page
+ *       - in: query
+ *         name: pagination
+ *         schema:
+ *           type: boolean
+ *         description: Set true if pagination is needed
  *     responses:
  *       200: 
  *         description: Fetched expenses successfully.
