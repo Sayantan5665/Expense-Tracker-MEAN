@@ -101,29 +101,33 @@ route.get('/fetch-by-id/:id', auth, expenseController.getExpenseById);
  * @swagger
  * /api/expense/fetch/all:
  *   get:
- *     summary: fetch all expenses
+ *     summary: Fetch expenses with pagination
  *     tags:
  *       - Expenses
  *     security: 
  *       - token: []
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
  *     responses:
  *       200: 
- *         description: Fetched all expenses successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Fetched all expenses successfully.
+ *         description: Fetched expenses successfully.
  *       400:
  *         description: Bad Request
  *       500:
  *         description: Server Error
  */
+
 route.get('/fetch/all', auth, expenseController.getAllExpenses);
 
 

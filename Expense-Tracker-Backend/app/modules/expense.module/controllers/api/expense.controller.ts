@@ -48,10 +48,10 @@ class expenseController {
 
     async getExpenseById(req: Request, res: Response): Promise<any> {
         try {
-            const expenseId:string = req.params.id;
+            const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: IExpense | null = (await expenseRepository.getExpenses({userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId)}))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0 }))[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
@@ -77,7 +77,10 @@ class expenseController {
     async getAllExpenses(req: Request, res: Response): Promise<any> {
         try {
             const user: ITokenUser = req.user!;
-            const expenses: IExpense[] = await expenseRepository.getExpenses1({userId: new Types.ObjectId(user.id)}, {page: 1, limit:2});
+            const page: number = parseInt(req.query.page as string, 10) || 1;
+            const limit: number = parseInt(req.query.limit as string, 10) || 0;
+
+            const expenses: any = await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id) }, { page, limit });
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",
@@ -111,7 +114,7 @@ class expenseController {
             req.query?.type && (matchConditions.type = req.query.type as string);
             req.query?.categoryId && (matchConditions.categoryId = new Types.ObjectId(req.query.categoryId as string));
 
-            const dateRange:{startDate?: string, endDate?: string} = {};
+            const dateRange: { startDate?: string, endDate?: string } = {};
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
 
@@ -135,8 +138,8 @@ class expenseController {
         try {
             const user: ITokenUser = req.user!;
 
-            const matchConditions: { userId: Types.ObjectId, type:'cash-in' | 'cash-out' } = { userId: new Types.ObjectId(user.id), type:'cash-out' };
-            if(req.query?.type) {
+            const matchConditions: { userId: Types.ObjectId, type: 'cash-in' | 'cash-out' } = { userId: new Types.ObjectId(user.id), type: 'cash-out' };
+            if (req.query?.type) {
                 matchConditions.type = req.query.type as 'cash-in' | 'cash-out';
             } else {
                 return res.status(400).json({
@@ -145,7 +148,7 @@ class expenseController {
                 });
             }
 
-            const dateRange:{startDate?: string, endDate?: string} = {};
+            const dateRange: { startDate?: string, endDate?: string } = {};
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
 
@@ -168,17 +171,17 @@ class expenseController {
 
     async editExpense(req: Request, res: Response): Promise<any> {
         try {
-            const expenseId:string = req.params.id;
+            const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: any = (await expenseRepository.getExpenses({userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId)}))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0 }))[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
                     message: "Expense not found",
                 });
             }
-            if(fetchedExpense.userId.toString() !== user.id.toString()) {
+            if (fetchedExpense.userId.toString() !== user.id.toString()) {
                 return res.status(403).json({
                     status: 403,
                     message: "You are not authorized to edit this expense",
@@ -192,7 +195,7 @@ class expenseController {
                 date: req.body?.date || new Date(fetchedExpense.date),
                 userId: fetchedExpense?.userId?.toString(),
                 type: req.body?.type || fetchedExpense.type,
-                documents: fetchedExpense.documents.map((doc: any) => ({path: doc.path, originalName: doc.originalName})),
+                documents: fetchedExpense.documents.map((doc: any) => ({ path: doc.path, originalName: doc.originalName })),
             };
             console.log("body: ", body);
 
@@ -208,14 +211,14 @@ class expenseController {
                 body.documents = fileArr;
             }
 
-            const newExpense: IExpense | null = await expenseRepository.updateExpenses(new Types.ObjectId(expenseId) ,body);
+            const newExpense: IExpense | null = await expenseRepository.updateExpenses(new Types.ObjectId(expenseId), body);
             if (!newExpense) {
                 return res.status(404).json({
                     status: 404,
                     message: "Expense not found",
                 });
             }
-            if(files.length > 0) {
+            if (files.length > 0) {
                 // delete old files
                 for (const file of fetchedExpense.documents) {
                     deleteUploadedDoc(user.id, file.path.split('/').pop());
@@ -245,24 +248,24 @@ class expenseController {
 
     async deleteExpense(req: Request, res: Response): Promise<any> {
         try {
-            const expenseId:string = req.params.id;
+            const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: IExpense | null = (await expenseRepository.getExpenses({userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId)}))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0 }))[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
                     message: "Expense not found",
                 });
             }
-            if(fetchedExpense.userId.toString() !== user.id.toString()) {
+            if (fetchedExpense.userId.toString() !== user.id.toString()) {
                 return res.status(403).json({
                     status: 403,
                     message: "You are not authorized to delete this expense",
                 });
             }
 
-            const deletedExpense: IExpense | null = await expenseRepository.deleteExpenses({_id: new Types.ObjectId(expenseId), userId: new Types.ObjectId(user.id)});
+            const deletedExpense: IExpense | null = await expenseRepository.deleteExpenses({ _id: new Types.ObjectId(expenseId), userId: new Types.ObjectId(user.id) });
             if (!deletedExpense) {
                 return res.status(404).json({
                     status: 404,

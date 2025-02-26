@@ -35,89 +35,89 @@ class expenseRepository {
   * 6. Unwinds the color array to an object.
   * 7. Optionally, projects the output to structure the response.
   */
-  async getExpenses(matchConditions: { userId: Types.ObjectId } & Record<string, any>): Promise<IExpense[]> {
-    try {
-      const expenses: IExpense[] = await expenseModel.aggregate([
-        // Filter expenses for the specific user
-        {
-          $match: matchConditions
-        },
+  // async _getExpenses(matchConditions: { userId: Types.ObjectId } & Record<string, any>): Promise<any[]> {
+  //   try {
+  //     const expenses: any[] = await expenseModel.aggregate([
+  //       // Filter expenses for the specific user
+  //       {
+  //         $match: matchConditions
+  //       },
 
-        // Perform a left join with the Category collection
-        {
-          $lookup: {
-            from: "categories",
-            localField: "categoryId",
-            foreignField: "_id",
-            as: "category"
-          }
-        },
+  //       // Perform a left join with the Category collection
+  //       {
+  //         $lookup: {
+  //           from: "categories",
+  //           localField: "categoryId",
+  //           foreignField: "_id",
+  //           as: "category"
+  //         }
+  //       },
 
-        // Unwind the category array to an object
-        {
-          $unwind: {
-            path: "$category",
-            preserveNullAndEmptyArrays: true
-          }
-        },
+  //       // Unwind the category array to an object
+  //       {
+  //         $unwind: {
+  //           path: "$category",
+  //           preserveNullAndEmptyArrays: true
+  //         }
+  //       },
 
-        // Sort expenses by date in descending order
-        {
-          $sort: { date: -1 }
-        },
+  //       // Sort expenses by date in descending order
+  //       {
+  //         $sort: { date: -1 }
+  //       },
 
-        // Lookup color details from Color collection through category.colorId
-        {
-          $lookup: {
-            from: "colors",
-            localField: "category.colorId",
-            foreignField: "_id",
-            as: "category.color"
-          }
-        },
+  //       // Lookup color details from Color collection through category.colorId
+  //       {
+  //         $lookup: {
+  //           from: "colors",
+  //           localField: "category.colorId",
+  //           foreignField: "_id",
+  //           as: "category.color"
+  //         }
+  //       },
 
-        // Unwind the color array to an object
-        { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
+  //       // Unwind the color array to an object
+  //       { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
 
-        // Optionally, project the output to structure the response
-        {
-          $project: {
-            _id: 1,
-            userId: 1,
-            date: 1,
-            amount: 1,
-            type: 1,
-            description: 1,
-            category: {
-              _id: 1,
-              name: 1,
-              description: 1,
-              isDefault: 1,
-              color: {
-                _id: 1,
-                name: 1,
-                hexCode: 1
-              }
-            },
-            documents: 1,
-            createdAt: 1,
-            updatedAt: 1
-          }
-        }
-      ]);
+  //       // Optionally, project the output to structure the response
+  //       {
+  //         $project: {
+  //           _id: 1,
+  //           userId: 1,
+  //           date: 1,
+  //           amount: 1,
+  //           type: 1,
+  //           description: 1,
+  //           category: {
+  //             _id: 1,
+  //             name: 1,
+  //             description: 1,
+  //             isDefault: 1,
+  //             color: {
+  //               _id: 1,
+  //               name: 1,
+  //               hexCode: 1
+  //             }
+  //           },
+  //           documents: 1,
+  //           createdAt: 1,
+  //           updatedAt: 1
+  //         }
+  //       }
+  //     ]);
 
-      return expenses;
-    } catch (error: any) {
-      throw new Error(error.message || "Something went wrong");
-    }
-  }
+  //     return expenses;
+  //   } catch (error: any) {
+  //     throw new Error(error.message || "Something went wrong");
+  //   }
+  // }
 
-  async getExpenses1(
+  async getExpenses(
     matchConditions: { userId: Types.ObjectId } & Record<string, any>,
     options: PaginateOptions
   ): Promise<any> {
     try {
-      const aggregationPipeline:any = [
+      const aggregationPipeline: any = [
         // Match expenses for the specific user
         { $match: matchConditions },
 
@@ -182,10 +182,25 @@ class expenseRepository {
         }
       ];
 
-      const aggregateExpenses = expenseModel.aggregate(aggregationPipeline, options); 
-      console.log("aggregateExpenses: ", aggregateExpenses);
-
-      return aggregateExpenses;
+      let expenses: any;
+      if (options.page && options.limit && options.limit > 0) {
+        expenses = await expenseModel.aggregatePaginate(aggregationPipeline, options);
+      } else {
+        expenses = {
+          docs: [...await expenseModel.aggregate(aggregationPipeline)],
+          "totalDocs": null,
+          "limit": null,
+          "page": null,
+          "totalPages": null,
+          "pagingCounter": null,
+          "hasPrevPage": null,
+          "hasNextPage": null,
+          "prevPage": null,
+          "nextPage": null,
+          "allDocs": true
+        };
+      }
+      return expenses;
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");
     }
