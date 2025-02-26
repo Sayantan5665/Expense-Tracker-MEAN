@@ -424,6 +424,80 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void { }
 
+  private splideInit() {
+    const config: any = {
+      perMove: 1,
+      gap: '5px',
+      arrows: false,
+      grid: {
+        rows: 2,
+        cols: 12,
+        gap: {
+          row: '5px',
+          col: '5px',
+        },
+      },
+      breakpoints: {
+        2000: {
+          grid: {
+            rows: 2,
+            cols: 11,
+          },
+        },
+        1650: {
+          grid: {
+            rows: 2,
+            cols: 9,
+          },
+        },
+        1450: {
+          grid: {
+            rows: 2,
+            cols: 8,
+          },
+        },
+        1250: {
+          grid: {
+            rows: 2,
+            cols: 7,
+          },
+        },
+        1050: {
+          grid: {
+            rows: 2,
+            cols: 6,
+          },
+        },
+        900: {
+          grid: {
+            rows: 2,
+            cols: 5,
+          },
+        },
+        480: {
+          grid: {
+            rows: 2,
+            cols: 4,
+          },
+        },
+        380: {
+          grid: {
+            rows: 2,
+            cols: 3,
+          },
+        },
+        300: {
+          grid: {
+            rows: 1,
+            cols: 1,
+          },
+        },
+      },
+    }
+    this.splide = new Splide('#splide', config);
+    this.splide.mount({ Grid });
+  }
+
   /** Calculate the days gone, weekdays remaining, and weekends remaining */
   protected calculateMonthDetails() {
     const today = new Date();
@@ -502,77 +576,4 @@ export class DashboardComponent implements OnInit {
     })
   }
 
-  private splideInit() {
-    const config: any = {
-      perMove: 1,
-      gap: '5px',
-      arrows: false,
-      grid: {
-        rows: 2,
-        cols: 12,
-        gap: {
-          row: '5px',
-          col: '5px',
-        },
-      },
-      breakpoints: {
-        2000: {
-          grid: {
-            rows: 2,
-            cols: 11,
-          },
-        },
-        1650: {
-          grid: {
-            rows: 2,
-            cols: 9,
-          },
-        },
-        1450: {
-          grid: {
-            rows: 2,
-            cols: 8,
-          },
-        },
-        1250: {
-          grid: {
-            rows: 2,
-            cols: 7,
-          },
-        },
-        1050: {
-          grid: {
-            rows: 2,
-            cols: 6,
-          },
-        },
-        900: {
-          grid: {
-            rows: 2,
-            cols: 5,
-          },
-        },
-        480: {
-          grid: {
-            rows: 2,
-            cols: 4,
-          },
-        },
-        380: {
-          grid: {
-            rows: 2,
-            cols: 3,
-          },
-        },
-        300: {
-          grid: {
-            rows: 1,
-            cols: 1,
-          },
-        },
-      },
-    }
-    this.splide = new Splide('#splide', config);
-    this.splide.mount({ Grid });
-  }
 }
