@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { afterNextRender, Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AlertService, ApiService, EventService, StorageService } from '@services';
@@ -23,6 +23,17 @@ export class LoginComponent {
     rememberMe: new FormControl(true)
   });
   protected tooglePassword = signal<'text' | 'password'>('password');
+
+  constructor() {
+    afterNextRender(() => {
+      this.getCredentials();
+    });
+  }
+
+  private getCredentials(): void {
+    const credentials = this.storage.getCredential();
+    credentials && this.form.patchValue(credentials);
+  }
 
   protected submit(form: FormGroup): void {
     if (form.valid) {
