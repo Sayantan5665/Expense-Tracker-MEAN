@@ -498,52 +498,6 @@ export class DashboardComponent implements OnInit {
     this.splide.mount({ Grid });
   }
 
-  /** Calculate the days gone, weekdays remaining, and weekends remaining */
-  protected calculateMonthDetails() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-
-    const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysGone = today.getDate();
-
-    const remainingDays = totalDaysInMonth - daysGone;
-
-    // Calculate remaining weekdays and weekends
-    let weekdaysRemaining = 0;
-    let weekendsRemaining = 0;
-
-    for (let i = 0; i < remainingDays; i++) {
-      const day = (today.getDay() + i) % 7;
-      (day === 0 || day === 6) ? weekendsRemaining++ : weekdaysRemaining++;
-    }
-
-    this.monthDetails.update((values) => ({
-      ...values,
-      daysGoneInPercent: Math.round((daysGone / totalDaysInMonth) * 100),
-      weekendsRemaining,
-      weekdaysRemaining,
-    }));
-  }
-
-
-  protected greetings() {
-    const hours = new Date().getHours();
-    if (hours < 12) return 'Good morning!';
-    if (hours < 18) return 'Good afternoon!';
-    return 'Good evening!';
-  }
-
-  protected onMonthChange(event: any) {
-    const month = this.months[event]
-    const _selectedMonth = this.selectedMonth();
-    if (_selectedMonth.current === event) {
-      this.selectedMonth.update((values) => ({ ...values, selected: event, rangeStart: new Date(new Date().getFullYear(), event, 1), rangeEnd: (new Date()) }));
-    } else {
-      this.selectedMonth.update((values) => ({ ...values, selected: event, rangeStart: new Date(new Date().getFullYear(), event, 1), rangeEnd: new Date((new Date).getFullYear(), event + 1, 0) }));
-    }
-  }
-
   private doughnutChartInit() {
     // Check if a chart instance already exists
     if (this.chart) {
@@ -574,6 +528,50 @@ export class DashboardComponent implements OnInit {
         }
       },
     })
+  }
+
+  /** Calculate the days gone, weekdays remaining, and weekends remaining */
+  protected calculateMonthDetails() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+
+    const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysGone = today.getDate();
+
+    const remainingDays = totalDaysInMonth - daysGone;
+
+    // Calculate remaining weekdays and weekends
+    let weekdaysRemaining = 0;
+    let weekendsRemaining = 0;
+
+    for (let i = 0; i < remainingDays; i++) {
+      const day = (today.getDay() + i) % 7;
+      (day === 0 || day === 6) ? weekendsRemaining++ : weekdaysRemaining++;
+    }
+
+    this.monthDetails.update((values) => ({
+      ...values,
+      daysGoneInPercent: Math.round((daysGone / totalDaysInMonth) * 100),
+      weekendsRemaining,
+      weekdaysRemaining,
+    }));
+  }
+
+  protected greetings() {
+    const hours = new Date().getHours();
+    if (hours < 12) return 'Good morning!';
+    if (hours < 18) return 'Good afternoon!';
+    return 'Good evening!';
+  }
+
+  protected onMonthChange(event: any) {
+    const _selectedMonth = this.selectedMonth();
+    if (_selectedMonth.current === event) {
+      this.selectedMonth.update((values) => ({ ...values, selected: event, rangeStart: new Date(new Date().getFullYear(), event, 1), rangeEnd: (new Date()) }));
+    } else {
+      this.selectedMonth.update((values) => ({ ...values, selected: event, rangeStart: new Date(new Date().getFullYear(), event, 1), rangeEnd: new Date((new Date).getFullYear(), event + 1, 0) }));
+    }
   }
 
 }
