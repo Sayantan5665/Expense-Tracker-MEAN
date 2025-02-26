@@ -79,7 +79,7 @@ class expenseController {
             const user: ITokenUser = req.user!;
             const page: number = parseInt(req.query.page as string, 10) || 1;
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
-            const pagination: boolean = (req.query.pagination as string) == 'true' ? true : false;
+            const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
 
             const expenses: any = await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id) }, { page, limit, pagination });
             return res.status(200).json({
