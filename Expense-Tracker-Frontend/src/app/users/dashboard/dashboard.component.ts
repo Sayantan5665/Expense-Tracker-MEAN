@@ -336,7 +336,7 @@ export class DashboardComponent implements OnInit {
   });
   private allTransactions: any = rxResource({
     loader: (e) => {
-      return this.api.get(`api/expense/fetch/all`);
+      return this.api.get(`api/expense/fetch/all?page=1&limit=6`);
     },
   });
   protected recentTransactions = signal<{ firstFive: Array<any>, totalLength: number }>({ firstFive: [], totalLength: 0 });
@@ -355,7 +355,6 @@ export class DashboardComponent implements OnInit {
       const value: any = this.expenseDetailsCategoryWise.value();
       const error: any = this.expenseDetailsCategoryWise.error();
       if (value) {
-        console.log("expenseDetailsCategoryWise value: ", value);
         const data = value.data;
         if (data.length) {
           const chartContainer = this.document.getElementById('chartContainer');
@@ -409,7 +408,8 @@ export class DashboardComponent implements OnInit {
       const value: any = this.allTransactions.value();
       const error: any = this.allTransactions.error();
       if (value) {
-        const data = value.data;
+        console.log("value: ", value);
+        const data = value.data.docs;
         if (data.length) {
           this.recentTransactions.set({ firstFive: data.slice(0, 5), totalLength: data.length });
         } else {
