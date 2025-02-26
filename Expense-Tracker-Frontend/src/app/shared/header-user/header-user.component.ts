@@ -1,18 +1,18 @@
+import { CdkMenuModule } from '@angular/cdk/menu';
 import { DOCUMENT } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { EventService } from '@services';
 import { CalculatorComponent } from 'src/app/modals/calculator/calculator.component';
-import { CdkMenuModule } from '@angular/cdk/menu';
 
 @Component({
-  selector: 'app-header',
+  selector: 'app-header-user',
   imports: [RouterLink, CdkMenuModule],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  templateUrl: './header-user.component.html',
+  styleUrl: './header-user.component.scss'
 })
-export class HeaderComponent {
+export class HeaderUserComponent {
   private readonly dialog = inject(MatDialog);
   private readonly document = inject(DOCUMENT);
   protected readonly event = inject(EventService);
@@ -29,7 +29,7 @@ export class HeaderComponent {
     });
   }
 
-  openCalculator(button: HTMLElement) {
+  protected openCalculator(button: HTMLElement) {
     this.dialog.open(CalculatorComponent, {
       panelClass: 'calculator-panel',
       data: {

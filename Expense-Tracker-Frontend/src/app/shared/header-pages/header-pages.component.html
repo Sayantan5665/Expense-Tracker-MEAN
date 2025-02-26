@@ -21,13 +21,12 @@
     </div>
     <div class="hidden lg:flex lg:gap-x-12">
       <a routerLink="/" class="text-sm/6 font-semibold text-gray-900">Home</a>
-      <a routerLink="/dashboard" class="text-sm/6 font-semibold text-gray-900">Dashboard</a>
       <a routerLink="/about" class="text-sm/6 font-semibold text-gray-900">About</a>
       <a routerLink="/contact" class="text-sm/6 font-semibold text-gray-900">Contact Us</a>
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-      <a #CalculatorBtn class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer"
-        (click)="openCalculator(CalculatorBtn)">Calculator</a>
+      <!-- <a #CalculatorBtn class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer"
+        (click)="openCalculator(CalculatorBtn)">Calculator</a> -->
       @if(!_isLoggedin) {
       <a routerLink="/login" class="text-sm/6 font-semibold text-gray-900">Log in <span
           aria-hidden="true">&rarr;</span></a>
@@ -80,9 +79,9 @@
               (click)="isMobileMenuOpen.set(false)">Contact Us</a>
           </div>
           <div class="py-6">
-            <a #CalculatorBtn1
+            <!-- <a #CalculatorBtn1
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
-              (click)="openCalculator(CalculatorBtn1); isMobileMenuOpen.set(false);">Calculator</a>
+              (click)="openCalculator(CalculatorBtn1); isMobileMenuOpen.set(false);">Calculator</a> -->
             @if(!_isLoggedin) {
             <a routerLink="/login"
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"

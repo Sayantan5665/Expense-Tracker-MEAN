@@ -1,0 +1,73 @@
+.example-menu-bar-item {
+  cursor: pointer;
+  border: none;
+  user-select: none;
+  min-width: 34px;
+  line-height: 26px;
+  padding: 0 16px;
+}
+
+.example-menu {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 150px;
+  max-width: 280px;
+  background-color: #eaf3ff;
+  padding: 0;
+  box-shadow: 0px 2px 4px rgba(31, 48, 69, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+
+  hr {
+    width: 100%;
+    color: rgba(0, 0, 0, 0.12);
+  }
+
+  .example-menu-group {
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  .example-menu-item {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    user-select: none;
+    min-width: 64px;
+    line-height: 36px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex: 1;
+
+    &:hover {
+      background-color: #c3ddff;
+    }
+
+    &:active {
+      background-color: #c3ddff;
+    }
+  }
+
+  .example-menu-item[role='menuitemradio'][aria-checked='true'] {
+    background-color: rgb(225, 225, 225);
+  }
+
+  .example-menu-item[role='menuitemcheckbox'][aria-checked='true'] {
+    background-color: rgb(225, 225, 225);
+  }
+}
+
+.example-menu-item {
+  &>span {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: flex-end;
+  }
+}
+
+.example-menu-item[aria-expanded='true'] {
+  background-color: #c3ddff !important;
+}

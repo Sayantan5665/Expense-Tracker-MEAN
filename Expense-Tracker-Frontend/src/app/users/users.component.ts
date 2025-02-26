@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from '@shared';
+import {  } from '@shared';
+import { HeaderUserComponent } from '../shared/header-user/header-user.component';
 
 @Component({
   selector: 'app-users',
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [RouterOutlet, HeaderUserComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
