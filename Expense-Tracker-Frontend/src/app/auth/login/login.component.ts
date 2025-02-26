@@ -49,7 +49,7 @@ export class LoginComponent {
           this.setDataAfterLogin(res.data);
           data.rememberMe ? this.saveCredential({ email: data.email, password: data.password, rememberMe: true }) : this.storage.clearCredential();
           this.alert.toast('Logged in successfully', 'success');
-          this.router.navigate(['/']);
+          this.router.navigate(['/dashboard']);
         } else {
           this.alert.toast(res.message || 'Failed to login', 'warning');
         }

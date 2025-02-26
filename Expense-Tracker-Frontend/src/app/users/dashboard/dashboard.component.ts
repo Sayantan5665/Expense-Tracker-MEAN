@@ -334,6 +334,13 @@ export class DashboardComponent implements OnInit {
       return this.api.get(`api/expense/fetch-by-category-wise?type=${'cash-out'}&startDate=${selectedMonth.rangeStart}&endDate=${selectedMonth.rangeEnd}`);
     },
   });
+  private allTransactions: any = rxResource({
+    loader: (e) => {
+      return this.api.get(`api/expense/fetch/all`);
+    },
+  });
+  protected recentTransactions = signal<{ firstFive: Array<any>, totalLength: number }>({ firstFive: [], totalLength: 0 });
+
 
   constructor() {
     Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
@@ -393,6 +400,21 @@ export class DashboardComponent implements OnInit {
 
         // Initialize Splide for category
         this.splideInit();
+      }
+      if (error) {
+        this.alert.toast(error.message, 'error');
+      }
+    });
+    effect(() => {
+      const value: any = this.allTransactions.value();
+      const error: any = this.allTransactions.error();
+      if (value) {
+        const data = value.data;
+        if (data.length) {
+          this.recentTransactions.set({ firstFive: data.slice(0, 5), totalLength: data.length });
+        } else {
+          this.recentTransactions.set({ firstFive: [], totalLength: data.length });
+        }
       }
       if (error) {
         this.alert.toast(error.message, 'error');
