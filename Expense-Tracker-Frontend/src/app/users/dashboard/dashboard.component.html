@@ -11,7 +11,7 @@
     class="w-full h-auto gap-4 flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row mb-4">
     <div
       class="w-full h-auto sm:w-full md:w-full lg:w-6/12 flex flex-col md:flex-row lg:flex-row p-4 gap-4 rounded-[15px] cards">
-      <div class="w-[316px] h-[316px] rounded-full overflow-hidden relative border-4 border-gray-300">
+      <div class="w-[250px] h-[250px] sm:w-[316px] sm:h-[316px] rounded-full overflow-hidden relative border-4 border-gray-300">
         @if (user && user?.image) {
           <img fill priority class="object-cover" [ngSrc]="user.image"
             [placeholder]="'/images/add_picture.jpg'"
