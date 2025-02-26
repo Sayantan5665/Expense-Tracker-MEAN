@@ -121,38 +121,35 @@
     <!-- Cash out category wise -->
     <div
       class="w-full md:w-2/3 h-full rounded-[15px] cards p-4 relative flex flex-col">
-      <p class="text-2xl font-light">Category Wise Expenses</p>
+      <p class="text-2xl font-light mb-2">Category Wise Expenses</p>
       <div id="splide" class="splide w-full">
         <div class="splide__track">
           <ul class="splide__list">
-            @if(_expenseCategoryWise.length > 18) {
-              @for (category of _expenseCategoryWise; track $index) {
+            @if(expenseCategoryWise.length > 18) {
+              @for (category of expenseCategoryWise; track $index) {
                 @if ($index < 17) {
                   <li class="splide__slide">
-                    <div
-                      class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
-                      <h3
-                        class="text-sm font-semibold">{{category?.category?.name}}</h3>
+                    <div class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
+                      <div class="w-[20px] h-[20px] rounded-full" [ngStyle]="{ 'background': category?.category?.color?.hexCode}"></div>
+                      <h3 class="text-sm font-semibold">{{category?.category?.name}}</h3>
                       <p class="text-xs text-gray-600">{{category?.totalAmount}}</p>
                     </div>
                   </li>
                 }
               }
               <li class="splide__slide">
-                <div
-                  class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
+                <div class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col justify-center items-center">
                   <h3 class="text-sm font-semibold">View All</h3>
-                  <p class="text-xs text-gray-600">-></p>
+                  <span class="material-symbols-outlined">arrow_right_alt</span>
                 </div>
               </li>
             } @else {
-              @for (category of _expenseCategoryWise; track $index) {
-                <li class="splide__slide">
-                  <div
-                    class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
-                    <h3
-                      class="text-sm font-semibold">{{category?.category?.name}}</h3>
-                    <p class="text-xs text-gray-600">{{category?.totalAmount}}</p>
+              @for (category of expenseCategoryWise; track $index) {
+                <li class="splide__slide" [ngClass]="expenseCategoryWise.length < 5 ? 'set-margin' : ''">
+                  <div class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
+                    <div class="w-[20px] h-[20px] rounded-full" [ngStyle]="{ 'background': category?.category?.color?.hexCode}"></div>
+                    <h3 class="text-sm font-semibold">{{category?.category?.name}}</h3>
+                    <p class="text-xs text-gray-600">{{category?.totalAmount | currency:'INR':'symbol'}}</p>
                   </div>
                 </li>
               }
