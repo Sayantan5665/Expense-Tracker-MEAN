@@ -114,16 +114,20 @@ class expenseController {
             const matchConditions: { userId: Types.ObjectId } & Record<string, any> = { userId: new Types.ObjectId(user.id) };
             req.query?.type && (matchConditions.type = req.query.type as string);
             req.query?.categoryId && (matchConditions.categoryId = new Types.ObjectId(req.query.categoryId as string));
-
+            
             const dateRange: { startDate?: string, endDate?: string } = {};
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
 
-            const expenses: IExpense[] = await expenseRepository.getExpensesReport(matchConditions, dateRange);
+            const page: number = parseInt(req.query.page as string, 10) || 1;
+            const limit: number = parseInt(req.query.limit as string, 10) || 0;
+            const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
+
+            const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, {page, limit, pagination});
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",
-                data: expenses[0] || {},
+                data: expenses,
             });
         } catch (error: any) {
             console.error("error: ", error);

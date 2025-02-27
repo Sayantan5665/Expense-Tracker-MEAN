@@ -81,8 +81,8 @@
         </div>
         <div
           class="w-full h-auto absolute top-30 left-0 flex justify-center items-center p-2">
-          <round-progress [current]="expenseDetails?.totalCashOut || 0"
-            [max]="(expenseDetails?.totalCashOut + expenseDetails?.totalCashIn) || 0"
+          <round-progress [current]="expenseDetails?.report?.totalCashOut || 0"
+            [max]="(expenseDetails?.report?.totalCashOut + expenseDetails?.report?.totalCashIn) || 0"
             [color]="'#45ccce'"
             [background]="'#eaeaea'" [radius]="150" [stroke]="20"
             [semicircle]="true" [rounded]="true" [clockwise]="true"
@@ -91,10 +91,10 @@
         </div>
         <div
           class="w-full h-auto flex flex-col justify-center items-center absolute bottom-15 left-0 p-5">
-          <p class="text-2xl font-light">{{(expenseDetails?.totalCashOut || 0) |
+          <p class="text-2xl font-light">{{(expenseDetails?.report?.totalCashOut || 0) |
             currency:'INR':'symbol'}}</p>
-          <p class="text-sm font-light">of {{((expenseDetails?.totalCashOut +
-            expenseDetails?.totalCashIn) || 0) |
+          <p class="text-sm font-light">of {{((expenseDetails?.report?.totalCashOut +
+            expenseDetails?.report?.totalCashIn) || 0) |
             currency:'INR':'symbol' }} </p>
         </div>
       </div>

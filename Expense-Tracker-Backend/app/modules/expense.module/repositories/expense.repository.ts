@@ -182,7 +182,9 @@ class expenseRepository {
         }
       ];
 
-      let expenses:AggregatePaginateResult<any> = await expenseModel.aggregatePaginate(aggregationPipeline, options);
+
+      if (!options.limit || options.limit <= 0) { options.pagination = false };  // if limit is not provided pagination will be disabled
+      let expenses: AggregatePaginateResult<any> = await expenseModel.aggregatePaginate(aggregationPipeline, options);
 
       return expenses;
     } catch (error: any) {
@@ -311,174 +313,470 @@ class expenseRepository {
    * 5. Groups expenses and calculates total cash in, total cash out, and remaining cash.
    * 6. Projects the final response structure.
    */
+  // async _getExpensesReport(  // OLD 
+  //   matchConditions: { userId: Types.ObjectId } & Record<string, any>,
+  //   dateRange: { startDate?: string, endDate?: string }
+  // ): Promise<IExpense[]> {
+  //   try {
+  //     // Construct the date filter based on optional startDate and endDate
+  //     const dateFilter = dateRange && (dateRange?.startDate || dateRange?.endDate) ?
+  //       {
+  //         ...(dateRange?.startDate && { $gte: new Date(dateRange?.startDate) }),
+  //         ...(dateRange?.endDate && {
+  //           // Add 1 day to endDate and use $lt to include the full day
+  //           $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000)
+  //         })
+  //       } : {};
+  //     // Example match conditions
+  //     // {
+  //     //   userId: "67a0d3c13930e10e33fa685b",
+  //     //   date: { $gte: "2025-02-01T00:00:00.000Z", $lte: "2025-02-21T00:00:00.000Z" }
+  //     // }
+  //     // OR if only startDate is provided
+  //     // {
+  //     //   userId: "67a0d3c13930e10e33fa685b",
+  //     //   date: { $gte: "2025-02-01T00:00:00.000Z" }
+  //     // }
+
+  //     // Merge date filter into match conditions if applicable
+  //     const fullMatchConditions = {
+  //       ...matchConditions,
+  //       ...(Object.keys(dateFilter).length && { date: dateFilter })
+  //     };
+
+  //     const expenses: IExpense[] = await expenseModel.aggregate([
+  //       // Filter expenses for the specific user and date range if provided
+  //       { $match: fullMatchConditions },
+
+  //       // Lookup category details
+  //       {
+  //         $lookup: {
+  //           from: "categories",
+  //           localField: "categoryId",
+  //           foreignField: "_id",
+  //           as: "category"
+  //         }
+  //       },
+  //       { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+
+  //       // Lookup color details from Color collection through category.colorId
+  //       {
+  //         $lookup: {
+  //           from: "colors",
+  //           localField: "category.colorId",
+  //           foreignField: "_id",
+  //           as: "category.color"
+  //         }
+  //       },
+  //       { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
+
+  //       // Sort expenses by date in descending order
+  //       { $sort: { date: -1 } },
+
+  //       // // Project only required fields for expenses
+  //       // {
+  //       //   $project: {
+  //       //     _id: 1,
+  //       //     userId: 1,
+  //       //     date: 1,
+  //       //     amount: 1,
+  //       //     description: 1,
+  //       //     type: 1,
+  //       //     documents: 1,
+  //       //     category: {
+  //       //       _id: 1,
+  //       //       name: 1,
+  //       //       description: 1,
+  //       //       isDefault: 1,
+  //       //       color: {
+  //       //         _id: 1,
+  //       //         name: 1,
+  //       //         hexCode: 1
+  //       //       }
+  //       //     },
+  //       //     createdAt: 1,
+  //       //     updatedAt: 1
+  //       //   }
+  //       // },
+
+  //       // // Group expenses and calculate totals
+  //       // {
+  //       //   $group: {
+  //       //     _id: null,
+  //       //     expenses: { $push: "$$ROOT" },
+  //       //     totalCashIn: {
+  //       //       $sum: {
+  //       //         $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0]
+  //       //       }
+  //       //     },
+  //       //     totalCashOut: {
+  //       //       $sum: {
+  //       //         $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0]
+  //       //       }
+  //       //     }
+  //       //   }
+  //       // },
+
+  //       // // Add remaining cash as a computed field
+  //       // {
+  //       //   $addFields: {
+  //       //     remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] }
+  //       //   }
+  //       // },
+
+  //       // Group to calculate totals and aggregate expenses  [Above one and this both works same]
+  //       {
+  //         $group: {
+  //           _id: null,
+  //           expenses: {
+  //             $push: {
+  //               _id: "$_id",
+  //               userId: "$userId",
+  //               date: "$date",
+  //               amount: "$amount",
+  //               description: "$description",
+  //               type: "$type",
+  //               documents: "$documents",
+  //               category: {
+  //                 _id: "$category._id",
+  //                 name: "$category.name",
+  //                 description: "$category.description",
+  //                 isDefault: "$category.isDefault",
+  //                 color: {
+  //                   _id: "$category.color._id",
+  //                   name: "$category.color.name",
+  //                   hexCode: "$category.color.hexCode"
+  //                 }
+  //               },
+  //               createdAt: "$createdAt",
+  //               updatedAt: "$updatedAt"
+  //             }
+  //           },
+  //           totalCashIn: {
+  //             $sum: { $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0] }
+  //           },
+  //           totalCashOut: {
+  //             $sum: { $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0] }
+  //           }
+  //         }
+  //       },
+
+  //       // Calculate remaining cash
+  //       {
+  //         $addFields: {
+  //           remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] }
+  //         }
+  //       },
+
+  //       // Project the final response structure
+  //       {
+  //         $project: {
+  //           _id: 0,
+  //           expenses: 1,
+  //           totalCashIn: 1,
+  //           totalCashOut: 1,
+  //           remainingCash: 1
+  //         }
+  //       }
+  //     ]);
+
+  //     return expenses;
+  //   } catch (error: any) {
+  //     throw new Error(error.message || "Something went wrong");
+  //   }
+
+
+  //   /** Output: */
+  //   // [
+  //   //     {
+  //   //         "expenses": [
+  //   //             {
+  //   //                 "_id": "67b888943b9da33656566630",
+  //   //                 "userId": "67a0d3c13930e10e33fa685b",
+  //   //                 "date": "2025-02-21T13:59:24.368Z",
+  //   //                 "amount": 230,
+  //   //                 "description": "sdf",
+  //   //                 "type": "cash-out",
+  //   //                 "documents": [],
+  //   //                 "category": {
+  //   //                     "_id": "67af3466ef2d50ecaf18b05d",
+  //   //                     "name": "Category-2",
+  //   //                     "description": "Category-2 description",
+  //   //                     "isDefault": true,
+  //   //                     "color": {
+  //   //                         "_id": "67a4b823df6cedadaaaac3f3",
+  //   //                         "name": "DarkRed",
+  //   //                         "hexCode": "#8B0000"
+  //   //                     }
+  //   //                 },
+  //   //                 "createdAt": "2025-02-21T14:07:16.160Z",
+  //   //                 "updatedAt": "2025-02-21T14:07:16.160Z"
+  //   //             },
+  //   //             {
+  //   //                 "_id": "67b888a33b9da33656566633",
+  //   //                 "userId": "67a0d3c13930e10e33fa685b",
+  //   //                 "date": "2025-02-21T13:59:24.368Z",
+  //   //                 "amount": 1030,
+  //   //                 "description": "570",
+  //   //                 "type": "cash-out",
+  //   //                 "documents": [],
+  //   //                 "category": {
+  //   //                     "_id": "67af3466ef2d50ecaf18b05d",
+  //   //                     "name": "Category-2",
+  //   //                     "description": "Category-2 description",
+  //   //                     "isDefault": true,
+  //   //                     "color": {
+  //   //                         "_id": "67a4b823df6cedadaaaac3f3",
+  //   //                         "name": "DarkRed",
+  //   //                         "hexCode": "#8B0000"
+  //   //                     }
+  //   //                 },
+  //   //                 "createdAt": "2025-02-21T14:07:31.262Z",
+  //   //                 "updatedAt": "2025-02-21T14:07:31.262Z"
+  //   //             },
+  //   //             {
+  //   //                 "_id": "67b861d683fab7ccacb029a3",
+  //   //                 "userId": "67a0d3c13930e10e33fa685b",
+  //   //                 "date": "2025-02-21T11:18:21.886Z",
+  //   //                 "amount": 600,
+  //   //                 "description": "cd",
+  //   //                 "type": "cash-out",
+  //   //                 "documents": [
+  //   //                     {
+  //   //                         "path": "http://localhost:5503/uploads/expense/67a0d3c13930e10e33fa685b/1740136918442-371355304.jpg",
+  //   //                         "originalName": "user2.jpg",
+  //   //                         "_id": "67b861d683fab7ccacb029a4"
+  //   //                     },
+  //   //                     {
+  //   //                         "path": "http://localhost:5503/uploads/expense/67a0d3c13930e10e33fa685b/1740136918443-531324801.jpg",
+  //   //                         "originalName": "user.jpg",
+  //   //                         "_id": "67b861d683fab7ccacb029a5"
+  //   //                     }
+  //   //                 ],
+  //   //                 "category": {
+  //   //                     "_id": "67a5b3488f61c4642c10493b",
+  //   //                     "name": "Category-1",
+  //   //                     "description": "Category-1 description",
+  //   //                     "isDefault": true,
+  //   //                     "color": {
+  //   //                         "_id": "67a4b6c4df6cedadaaaac3c3",
+  //   //                         "name": "IndianRed",
+  //   //                         "hexCode": "#CD5C5C"
+  //   //                     }
+  //   //                 },
+  //   //                 "createdAt": "2025-02-21T11:21:58.453Z",
+  //   //                 "updatedAt": "2025-02-21T11:21:58.453Z"
+  //   //             },
+  //   //             {
+  //   //                 "_id": "67b819ca9bf59bc3afe7a926",
+  //   //                 "userId": "67a0d3c13930e10e33fa685b",
+  //   //                 "date": "2025-02-21T06:12:22.105Z",
+  //   //                 "amount": 100000,
+  //   //                 "description": "abcd",
+  //   //                 "type": "cash-in",
+  //   //                 "documents": [
+  //   //                     {
+  //   //                         "path": "http://localhost:5503/uploads/expense/67a0d3c13930e10e33fa685b/1740118474891-428535597.jpg",
+  //   //                         "originalName": "7.jpg",
+  //   //                         "_id": "67b819ca9bf59bc3afe7a927"
+  //   //                     },
+  //   //                     {
+  //   //                         "path": "http://localhost:5503/uploads/expense/67a0d3c13930e10e33fa685b/1740118474893-977931585.xlsx",
+  //   //                         "originalName": "custom_users_data (5).xlsx",
+  //   //                         "_id": "67b819ca9bf59bc3afe7a928"
+  //   //                     },
+  //   //                     {
+  //   //                         "path": "http://localhost:5503/uploads/expense/67a0d3c13930e10e33fa685b/1740118474894-380876537.docx",
+  //   //                         "originalName": "PZ Update March 3 ,2023 (1).docx",
+  //   //                         "_id": "67b819ca9bf59bc3afe7a929"
+  //   //                     }
+  //   //                 ],
+  //   //                 "category": {
+  //   //                     "_id": "67a5b3488f61c4642c10493b",
+  //   //                     "name": "Category-1",
+  //   //                     "description": "Category-1 description",
+  //   //                     "isDefault": true,
+  //   //                     "color": {
+  //   //                         "_id": "67a4b6c4df6cedadaaaac3c3",
+  //   //                         "name": "IndianRed",
+  //   //                         "hexCode": "#CD5C5C"
+  //   //                     }
+  //   //                 },
+  //   //                 "createdAt": "2025-02-21T06:14:34.908Z",
+  //   //                 "updatedAt": "2025-02-21T06:14:34.908Z"
+  //   //             },
+  //   //             {
+  //   //                 "_id": "67b81a279bf59bc3afe7a92c",
+  //   //                 "userId": "67a0d3c13930e10e33fa685b",
+  //   //                 "date": "2025-02-21T06:12:22.105Z",
+  //   //                 "amount": 10000,
+  //   //                 "description": "ab",
+  //   //                 "type": "cash-out",
+  //   //                 "documents": [
+  //   //                     {
+  //   //                         "path": "http://localhost:5503/uploads/expense/67a0d3c13930e10e33fa685b/1740118567295-367169830.jpg",
+  //   //                         "originalName": "7.jpg",
+  //   //                         "_id": "67b81a279bf59bc3afe7a92d"
+  //   //                     }
+  //   //                 ],
+  //   //                 "category": {
+  //   //                     "_id": "67a5b3488f61c4642c10493b",
+  //   //                     "name": "Category-1",
+  //   //                     "description": "Category-1 description",
+  //   //                     "isDefault": true,
+  //   //                     "color": {
+  //   //                         "_id": "67a4b6c4df6cedadaaaac3c3",
+  //   //                         "name": "IndianRed",
+  //   //                         "hexCode": "#CD5C5C"
+  //   //                     }
+  //   //                 },
+  //   //                 "createdAt": "2025-02-21T06:16:07.302Z",
+  //   //                 "updatedAt": "2025-02-21T06:16:07.302Z"
+  //   //             }
+  //   //         ],
+  //   //         "totalCashIn": 100000,
+  //   //         "totalCashOut": 11860,
+  //   //         "remainingCash": 88140
+  //   //     }
+  //   // ]
+  // }
   async getExpensesReport(
     matchConditions: { userId: Types.ObjectId } & Record<string, any>,
-    dateRange: { startDate?: string, endDate?: string }
-  ): Promise<IExpense[]> {
+    dateRange: { startDate?: string; endDate?: string },
+    options: PaginateOptions
+  ): Promise<{ expenses: AggregatePaginateResult<any>; totals: { totalCashIn: number; totalCashOut: number; remainingCash: number } }> {
     try {
       // Construct the date filter based on optional startDate and endDate
-      const dateFilter = dateRange && (dateRange?.startDate || dateRange?.endDate) ?
-        {
-          ...(dateRange?.startDate && { $gte: new Date(dateRange?.startDate) }),
-          ...(dateRange?.endDate && {
-            // Add 1 day to endDate and use $lt to include the full day
-            $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000)
-          })
-        } : {};
-      // Example match conditions
-      // {
-      //   userId: "67a0d3c13930e10e33fa685b",
-      //   date: { $gte: "2025-02-01T00:00:00.000Z", $lte: "2025-02-21T00:00:00.000Z" }
-      // }
-      // OR if only startDate is provided
-      // {
-      //   userId: "67a0d3c13930e10e33fa685b",
-      //   date: { $gte: "2025-02-01T00:00:00.000Z" }
-      // }
-
+      const dateFilter =
+        dateRange && (dateRange?.startDate || dateRange?.endDate)
+          ? {
+              ...(dateRange?.startDate && { $gte: new Date(dateRange?.startDate) }),
+              ...(dateRange?.endDate && {
+                // Add 1 day to endDate and use $lt to include the full day
+                $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
+              }),
+            }
+          : {};
+  
       // Merge date filter into match conditions if applicable
       const fullMatchConditions = {
         ...matchConditions,
-        ...(Object.keys(dateFilter).length && { date: dateFilter })
+        ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
-
-      const expenses: IExpense[] = await expenseModel.aggregate([
+  
+      const aggregationPipeline: any = [
         // Filter expenses for the specific user and date range if provided
         { $match: fullMatchConditions },
-
+  
         // Lookup category details
         {
           $lookup: {
             from: "categories",
             localField: "categoryId",
             foreignField: "_id",
-            as: "category"
-          }
+            as: "category",
+          },
         },
         { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
-
+  
         // Lookup color details from Color collection through category.colorId
         {
           $lookup: {
             from: "colors",
             localField: "category.colorId",
             foreignField: "_id",
-            as: "category.color"
-          }
+            as: "category.color",
+          },
         },
         { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
-
-        // Sort expenses by date in descending order
-        { $sort: { date: -1 } },
-
-        // // Project only required fields for expenses
-        // {
-        //   $project: {
-        //     _id: 1,
-        //     userId: 1,
-        //     date: 1,
-        //     amount: 1,
-        //     description: 1,
-        //     type: 1,
-        //     documents: 1,
-        //     category: {
-        //       _id: 1,
-        //       name: 1,
-        //       description: 1,
-        //       isDefault: 1,
-        //       color: {
-        //         _id: 1,
-        //         name: 1,
-        //         hexCode: 1
-        //       }
-        //     },
-        //     createdAt: 1,
-        //     updatedAt: 1
-        //   }
-        // },
-
-        // // Group expenses and calculate totals
-        // {
-        //   $group: {
-        //     _id: null,
-        //     expenses: { $push: "$$ROOT" },
-        //     totalCashIn: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0]
-        //       }
-        //     },
-        //     totalCashOut: {
-        //       $sum: {
-        //         $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0]
-        //       }
-        //     }
-        //   }
-        // },
-
-        // // Add remaining cash as a computed field
-        // {
-        //   $addFields: {
-        //     remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] }
-        //   }
-        // },
-
-        // Group to calculate totals and aggregate expenses  [Above one and this both works same]
+  
+        // Group to calculate totalCashIn, totalCashOut, and remainingCash
         {
-          $group: {
-            _id: null,
-            expenses: {
-              $push: {
-                _id: "$_id",
-                userId: "$userId",
-                date: "$date",
-                amount: "$amount",
-                description: "$description",
-                type: "$type",
-                documents: "$documents",
-                category: {
-                  _id: "$category._id",
-                  name: "$category.name",
-                  description: "$category.description",
-                  isDefault: "$category.isDefault",
-                  color: {
-                    _id: "$category.color._id",
-                    name: "$category.color.name",
-                    hexCode: "$category.color.hexCode"
-                  }
+          $facet: {
+            // Pipeline for totals
+            totals: [
+              {
+                $group: {
+                  _id: null, // Group all documents together
+                  totalCashIn: {
+                    $sum: {
+                      $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0],
+                    },
+                  },
+                  totalCashOut: {
+                    $sum: {
+                      $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0],
+                    },
+                  },
                 },
-                createdAt: "$createdAt",
-                updatedAt: "$updatedAt"
-              }
-            },
-            totalCashIn: {
-              $sum: { $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0] }
-            },
-            totalCashOut: {
-              $sum: { $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0] }
-            }
-          }
+              },
+              {
+                $project: {
+                  _id: 0,
+                  totalCashIn: 1,
+                  totalCashOut: 1,
+                  remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] },
+                },
+              },
+            ],
+  
+            // Pipeline for expenses
+            expenses: [
+              // Sort expenses by date in descending order
+              { $sort: { date: -1 } },
+  
+              // Project only required fields for expenses
+              {
+                $project: {
+                  _id: 1,
+                  userId: 1,
+                  date: 1,
+                  amount: 1,
+                  description: 1,
+                  type: 1,
+                  documents: 1,
+                  category: {
+                    _id: 1,
+                    name: 1,
+                    description: 1,
+                    isDefault: 1,
+                    color: {
+                      _id: 1,
+                      name: 1,
+                      hexCode: 1,
+                    },
+                  },
+                  createdAt: 1,
+                  updatedAt: 1,
+                },
+              },
+            ],
+          },
         },
-
-        // Calculate remaining cash
-        {
-          $addFields: {
-            remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] }
-          }
-        },
-
-        // Project the final response structure
-        {
-          $project: {
-            _id: 0,
-            expenses: 1,
-            totalCashIn: 1,
-            totalCashOut: 1,
-            remainingCash: 1
-          }
-        }
-      ]);
-
-      return expenses;
+  
+        // Unwind the totals array (since $facet returns an array)
+        { $unwind: "$totals" },
+      ];
+  
+      // Disable pagination if limit is not provided or invalid
+      if (!options.limit || options.limit <= 0) {
+        options.pagination = false;
+      }
+  
+      // Execute the aggregation pipeline
+      const [result] = await expenseModel.aggregate(aggregationPipeline);
+  
+      // Paginate the expenses array
+      const expenses:any = await expenseModel.aggregatePaginate(
+        [{ $match: {} }], // Empty match to use the already filtered expenses
+        options,
+        result.expenses, // Pass the pre-filtered expenses array
+      );
+  
+      return {
+        ...expenses,
+        report: result.totals,
+      };
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");
     }

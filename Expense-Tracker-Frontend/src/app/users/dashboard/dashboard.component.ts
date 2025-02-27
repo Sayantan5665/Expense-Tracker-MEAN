@@ -331,7 +331,7 @@ export class DashboardComponent implements OnInit {
     request: () => ({ selectedMonth: this.selectedMonth() }),
     loader: (e) => {
       const selectedMonth = e.request.selectedMonth;
-      return this.api.get(`api/expense/fetch-by-category-wise?type=${'cash-out'}&startDate=${selectedMonth.rangeStart}&endDate=${selectedMonth.rangeEnd}`);
+      return this.api.get(`api/expense/fetch-by-category-wise?type=cash-out&startDate=${selectedMonth.rangeStart}&endDate=${selectedMonth.rangeEnd}`);
     },
   });
   private allTransactions: any = rxResource({
@@ -355,6 +355,7 @@ export class DashboardComponent implements OnInit {
       const value: any = this.expenseDetailsCategoryWise.value();
       const error: any = this.expenseDetailsCategoryWise.error();
       if (value) {
+        // console.log("expenseDetailsCategoryWise: ", value);
         const data = value.data;
         if (data.length) {
           const chartContainer = this.document.getElementById('chartContainer');
@@ -408,7 +409,7 @@ export class DashboardComponent implements OnInit {
       const value: any = this.allTransactions.value();
       const error: any = this.allTransactions.error();
       if (value) {
-        console.log("value: ", value);
+        // console.log("allTransactions: ", value);
         const data = value.data.docs;
         if (data.length) {
           this.recentTransactions.set({ firstFive: data.slice(0, 5), totalLength: data.length });

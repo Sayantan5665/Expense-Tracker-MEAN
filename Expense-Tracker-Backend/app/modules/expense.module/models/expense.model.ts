@@ -54,7 +54,7 @@ const expenseSchema: Schema<IExpense> = new Schema({
     }]
 }, { timestamps: true, versionKey: false });
 
-// paginate with this plugin
+// Pagination plugin for mongoose
 expenseSchema.plugin(paginate);
 
 const expenseModel:AggregatePaginateModel<IExpense> = model<IExpense, AggregatePaginateModel<IExpense>>('Expense', expenseSchema);
