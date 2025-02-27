@@ -1,9 +1,10 @@
+@let _isScrolled = isScrolled();
 @let _isLoggedin = isLoggedin();
 @let _userdetails = userdetails();
 @let _isMobileMenuOpen = isMobileMenuOpen();
 
-<header class="absolute inset-x-0 top-0 z-50">
-  <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+<header class="sticky inset-x-0 top-0 z-50 transition-colors duration-200" [class]="_isScrolled ? 'bg-[#f3f8ff] shadow-md' : 'bg-transparent'">
+  <nav class="flex items-center justify-between px-6 transition-all duration-200 ease-in-out" aria-label="Global" [class]="_isScrolled ? 'py-3 ' : 'py-6'">
     <div class="flex lg:flex-1 select-none">
       <a routerLink="/" class="-m-1.5 p-1.5">
         <span class="sr-only">Cashlytics</span>
