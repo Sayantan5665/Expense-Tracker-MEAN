@@ -1,39 +1,30 @@
 <div class="mx-auto p-6 flex gap-5 justify-between">
   <!-- Left box -->
-  <div class="w-full bg-blue-400 rounded-lg py-10 px-5">
+  <div class="w-full rounded-lg py-10 px-5 cards">
     <!-- Page Header -->
     <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
-      <h1
-        class="text-3xl font-bold text-gray-800 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
+      <h1 class="text-3xl font-bold text-gray-800 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
         Expense List
       </h1>
       <div class="flex gap-4 mt-4 sm:mt-0">
-        <button
-          class="px-6 py-2 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
+        <button class="px-6 py-2 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
           + Add New Expense
         </button>
-        <button
-          class="px-6 py-2 bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-300 shadow-md hover:shadow-lg">
+        <button class="px-6 py-2 bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-lg hover:from-purple-500 hover:to-pink-500 transition-all duration-300 shadow-md hover:shadow-lg">
           Export Data
         </button>
-        <button
-          class="px-6 py-2 bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-lg hover:from-orange-500 hover:to-red-500 transition-all duration-300 shadow-md hover:shadow-lg">
+        <button class="px-6 py-2 bg-gradient-to-r from-orange-400 to-red-400 text-white rounded-lg hover:from-orange-500 hover:to-red-500 transition-all duration-300 shadow-md hover:shadow-lg">
           Send to Mail
         </button>
       </div>
     </div>
 
-    <!-- Filter and Sort Section -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Filter and Sort Section (Above Table Header) -->
+    <div class="flex gap-4 mb-4">
       <!-- Filter by Category -->
-      <div
-        class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-        <label for="category"
-          class="block text-sm font-medium text-gray-700 mb-2">Filter by
-          Category</label>
-        <select
-          id="category"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+      <div class="flex-1">
+        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Filter by Category</label>
+        <select id="category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
           <option value>All Categories</option>
           <option value="food">Food</option>
           <option value="transport">Transport</option>
@@ -41,15 +32,10 @@
           <option value="utilities">Utilities</option>
         </select>
       </div>
-
       <!-- Sort by Date or Amount -->
-      <div
-        class="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-        <label for="sort"
-          class="block text-sm font-medium text-gray-700 mb-2">Sort by</label>
-        <select
-          id="sort"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+      <div class="flex-1">
+        <label for="sort" class="block text-sm font-medium text-gray-700 mb-2">Sort by</label>
+        <select id="sort" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
           <option value="date-asc">Date (Oldest First)</option>
           <option value="date-desc">Date (Newest First)</option>
           <option value="amount-asc">Amount (Low to High)</option>
@@ -63,24 +49,19 @@
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gradient-to-r from-teal-400 to-blue-400">
           <tr>
-            <th scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Date
             </th>
-            <th scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Category
             </th>
-            <th scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Description
             </th>
-            <th scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Amount
             </th>
-            <th scope="col"
-              class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
               Actions
             </th>
           </tr>
@@ -88,51 +69,36 @@
         <tbody class="bg-white divide-y divide-gray-200">
           <!-- Example Row 1 -->
           <tr class="hover:bg-gray-50 transition-colors duration-200">
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-01</td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Food</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lunch
-              at Cafe</td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$15.00</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-01</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Food</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lunch at Cafe</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$15.00</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <a href="#"
-                class="text-teal-600 hover:text-teal-800 mr-2">Edit</a>
+              <a href="#" class="text-teal-600 hover:text-teal-800 mr-2">Edit</a>
               <a href="#" class="text-red-600 hover:text-red-800">Delete</a>
             </td>
           </tr>
 
           <!-- Example Row 2 -->
           <tr class="hover:bg-gray-50 transition-colors duration-200">
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-02</td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Transport</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bus
-              Fare</td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$2.50</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-02</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Transport</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bus Fare</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$2.50</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <a href="#"
-                class="text-teal-600 hover:text-teal-800 mr-2">Edit</a>
+              <a href="#" class="text-teal-600 hover:text-teal-800 mr-2">Edit</a>
               <a href="#" class="text-red-600 hover:text-red-800">Delete</a>
             </td>
           </tr>
 
           <!-- Example Row 3 -->
           <tr class="hover:bg-gray-50 transition-colors duration-200">
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-03</td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Entertainment</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Movie
-              Ticket</td>
-            <td
-              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$12.00</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-03</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Entertainment</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Movie Ticket</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$12.00</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-              <a href="#"
-                class="text-teal-600 hover:text-teal-800 mr-2">Edit</a>
+              <a href="#" class="text-teal-600 hover:text-teal-800 mr-2">Edit</a>
               <a href="#" class="text-red-600 hover:text-red-800">Delete</a>
             </td>
           </tr>
@@ -143,17 +109,13 @@
     <!-- Pagination -->
     <div class="flex justify-between items-center mt-6">
       <div class="text-sm text-gray-700">
-        Showing <span class="font-semibold">1</span> to <span
-          class="font-semibold">10</span> of <span
-          class="font-semibold">100</span> entries
+        Showing <span class="font-semibold">1</span> to <span class="font-semibold">10</span> of <span class="font-semibold">100</span> entries
       </div>
       <div class="flex gap-2">
-        <button
-          class="px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
+        <button class="px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
           Previous
         </button>
-        <button
-          class="px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
+        <button class="px-4 py-2 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
           Next
         </button>
       </div>
@@ -161,29 +123,21 @@
   </div>
 
   <!-- Right box -->
-  <div class="w-200 bg-blue-400 px-5 py-10 rounded-lg">
+  <div class="w-200 rounded-lg px-5 py-10 cards">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
+      Add New Expense
+    </h2>
     <!-- Add Expense Form -->
     <div class="mt-8 p-6 bg-white rounded-lg shadow-lg">
-      <h2
-        class="text-2xl font-bold text-gray-800 mb-6 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
-        Add New Expense
-      </h2>
       <form class="space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label for="date"
-              class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-            <input
-              type="date"
-              id="date"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+            <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+            <input type="date" id="date" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
           </div>
           <div>
-            <label for="category"
-              class="block text-sm font-medium text-gray-700 mb-2">Category</label>
-            <select
-              id="category"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+            <label for="category" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <select id="category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
               <option value="food">Food</option>
               <option value="transport">Transport</option>
               <option value="entertainment">Entertainment</option>
@@ -192,24 +146,14 @@
           </div>
         </div>
         <div>
-          <label for="description"
-            class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-          <input
-            type="text"
-            id="description"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+          <input type="text" id="description" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
         </div>
         <div>
-          <label for="amount"
-            class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
-          <input
-            type="number"
-            id="amount"
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+          <label for="amount" class="block text-sm font-medium text-gray-700 mb-2">Amount</label>
+          <input type="number" id="amount" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
         </div>
-        <button
-          type="submit"
-          class="w-full px-6 py-2 bg-gradient-to-r from-teal-400 to-blue-400 text-white rounded-lg hover:from-teal-500 hover:to-blue-500 transition-all duration-300 shadow-md hover:shadow-lg">
+        <button type="submit" class="w-full px-6 py-2 bg-blue-400 text-black rounded-lg hover:bg-teal-500 transition-all duration-300 shadow-md hover:shadow-lg">
           Add Expense
         </button>
       </form>
