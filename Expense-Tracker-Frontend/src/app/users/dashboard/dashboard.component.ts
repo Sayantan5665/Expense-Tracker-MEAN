@@ -393,6 +393,7 @@ export class DashboardComponent implements OnInit {
             const msg = this.document.createElement('p');
             msg.id = 'emptyDoughnutMsg';
             msg.innerHTML = 'No data available';
+            msg.classList.add('text-gray-500');
             chartContainer.innerHTML = '';
             chartContainer.appendChild(msg);
           }

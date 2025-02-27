@@ -21,6 +21,7 @@ export const routes: Routes = [
     children: [
       { path: 'profile', loadComponent: () => import('./users/profile/profile.component').then((c) => c.ProfileComponent) },
       { path: 'dashboard', loadComponent: () => import('./users/dashboard/dashboard.component').then((c) => c.DashboardComponent) },
+      { path: 'expenses', loadComponent: () => import('./users/expenses/expenses.component').then((c) => c.ExpensesComponent) },
     ]
   },
   {
