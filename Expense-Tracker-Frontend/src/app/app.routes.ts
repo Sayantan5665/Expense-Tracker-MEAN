@@ -10,6 +10,8 @@ export const routes: Routes = [
       { path: '', loadComponent: () => import('./pages/home/home.component').then((c) => c.HomeComponent) },
       { path: 'about', loadComponent: () => import('./pages/about/about.component').then((c) => c.AboutComponent) },
       { path: 'contact', loadComponent: () => import('./pages/contact/contact.component').then((c) => c.ContactComponent) },
+      { path: 'privacy-policy', loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then((c) => c.PrivacyPolicyComponent) },
+      { path: 'terms-and-conditions', loadComponent: () => import('./pages/terms-and-conditions/terms-and-conditions.component').then((c) => c.TermsAndConditionsComponent) },
     ]
   },
   {
