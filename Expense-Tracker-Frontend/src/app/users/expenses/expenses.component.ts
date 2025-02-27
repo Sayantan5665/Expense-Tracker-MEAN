@@ -2,14 +2,13 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSelectModule} from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-expenses',
-  imports: [ReactiveFormsModule, MatIcon, MatFormFieldModule, MatDatepickerModule, MatSelectModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule],
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.scss',
   providers: [provideNativeDateAdapter()],
