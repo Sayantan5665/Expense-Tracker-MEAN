@@ -212,8 +212,9 @@ class expenseRepository {
    */
   async getExpensesCategoryWise(
     matchConditions: { userId: Types.ObjectId; type: 'cash-in' | 'cash-out' },
-    dateRange: { startDate?: string; endDate?: string }
-  ): Promise<any[]> {
+    dateRange: { startDate?: string; endDate?: string },
+    options: PaginateOptions
+  ): Promise<AggregatePaginateResult<any>> {
     try {
       const dateFilter = dateRange && (dateRange?.startDate || dateRange?.endDate)
         ? {
@@ -230,7 +231,7 @@ class expenseRepository {
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
 
-      const expenses: IExpense[] = await expenseModel.aggregate([
+      const aggregationPipeline: any = [
         // Match the expenses with conditions
         { $match: fullMatchConditions },
 
@@ -286,7 +287,10 @@ class expenseRepository {
             },
           },
         },
-      ]);
+      ]
+
+      if (!options.limit || options.limit <= 0) { options.pagination = false };  // if limit is not provided pagination will be disabled
+      const expenses = await expenseModel.aggregatePaginate(aggregationPipeline, options);
 
       return expenses;
     } catch (error: any) {

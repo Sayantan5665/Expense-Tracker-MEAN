@@ -356,7 +356,7 @@ export class DashboardComponent implements OnInit {
       const error: any = this.expenseDetailsCategoryWise.error();
       if (value) {
         // console.log("expenseDetailsCategoryWise: ", value);
-        const data = value.data;
+        const data = value.data.docs;
         if (data.length) {
           const chartContainer = this.document.getElementById('chartContainer');
           if (chartContainer) {

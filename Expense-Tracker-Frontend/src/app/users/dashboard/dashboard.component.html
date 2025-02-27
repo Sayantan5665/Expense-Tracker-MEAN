@@ -126,8 +126,8 @@
       <div id="splide" class="splide w-full">
         <div class="splide__track">
           <ul class="splide__list">
-            @if(expenseCategoryWise.length > 18) {
-            @for (category of expenseCategoryWise; track $index) {
+            @if(expenseCategoryWise.docs?.length > 18) {
+            @for (category of expenseCategoryWise.docs; track $index) {
             @if ($index < 17) {
             <li class="splide__slide">
               <div
@@ -150,9 +150,9 @@
               </div>
             </li>
             } @else {
-            @for (category of expenseCategoryWise; track $index) {
+            @for (category of expenseCategoryWise.docs; track $index) {
             <li class="splide__slide"
-              [ngClass]="expenseCategoryWise.length < 5 ? 'set-margin' : ''">
+              [ngClass]="expenseCategoryWise.docs?.length < 5 ? 'set-margin' : ''">
               <div
                 class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
                 <div class="w-[20px] h-[20px] rounded-full"

@@ -157,7 +157,11 @@ class expenseController {
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
 
-            const expenses: IExpense[] = await expenseRepository.getExpensesCategoryWise(matchConditions, dateRange);
+            const page: number = parseInt(req.query.page as string, 10) || 1;
+            const limit: number = parseInt(req.query.limit as string, 10) || 0;
+            const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
+
+            const expenses = await expenseRepository.getExpensesCategoryWise(matchConditions, dateRange, {page, limit, pagination});
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",
