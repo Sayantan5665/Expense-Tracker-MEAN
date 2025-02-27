@@ -774,12 +774,12 @@ class expenseRepository {
       const expenses:any = await expenseModel.aggregatePaginate(
         [{ $match: {} }], // Empty match to use the already filtered expenses
         options,
-        result.expenses, // Pass the pre-filtered expenses array
+        result && result.expenses || [], // Pass the pre-filtered expenses array
       );
   
       return {
         ...expenses,
-        report: result.totals,
+        report: result && result.totals || [],
       };
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");
