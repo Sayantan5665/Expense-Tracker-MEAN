@@ -1,19 +1,14 @@
-// /* Ensure thead and tbody columns align */
-// table {
-//   width: 100%;
-//   table-layout: fixed; /* Fix column widths */
-// }
+ select {
+   border: none !important;
+   outline: none !important;
 
-// thead, tbody tr {
-//   display: table;
-//   width: 100%;
-//   table-layout: fixed; /* Fix column widths */
-// }
+   &:focus {
+     box-shadow: none !important;
+   }
 
-// tbody {
-//   display: block;
-// }
+   &:focus-visible {
+     outline: none !important;
+     box-shadow: none !important;
+   }
 
-// tr, th{
-//   min-width: 600px !important;
-// }
+ }
