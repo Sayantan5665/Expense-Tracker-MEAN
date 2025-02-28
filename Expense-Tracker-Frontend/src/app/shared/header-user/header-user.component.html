@@ -28,12 +28,12 @@
         class="text-sm/6 font-semibold text-gray-900">Dashboard</a>
       <a routerLink="/expenses"
         class="text-sm/6 font-semibold text-gray-900">Expenses</a>
-      <a routerLink="/"
-        class="text-sm/6 font-semibold text-gray-900">Categories</a>
+      <!-- <a routerLink="/"
+        class="text-sm/6 font-semibold text-gray-900">Categories</a> -->
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
       <a #GetReportBtn
-        class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer mt-2" >Get Report</a>
+        class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer mt-2" >Get Statement</a>
       <a #CalculatorBtn
         class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer mt-2"
         (click)="openCalculator(CalculatorBtn)">Calculator</a>
@@ -93,14 +93,14 @@
             <a routerLink="/expenses"
               class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50"
               (click)="isMobileMenuOpen.set(false)">Expenses</a>
-            <a routerLink="/"
+            <!-- <a routerLink="/"
               class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50"
-              (click)="isMobileMenuOpen.set(false)">Categories</a>
+              (click)="isMobileMenuOpen.set(false)">Categories</a> -->
           </div>
           <div class="py-6">
             <a #GetReportBtn1
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
-              (click)="isMobileMenuOpen.set(false);">Get Report</a>
+              (click)="isMobileMenuOpen.set(false);">Get Statement</a>
             <a #CalculatorBtn1
             class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
             (click)="openCalculator(CalculatorBtn1); isMobileMenuOpen.set(false);">Calculator</a>

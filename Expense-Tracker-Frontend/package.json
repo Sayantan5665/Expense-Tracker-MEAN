@@ -34,6 +34,7 @@
     "mathjs": "^14.2.0",
     "ngx-cookie-service": "^19.1.0",
     "ngx-mask": "^19.0.6",
+    "ngx-pagination": "^6.0.3",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.15.10",
     "tslib": "^2.3.0",
