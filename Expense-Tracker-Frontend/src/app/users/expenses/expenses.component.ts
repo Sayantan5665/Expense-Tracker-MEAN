@@ -9,10 +9,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AlertService, ApiService, EventService } from '@services';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgStyle } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-expenses',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, MatInputModule, FormsModule, MatNativeDateModule, NgxPaginationModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatDatepickerModule, MatSelectModule, MatInputModule, FormsModule, MatNativeDateModule, NgxPaginationModule, NgStyle, MatIcon],
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.scss',
   providers: [provideNativeDateAdapter()],
@@ -23,6 +25,7 @@ export class ExpensesComponent {
   private readonly event = inject(EventService);
   private readonly fb = inject(FormBuilder);
 
+  protected transaction = {type: 'cash-in'}
   protected expenseForm!: FormGroup;
   protected dateRangeForm!: FormGroup;
   protected filterOption = signal({
