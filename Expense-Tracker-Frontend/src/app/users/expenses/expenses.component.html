@@ -62,7 +62,7 @@
 
     <!-- Expense List Table -->
     <div class="bg-white rounded-lg shadow-lg ">
-      <div class="rounded-lg w-full max-h-[500px] overflow-y-auto overflow-x-auto thin-scrollbar">
+      <div class="rounded-lg w-full h-[500px] overflow-y-auto overflow-x-auto thin-scrollbar">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gradient-to-r from-teal-400 to-blue-400">
             <tr>
@@ -103,6 +103,10 @@
                   <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
                   <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
                 </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="pl-6 whitespace-nowrap text-sm text-gray-500 text-center pt-[200px]" colspan="6">No data found!</td>
               </tr>
             }
 

@@ -28,7 +28,6 @@ export class ExpensesComponent {
   private readonly fb = inject(FormBuilder);
 
   protected expenseForm!: FormGroup;
-  protected dateRangeForm!: FormGroup;
   protected filterOption = signal({
     limit: 10,
     page: 1,
@@ -74,11 +73,6 @@ export class ExpensesComponent {
       categoryId: [null, Validators.required],
       description: ['', Validators.required],
       paymentMethod: ['cash', Validators.required]
-    });
-
-    this.dateRangeForm = this.fb.group({
-      start: [null],
-      end: [null]
     });
   }
 
