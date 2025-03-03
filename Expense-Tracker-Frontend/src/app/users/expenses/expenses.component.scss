@@ -1,8 +1,8 @@
  select {
-   border: none !important;
    outline: none !important;
 
    &:focus {
+    outline: none !important;
      box-shadow: none !important;
    }
 
@@ -11,4 +11,7 @@
      box-shadow: none !important;
    }
 
+   &.per-page-select {
+     border: none !important;
+   }
  }

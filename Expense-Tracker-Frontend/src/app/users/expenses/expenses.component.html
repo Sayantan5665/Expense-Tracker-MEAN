@@ -1,4 +1,5 @@
 @let _filterOption = filterOption();
+@let _expenses = expenses.value()?.data?.docs || [];
 
 <div class="mx-auto mb-10 pb-4 flex flex-col lg:flex-row gap-5 justify-between">
   <!-- Left box -->
@@ -43,14 +44,19 @@
       <div class="flex-1 expense-range-picker">
         <label for="dateRange" class="block text-sm font-medium text-gray-700 mb-2">Date
           Range</label>
-        <mat-form-field appearance="outline" class="w-full sm:!min-w-[285px]">
-          <mat-date-range-input [rangePicker]="picker" (click)="picker.open()">
-            <input matStartDate placeholder="Start date" readonly>
-            <input matEndDate placeholder="End date" readonly>
-          </mat-date-range-input>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="w-full sm:!min-w-[285px]">
+            <mat-date-range-input [rangePicker]="rangePicker" (click)="rangePicker.open()">
+              <input matStartDate placeholder="Start date" [(ngModel)]="_filterOption.startDate" readonly>
+              <input matEndDate placeholder="End date" [(ngModel)]="_filterOption.endDate" readonly>
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #rangePicker>
+              <mat-date-range-picker-actions>
+                <button mat-button matDateRangePickerCancel>Cancel</button>
+                <button mat-raised-button matDateRangePickerApply (click)="expenses.reload()">Apply</button>
+              </mat-date-range-picker-actions>
+            </mat-date-range-picker>
+          </mat-form-field>
       </div>
     </div>
 
@@ -79,205 +85,27 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <!-- Example Row 1 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-01</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Food</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lunch
-                at Cafe</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$15.00</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
 
-            <!-- Example Row 2 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-02</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Transport</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bus
-                Fare</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$2.50</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
+            @for (expense of _expenses; track expense) {
+              <tr class="hover:bg-gray-50 transition-colors duration-200">
+                <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                    [ngStyle]="{ 'background': expense?.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
+                    <mat-icon class="material-symbols-outlined">{{expense?.type
+                      === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{expense?.date | date: 'dd MMMM'}}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{expense?.category?.name || '_'}}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{expense?.description || '_'}}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">{{expense?.amount | currency:'INR':'symbol'}}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
+                  <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
+                </td>
+              </tr>
+            }
 
-            <!-- Example Row 3 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-03</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Entertainment</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Movie
-                Ticket</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$12.00</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
-
-            <!-- Example Row 1 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-01</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Food</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lunch
-                at Cafe</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$15.00</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
-
-            <!-- Example Row 2 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-02</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Transport</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bus
-                Fare</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$2.50</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
-
-            <!-- Example Row 3 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-03</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Entertainment</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Movie
-                Ticket</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$12.00</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
-
-            <!-- Example Row 1 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-01</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Food</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Lunch
-                at Cafe</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$15.00</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
-
-            <!-- Example Row 2 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-02</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Transport</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bus
-                Fare</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$2.50</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
-
-            <!-- Example Row 3 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-03</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Entertainment</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Movie
-                Ticket</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$12.00</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
-
-            <!-- Example Row 3 -->
-            <tr class="hover:bg-gray-50 transition-colors duration-200">
-              <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': transaction.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{transaction.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-10-03</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">Entertainment</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Movie
-                Ticket</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">$12.00</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>
@@ -302,9 +130,8 @@
         <div class="flex items-center">
           <div class="flex justify-center items-center">
             <span>Show:</span>
-            <select class="max-w-[100px] !bg-transparent !border-none" [(ngModel)]="_filterOption.limit"
+            <select class="per-page-select max-w-[100px] !bg-transparent !border-none" [(ngModel)]="_filterOption.limit"
               (change)="expenses.reload()">
-              <option [value]="5">5</option>
               <option [value]="10">10</option>
               <option [value]="25">25</option>
               <option [value]="50">50</option>
