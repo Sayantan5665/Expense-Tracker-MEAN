@@ -644,14 +644,154 @@ class expenseRepository {
   //   //     }
   //   // ]
   // }
+  // async getExpensesReport(  [format not currect]
+  //   matchConditions: { userId: Types.ObjectId; type?: "cash-in" | "cash-out" } & Record<string, any>,
+  //   dateRange: { startDate?: string; endDate?: string },
+  //   options: PaginateOptions
+  // ): Promise<{
+  //   expenses: AggregatePaginateResult<any>;
+  //   totals: { totalCashIn: number; totalCashOut: number; remainingCash: number };
+  // }> {
+  //   try {
+  //     // Construct the date filter based on optional startDate and endDate
+  //     const dateFilter =
+  //       dateRange && (dateRange.startDate || dateRange.endDate)
+  //         ? {
+  //             ...(dateRange.startDate && { $gte: new Date(dateRange.startDate) }),
+  //             ...(dateRange.endDate && {
+  //               $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
+  //             }),
+  //           }
+  //         : {};
+  
+  //     // Ensure the type filter is included in matchConditions
+  //     const typeFilter = matchConditions.type ? { type: matchConditions.type } : {};
+  
+  //     // Merge filters into match conditions
+  //     const fullMatchConditions = {
+  //       ...matchConditions,
+  //       ...typeFilter, // Add type filter explicitly
+  //       ...(Object.keys(dateFilter).length && { date: dateFilter }),
+  //     };
+  
+  //     const aggregationPipeline: any = [
+  //       { $match: fullMatchConditions }, // Ensure filtering by user, date, and type
+  
+  //       // Lookup category details
+  //       {
+  //         $lookup: {
+  //           from: "categories",
+  //           localField: "categoryId",
+  //           foreignField: "_id",
+  //           as: "category",
+  //         },
+  //       },
+  //       { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+  
+  //       // Lookup color details
+  //       {
+  //         $lookup: {
+  //           from: "colors",
+  //           localField: "category.colorId",
+  //           foreignField: "_id",
+  //           as: "category.color",
+  //         },
+  //       },
+  //       { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
+  
+  //       {
+  //         $facet: {
+  //           // **Totals Pipeline**
+  //           totals: [
+  //             { $match: fullMatchConditions }, // Ensure type filtering applies here
+  //             {
+  //               $group: {
+  //                 _id: null,
+  //                 totalCashIn: {
+  //                   $sum: {
+  //                     $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0],
+  //                   },
+  //                 },
+  //                 totalCashOut: {
+  //                   $sum: {
+  //                     $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0],
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //             {
+  //               $project: {
+  //                 _id: 0,
+  //                 totalCashIn: 1,
+  //                 totalCashOut: 1,
+  //                 remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] },
+  //               },
+  //             },
+  //           ],
+  
+  //           // **Expenses Pipeline**
+  //           expenses: [
+  //             { $match: fullMatchConditions }, // Ensure filtering applies
+  //             { $sort: { date: -1 } },
+  //             {
+  //               $project: {
+  //                 _id: 1,
+  //                 userId: 1,
+  //                 date: 1,
+  //                 amount: 1,
+  //                 description: 1,
+  //                 type: 1,
+  //                 documents: 1,
+  //                 category: {
+  //                   _id: 1,
+  //                   name: 1,
+  //                   description: 1,
+  //                   isDefault: 1,
+  //                   color: {
+  //                     _id: 1,
+  //                     name: 1,
+  //                     hexCode: 1,
+  //                   },
+  //                 },
+  //                 createdAt: 1,
+  //                 updatedAt: 1,
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       },
+  
+  //       { $unwind: "$totals" },
+  //     ];
+  
+  //     // Disable pagination if limit is not provided or invalid
+  //     if (!options.limit || options.limit <= 0) {
+  //       options.pagination = false;
+  //     }
+  
+  //     // Execute aggregation pipeline
+  //     const [result] = await expenseModel.aggregate(aggregationPipeline);
+  
+  //     // Paginate the expenses array correctly
+  //     const expenses: any = await expenseModel.aggregatePaginate(
+  //       [{ $match: fullMatchConditions }], // Ensure correct filtering
+  //       options,
+  //       result?.expenses || []
+  //     );
+  
+  //     return {
+  //       ...expenses,
+  //       report: result?.totals || [],
+  //     };
+  //   } catch (error: any) {
+  //     throw new Error(error.message || "Something went wrong");
+  //   }
+  // }
   async getExpensesReport(
     matchConditions: { userId: Types.ObjectId; type?: "cash-in" | "cash-out" } & Record<string, any>,
     dateRange: { startDate?: string; endDate?: string },
     options: PaginateOptions
-  ): Promise<{
-    expenses: AggregatePaginateResult<any>;
-    totals: { totalCashIn: number; totalCashOut: number; remainingCash: number };
-  }> {
+  ): Promise<any> {
     try {
       // Construct the date filter based on optional startDate and endDate
       const dateFilter =
@@ -659,25 +799,26 @@ class expenseRepository {
           ? {
               ...(dateRange.startDate && { $gte: new Date(dateRange.startDate) }),
               ...(dateRange.endDate && {
+                // Add one day to include the entire end date
                 $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
               }),
             }
           : {};
   
-      // Ensure the type filter is included in matchConditions
+      // Ensure the type filter is included if provided
       const typeFilter = matchConditions.type ? { type: matchConditions.type } : {};
   
       // Merge filters into match conditions
       const fullMatchConditions = {
         ...matchConditions,
-        ...typeFilter, // Add type filter explicitly
+        ...typeFilter,
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
   
-      const aggregationPipeline: any = [
-        { $match: fullMatchConditions }, // Ensure filtering by user, date, and type
-  
-        // Lookup category details
+      // --- Report Pipeline ---
+      // This pipeline calculates the totals (cash-in, cash-out, and remaining cash)
+      const reportPipeline:any = [
+        { $match: fullMatchConditions },
         {
           $lookup: {
             from: "categories",
@@ -687,8 +828,6 @@ class expenseRepository {
           },
         },
         { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
-  
-        // Lookup color details
         {
           $lookup: {
             from: "colors",
@@ -698,90 +837,90 @@ class expenseRepository {
           },
         },
         { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
-  
         {
-          $facet: {
-            // **Totals Pipeline**
-            totals: [
-              { $match: fullMatchConditions }, // Ensure type filtering applies here
-              {
-                $group: {
-                  _id: null,
-                  totalCashIn: {
-                    $sum: {
-                      $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0],
-                    },
-                  },
-                  totalCashOut: {
-                    $sum: {
-                      $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0],
-                    },
-                  },
-                },
-              },
-              {
-                $project: {
-                  _id: 0,
-                  totalCashIn: 1,
-                  totalCashOut: 1,
-                  remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] },
-                },
-              },
-            ],
-  
-            // **Expenses Pipeline**
-            expenses: [
-              { $match: fullMatchConditions }, // Ensure filtering applies
-              { $sort: { date: -1 } },
-              {
-                $project: {
-                  _id: 1,
-                  userId: 1,
-                  date: 1,
-                  amount: 1,
-                  description: 1,
-                  type: 1,
-                  documents: 1,
-                  category: {
-                    _id: 1,
-                    name: 1,
-                    description: 1,
-                    isDefault: 1,
-                    color: {
-                      _id: 1,
-                      name: 1,
-                      hexCode: 1,
-                    },
-                  },
-                  createdAt: 1,
-                  updatedAt: 1,
-                },
-              },
-            ],
+          $group: {
+            _id: null,
+            totalCashIn: {
+              $sum: { $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0] },
+            },
+            totalCashOut: {
+              $sum: { $cond: [{ $eq: ["$type", "cash-out"] }, "$amount", 0] },
+            },
           },
         },
-  
-        { $unwind: "$totals" },
+        {
+          $project: {
+            _id: 0,
+            totalCashIn: 1,
+            totalCashOut: 1,
+            remainingCash: { $subtract: ["$totalCashIn", "$totalCashOut"] },
+          },
+        },
       ];
   
-      // Disable pagination if limit is not provided or invalid
+      const [reportResult] = await expenseModel.aggregate(reportPipeline);
+  
+      // --- Expenses Pipeline ---
+      // This pipeline returns the expense documents with lookup details and sorted by date.
+      const expensesPipeline:any = [
+        { $match: fullMatchConditions },
+        {
+          $lookup: {
+            from: "categories",
+            localField: "categoryId",
+            foreignField: "_id",
+            as: "category",
+          },
+        },
+        { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
+        {
+          $lookup: {
+            from: "colors",
+            localField: "category.colorId",
+            foreignField: "_id",
+            as: "category.color",
+          },
+        },
+        { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
+        { $sort: { date: -1 } },
+        {
+          $project: {
+            _id: 1,
+            userId: 1,
+            date: 1,
+            amount: 1,
+            description: 1,
+            type: 1,
+            documents: 1,
+            category: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              isDefault: 1,
+              color: {
+                _id: 1,
+                name: 1,
+                hexCode: 1,
+              },
+            },
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        },
+      ];
+  
+      // Disable pagination if limit is missing or invalid
       if (!options.limit || options.limit <= 0) {
         options.pagination = false;
       }
   
-      // Execute aggregation pipeline
-      const [result] = await expenseModel.aggregate(aggregationPipeline);
+      // Use aggregatePaginate with the full expenses pipeline that includes lookup stages.
+      const expenses = await expenseModel.aggregatePaginate(expensesPipeline, options);
   
-      // Paginate the expenses array correctly
-      const expenses: any = await expenseModel.aggregatePaginate(
-        [{ $match: fullMatchConditions }], // Ensure correct filtering
-        options,
-        result?.expenses || []
-      );
-  
+      // Return the final result with paginated expenses and the totals report.
       return {
         ...expenses,
-        report: result?.totals || [],
+        report: reportResult || { totalCashIn: 0, totalCashOut: 0, remainingCash: 0 },
       };
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");
