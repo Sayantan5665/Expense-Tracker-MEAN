@@ -45,14 +45,15 @@
           <div
             class="h-full bg-blue-600 text-xs font-light text-blue-100 leading-none rounded-full flex justify-center items-center"
             [ngStyle]="{'width': month.daysGoneInPercent+'%'}">
-            {{month.daysGoneInPercent >= 25 ? month.daysGoneInPercent+' % Completed' : ''}}</div>
+            {{month.daysGoneInPercent >= 25 ?
+            month.daysGoneInPercent+' % Completed' : ''}}</div>
           @if (month.daysGoneInPercent <= 75) {
-          @let remainingDays=month.weekdaysRemaining + month.weekendsRemaining;
           <div
             class="text-center flex flex-grow flex-col justify-center items-center">
             <p class="text-xs font-light">Remaining</p>
-            <p class="text-sm font-light">{{remainingDays > 1 ?
-              remainingDays+' Days' : remainingDays+'Day'}}</p>
+            <p class="text-sm font-light">{{month.totalRemainingDays > 1 ?
+              month.totalRemainingDays+' Days' :
+              month.totalRemainingDays+'Day'}}</p>
           </div>
           }
         </div>

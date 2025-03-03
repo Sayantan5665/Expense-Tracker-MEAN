@@ -299,12 +299,13 @@ export class DashboardComponent implements OnInit {
   private readonly document = inject(DOCUMENT);
 
   protected readonly userDetails = computed(() => this.event.userDetails());
-  protected monthDetails = signal<{ today: Date, daysGoneInPercent: number, weekdaysRemaining: number, weekendsRemaining: number }>(
+  protected monthDetails = signal<{ today: Date, daysGoneInPercent: number, weekdaysRemaining: number, weekendsRemaining: number, totalRemainingDays:number }>(
     {
       today: new Date(),
       daysGoneInPercent: 0,
       weekdaysRemaining: 0,
-      weekendsRemaining: 0
+      weekendsRemaining: 0,
+      totalRemainingDays: 0
     }
   );
   protected readonly months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -569,6 +570,7 @@ export class DashboardComponent implements OnInit {
       daysGoneInPercent: Math.round((daysGone / totalDaysInMonth) * 100),
       weekendsRemaining,
       weekdaysRemaining,
+      totalRemainingDays: remainingDays
     }));
   }
 
