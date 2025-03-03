@@ -344,7 +344,10 @@ export class DashboardComponent implements OnInit {
 
   constructor() {
     Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
-    this.calculateMonthDetails();
+    effect(() => {
+      this.selectedMonth();
+      this.calculateMonthDetails();
+    });
     effect(() => {
       const error: any = this.expenseDetailsWithReport.error();
       if (error) {
@@ -534,12 +537,20 @@ export class DashboardComponent implements OnInit {
 
   /** Calculate the days gone, weekdays remaining, and weekends remaining */
   protected calculateMonthDetails() {
+    const selectedMonth = this.selectedMonth();
     const today = new Date();
     const year = today.getFullYear();
-    const month = today.getMonth();
+    const month = selectedMonth.selected; // Use the selected month instead of the current month
 
+    // Calculate the total days in the selected month
     const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
-    const daysGone = today.getDate();
+
+    // Determine the current day in the selected month
+    let daysGone = today.getDate();
+    if (month !== today.getMonth()) {
+      // If the selected month is not the current month, assume all days are gone
+      daysGone = totalDaysInMonth;
+    }
 
     const remainingDays = totalDaysInMonth - daysGone;
 
@@ -554,6 +565,7 @@ export class DashboardComponent implements OnInit {
 
     this.monthDetails.update((values) => ({
       ...values,
+      today: new Date(year, month, daysGone), // Update today's date to reflect the selected month
       daysGoneInPercent: Math.round((daysGone / totalDaysInMonth) * 100),
       weekendsRemaining,
       weekdaysRemaining,

@@ -11,14 +11,15 @@
     class="w-full h-auto gap-4 flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row mb-4">
     <div
       class="w-full h-auto sm:w-full md:w-full lg:w-6/12 flex flex-col md:flex-row lg:flex-row p-4 gap-4 rounded-[15px] cards">
-      <div class="w-[250px] h-[250px] sm:w-[316px] sm:h-[316px] rounded-full overflow-hidden relative border-4 border-gray-300">
+      <div
+        class="w-[250px] h-[250px] sm:w-[316px] sm:h-[316px] rounded-full overflow-hidden relative border-4 border-gray-300">
         @if (user && user?.image) {
-          <img fill priority class="object-cover" [ngSrc]="user.image"
-            [placeholder]="'/images/add_picture.jpg'"
-            (error)="user.image = '/images/add_picture.jpg'" alt="User image">
+        <img fill priority class="object-cover" [ngSrc]="user.image"
+          [placeholder]="'/images/add_picture.jpg'"
+          (error)="user.image = '/images/add_picture.jpg'" alt="User image">
         } @else {
-          <img fill priority class="object-cover"
-            [ngSrc]="'/images/add_picture.jpg'" alt="User image">
+        <img fill priority class="object-cover"
+          [ngSrc]="'/images/add_picture.jpg'" alt="User image">
         }
       </div>
       <div
@@ -44,11 +45,14 @@
           <div
             class="h-full bg-blue-600 text-xs font-light text-blue-100 leading-none rounded-full flex justify-center items-center"
             [ngStyle]="{'width': month.daysGoneInPercent+'%'}">
-            {{month.daysGoneInPercent}}% Completed</div>
-          @if (month.daysGoneInPercent <= 75) { <div
+            {{month.daysGoneInPercent >= 25 ? month.daysGoneInPercent+' % Completed' : ''}}</div>
+          @if (month.daysGoneInPercent <= 75) {
+          @let remainingDays=month.weekdaysRemaining + month.weekendsRemaining;
+          <div
             class="text-center flex flex-grow flex-col justify-center items-center">
             <p class="text-xs font-light">Remaining</p>
-            <p class="text-sm font-light">9 Days</p>
+            <p class="text-sm font-light">{{remainingDays > 1 ?
+              remainingDays+' Days' : remainingDays+'Day'}}</p>
           </div>
           }
         </div>
@@ -91,9 +95,11 @@
         </div>
         <div
           class="w-full h-auto flex flex-col justify-center items-center absolute bottom-15 left-0 p-5">
-          <p class="text-2xl font-light">{{(expenseDetails?.report?.totalCashOut || 0) |
+          <p class="text-2xl font-light">{{(expenseDetails?.report?.totalCashOut
+            || 0) |
             currency:'INR':'symbol'}}</p>
-          <p class="text-sm font-light">of {{((expenseDetails?.report?.totalCashOut +
+          <p class="text-sm font-light">of
+            {{((expenseDetails?.report?.totalCashOut +
             expenseDetails?.report?.totalCashIn) || 0) |
             currency:'INR':'symbol' }} </p>
         </div>
@@ -128,8 +134,7 @@
           <ul class="splide__list">
             @if(expenseCategoryWise.docs?.length > 18) {
             @for (category of expenseCategoryWise.docs; track $index) {
-            @if ($index < 17) {
-            <li class="splide__slide">
+            @if ($index < 17) { <li class="splide__slide">
               <div
                 class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
                 <div class="w-[20px] h-[20px] rounded-full"
@@ -159,12 +164,14 @@
                   [ngStyle]="{ 'background': category?.category?.color?.hexCode}"></div>
                 <h3
                   class="text-sm font-semibold">{{category?.category?.name}}</h3>
-                <p class="text-xs text-gray-600">{{category?.totalAmount | currency:'INR':'symbol'}}</p>
+                <p class="text-xs text-gray-600">{{category?.totalAmount |
+                  currency:'INR':'symbol'}}</p>
               </div>
             </li>
             } @empty {
-              <p class="w-full text-sm text-gray-500 text-center mt-20">No expenses have been incurred this month.</p>
-              }
+            <p class="w-full text-sm text-gray-500 text-center mt-20">No
+              expenses have been incurred this month.</p>
+            }
             }
           </ul>
         </div>
@@ -178,7 +185,8 @@
       <!-- Transaction List -->
       <div
         class="w-full rounded-lg h-auto max-h-[200px] overflow-y-auto thin-scrollbar">
-        @for (transaction of _recentTransactions?.firstFive || []; track $index) {
+        @for (transaction of _recentTransactions?.firstFive || []; track $index)
+        {
         <div
           class="w-full h-auto flex items-center justify-between py-3 border-b border-gray-200 last:border-b-0 px-2"
           style="background-color: rgb(255, 255, 255);">
@@ -204,15 +212,15 @@
           </p>
         </div>
         } @empty {
-        <p class="text-sm text-gray-500 text-center mt-10">No recent transactions
+        <p class="text-sm text-gray-500 text-center mt-10">No recent
+          transactions
           found.</p>
         }
         @if (_recentTransactions.totalLength > 5) {
         <div
           class="w-full h-auto flex items-center justify-between py-3 border-b border-gray-200 last:border-b-0 px-2"
           style="background-color: rgb(255, 255, 255);">
-          <div
-            class="w-full flex justify-center items-center">
+          <div class="w-full flex justify-center items-center">
             <h3 class="text-sm font-semibold">View All</h3>
             <mat-icon
               class="material-symbols-outlined">arrow_right_alt</mat-icon>
