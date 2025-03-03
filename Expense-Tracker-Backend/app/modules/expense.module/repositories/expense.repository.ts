@@ -230,8 +230,6 @@ class expenseRepository {
         ...matchConditions,
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
-      console.log("fullMatchConditions: ", fullMatchConditions);
-
 
       const aggregationPipeline: any = [
         // Match the expenses with conditions
@@ -675,7 +673,6 @@ class expenseRepository {
         ...typeFilter, // Add type filter explicitly
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
-  
   
       const aggregationPipeline: any = [
         { $match: fullMatchConditions }, // Ensure filtering by user, date, and type
