@@ -230,6 +230,8 @@ class expenseRepository {
         ...matchConditions,
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
+      console.log("fullMatchConditions: ", fullMatchConditions);
+
 
       const aggregationPipeline: any = [
         // Match the expenses with conditions
@@ -645,32 +647,38 @@ class expenseRepository {
   //   // ]
   // }
   async getExpensesReport(
-    matchConditions: { userId: Types.ObjectId } & Record<string, any>,
+    matchConditions: { userId: Types.ObjectId; type?: "cash-in" | "cash-out" } & Record<string, any>,
     dateRange: { startDate?: string; endDate?: string },
     options: PaginateOptions
-  ): Promise<{ expenses: AggregatePaginateResult<any>; totals: { totalCashIn: number; totalCashOut: number; remainingCash: number } }> {
+  ): Promise<{
+    expenses: AggregatePaginateResult<any>;
+    totals: { totalCashIn: number; totalCashOut: number; remainingCash: number };
+  }> {
     try {
       // Construct the date filter based on optional startDate and endDate
       const dateFilter =
-        dateRange && (dateRange?.startDate || dateRange?.endDate)
+        dateRange && (dateRange.startDate || dateRange.endDate)
           ? {
-              ...(dateRange?.startDate && { $gte: new Date(dateRange?.startDate) }),
-              ...(dateRange?.endDate && {
-                // Add 1 day to endDate and use $lt to include the full day
+              ...(dateRange.startDate && { $gte: new Date(dateRange.startDate) }),
+              ...(dateRange.endDate && {
                 $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
               }),
             }
           : {};
   
-      // Merge date filter into match conditions if applicable
+      // Ensure the type filter is included in matchConditions
+      const typeFilter = matchConditions.type ? { type: matchConditions.type } : {};
+  
+      // Merge filters into match conditions
       const fullMatchConditions = {
         ...matchConditions,
+        ...typeFilter, // Add type filter explicitly
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
   
+  
       const aggregationPipeline: any = [
-        // Filter expenses for the specific user and date range if provided
-        { $match: fullMatchConditions },
+        { $match: fullMatchConditions }, // Ensure filtering by user, date, and type
   
         // Lookup category details
         {
@@ -683,7 +691,7 @@ class expenseRepository {
         },
         { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
   
-        // Lookup color details from Color collection through category.colorId
+        // Lookup color details
         {
           $lookup: {
             from: "colors",
@@ -694,14 +702,14 @@ class expenseRepository {
         },
         { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
   
-        // Group to calculate totalCashIn, totalCashOut, and remainingCash
         {
           $facet: {
-            // Pipeline for totals
+            // **Totals Pipeline**
             totals: [
+              { $match: fullMatchConditions }, // Ensure type filtering applies here
               {
                 $group: {
-                  _id: null, // Group all documents together
+                  _id: null,
                   totalCashIn: {
                     $sum: {
                       $cond: [{ $eq: ["$type", "cash-in"] }, "$amount", 0],
@@ -724,12 +732,10 @@ class expenseRepository {
               },
             ],
   
-            // Pipeline for expenses
+            // **Expenses Pipeline**
             expenses: [
-              // Sort expenses by date in descending order
+              { $match: fullMatchConditions }, // Ensure filtering applies
               { $sort: { date: -1 } },
-  
-              // Project only required fields for expenses
               {
                 $project: {
                   _id: 1,
@@ -758,7 +764,6 @@ class expenseRepository {
           },
         },
   
-        // Unwind the totals array (since $facet returns an array)
         { $unwind: "$totals" },
       ];
   
@@ -767,24 +772,25 @@ class expenseRepository {
         options.pagination = false;
       }
   
-      // Execute the aggregation pipeline
+      // Execute aggregation pipeline
       const [result] = await expenseModel.aggregate(aggregationPipeline);
   
-      // Paginate the expenses array
-      const expenses:any = await expenseModel.aggregatePaginate(
-        [{ $match: {} }], // Empty match to use the already filtered expenses
+      // Paginate the expenses array correctly
+      const expenses: any = await expenseModel.aggregatePaginate(
+        [{ $match: fullMatchConditions }], // Ensure correct filtering
         options,
-        result && result.expenses || [], // Pass the pre-filtered expenses array
+        result?.expenses || []
       );
   
       return {
         ...expenses,
-        report: result && result.totals || [],
+        report: result?.totals || [],
       };
     } catch (error: any) {
       throw new Error(error.message || "Something went wrong");
     }
   }
+  
 
 
   async updateExpenses(expenseId: Types.ObjectId, body: IExpense): Promise<IExpense | null> {
