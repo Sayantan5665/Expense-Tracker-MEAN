@@ -35,8 +35,8 @@ export class ExpensesComponent {
     sortField: 'createdAt',
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(),
-    categoryId: null,
-    type: null,
+    categoryId: "",
+    type: "",
     pagination: true,
   });
 
@@ -44,25 +44,48 @@ export class ExpensesComponent {
     request: () => ({ filterOption: this.filterOption() }),
     loader: (e) => {
       const filter = e.request.filterOption;
-      return this.api.get(`api/expense/fetch-by-filter-with-report?startDate=${filter.startDate}&endDate=${filter.endDate}`);
+      return this.api.get(`api/expense/fetch-by-filter-with-report?startDate=${filter.startDate}&endDate=${filter.endDate}${(filter.categoryId && filter.categoryId.length) ? '&categoryId=' + filter.categoryId : ''}${(filter.type && filter.type.length) ? '&type=' + filter.type : ''}`);
+    },
+  });
+  protected categories:ResourceRef<any> = rxResource({
+    loader: () => {
+      return this.api.get('api/category/fetch/all');
     },
   });
 
   constructor() {
     this.initForms();
 
+    /** For Expenses List */
     effect(() => {
       const error = this.expenses.error();
       if (error) {
         console.log("error: ", error);
         this.alert.toast('Error fetching expenses', 'error');
       }
-      const data = this.expenses.value();
+      // const data = this.expenses.value();
+      // if (data) {
+      //   console.log("expenses: ", data);
+      // }
+    });
+
+    /** For Categories List */
+    effect(() => {
+      const error = this.categories.error();
+      if (error) {
+        console.log("error: ", error);
+        this.alert.toast('Error fetching categories', 'error');
+      }
+      const data = this.categories.value();
       if (data) {
-        console.log("expenses: ", data);
+        console.log("categories: ", data);
       }
     });
 
+    effect(() => {
+      const filter = this.filterOption();
+      console.log("filter: ", filter);
+    })
   }
 
 
