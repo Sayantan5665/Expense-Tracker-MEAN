@@ -1,15 +1,15 @@
-import { Component, effect, inject, ResourceRef, signal, viewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, effect, inject, ResourceRef, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { AlertService, ApiService, EventService } from '@services';
+import { AlertService, ApiService } from '@services';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { CurrencyPipe, DatePipe, DOCUMENT, NgStyle } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 
@@ -24,10 +24,7 @@ import { MatButton } from '@angular/material/button';
 export class ExpensesComponent {
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
-  private readonly event = inject(EventService);
-  private readonly fb = inject(FormBuilder);
 
-  protected expenseForm!: FormGroup;
   protected filterOption = signal({
     limit: 10,
     page: 1,
@@ -37,6 +34,15 @@ export class ExpensesComponent {
     type: "",
     pagination: true,
   });
+  protected expenseForm: FormGroup = new FormGroup({
+    documents: new FormControl(),
+    amount: new FormControl(0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]{1,2})?$/)]),
+    description: new FormControl('', Validators.required),
+    categoryId: new FormControl('', Validators.required),
+    type: new FormControl('cash-in', Validators.required),
+    date: new FormControl(new Date(), Validators.required),
+  });
+  protected documentArray!:Array<{file:File, url:string, name:string}>;
 
   protected expenses:ResourceRef<any> = rxResource({
     request: () => ({ filterOption: this.filterOption() }),
@@ -55,8 +61,6 @@ export class ExpensesComponent {
   });
 
   constructor() {
-    this.initForms();
-
     /** For Expenses List */
     effect(() => {
       const error = this.expenses.error();
@@ -64,10 +68,6 @@ export class ExpensesComponent {
         console.log("error: ", error);
         this.alert.toast('Error fetching expenses', 'error');
       }
-      // const data = this.expenses.value();
-      // if (data) {
-      //   console.log("expenses: ", data);
-      // }
     });
 
     /** For Categories List */
@@ -77,28 +77,9 @@ export class ExpensesComponent {
         console.log("error: ", error);
         this.alert.toast('Error fetching categories', 'error');
       }
-      // const data = this.categories.value();
-      // if (data) {
-      //   console.log("categories: ", data);
-      // }
-    });
-
-    effect(() => {
-      // const filter = this.filterOption();
-      // console.log("filter: ", filter);
-    })
-  }
-
-
-  private initForms(): void {
-    this.expenseForm = this.fb.group({
-      amount: [null, [Validators.required, Validators.min(1)]],
-      date: [new Date(), Validators.required],
-      categoryId: [null, Validators.required],
-      description: ['', Validators.required],
-      paymentMethod: ['cash', Validators.required]
     });
   }
+
 
   protected pageChangeEvent(e: number): void {
     console.log("e: ", e);

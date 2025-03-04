@@ -104,7 +104,7 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
 
-            @for (expense of _expensesList | paginate: {itemsPerPage: _expenses?.limit, totalItems: _expenses?.totalDocs, currentPage: _expenses?.page }; track expense) {
+            @for (expense of _expensesList | paginate: {itemsPerPage: _expenses?.limit||10, totalItems: _expenses?.totalDocs, currentPage: _expenses?.page }; track expense) {
             <tr class="hover:bg-gray-50 transition-colors duration-200">
               <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
                 <div
@@ -188,11 +188,11 @@
           </div>
 
           <div class="__screenLabel">
-            {{ _expenses.page * _expenses.limit - _expenses.limit + 1 }} -
+            {{ _expenses.page||1 * _expenses.limit||10 - (_expenses.limit||10) + 1 }} -
             {{
-            _expenses.page * _expenses.limit > _expenses?.totalDocs||0
+            _expenses.page||1 * _expenses.limit||10 > _expenses?.totalDocs||0
             ? _expenses?.totalDocs||0
-            : _expenses.page * _expenses.limit
+            : _expenses.page||1 * _expenses.limit||10
             }}
             of {{ _expenses?.totalDocs||0 }}
           </div>

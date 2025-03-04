@@ -51,7 +51,7 @@ class expenseController {
             const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false }))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false })).docs[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
@@ -122,7 +122,6 @@ class expenseController {
             const page: number = parseInt(req.query.page as string, 10) || 1;
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
             const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
-            console.log("pagination: ", pagination);
 
             const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, {page, limit, pagination});
             return res.status(200).json({
@@ -184,7 +183,8 @@ class expenseController {
             const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false }))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false })).docs[0];
+            console.log("fetchedExpense: ", fetchedExpense);
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
@@ -222,6 +222,7 @@ class expenseController {
             }
 
             const newExpense: IExpense | null = await expenseRepository.updateExpenses(new Types.ObjectId(expenseId), body);
+            console.log("newExpense: ", newExpense);
             if (!newExpense) {
                 return res.status(404).json({
                     status: 404,
@@ -261,7 +262,7 @@ class expenseController {
             const expenseId: string = req.params.id;
             const user: ITokenUser = req.user!;
 
-            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false }))[0];
+            const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false })).docs[0];
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
