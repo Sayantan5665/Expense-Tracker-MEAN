@@ -59,7 +59,7 @@
 
          li {
            &.pagination-previous {
-             margin-right: 16px;
+             margin-right: 0px;//16px;
 
              @media (min-width: 1200px) {
                margin-right: 1vw;
@@ -81,7 +81,7 @@
            }
 
            &.pagination-next {
-             margin-left: 16px;
+             margin-left: 0px; //16px;
 
              @media (min-width: 1200px) {
                margin-left: 1vw;

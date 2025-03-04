@@ -122,6 +122,7 @@ class expenseController {
             const page: number = parseInt(req.query.page as string, 10) || 1;
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
             const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
+            console.log("pagination: ", pagination);
 
             const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, {page, limit, pagination});
             return res.status(200).json({

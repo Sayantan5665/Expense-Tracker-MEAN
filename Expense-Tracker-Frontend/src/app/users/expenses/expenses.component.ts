@@ -9,7 +9,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AlertService, ApiService, EventService } from '@services';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
+import { CurrencyPipe, DatePipe, DOCUMENT, NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 
@@ -42,7 +42,7 @@ export class ExpensesComponent {
     request: () => ({ filterOption: this.filterOption() }),
     loader: (e) => {
       const filter = e.request.filterOption;
-      let url = `api/expense/fetch-by-filter-with-report?startDate=${filter.startDate}&endDate=${filter.endDate}&limit=${filter?.limit || 10}&page=${filter?.page || 1}`;
+      let url = `api/expense/fetch-by-filter-with-report?startDate=${filter.startDate}&endDate=${filter.endDate}&limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
       (filter.categoryId && filter.categoryId.length) && (url += '&categoryId=' + filter.categoryId);
       (filter.type && filter.type.length) && (url += '&type=' + filter.type);
       return this.api.get(url);
@@ -77,15 +77,15 @@ export class ExpensesComponent {
         console.log("error: ", error);
         this.alert.toast('Error fetching categories', 'error');
       }
-      const data = this.categories.value();
-      if (data) {
-        console.log("categories: ", data);
-      }
+      // const data = this.categories.value();
+      // if (data) {
+      //   console.log("categories: ", data);
+      // }
     });
 
     effect(() => {
-      const filter = this.filterOption();
-      console.log("filter: ", filter);
+      // const filter = this.filterOption();
+      // console.log("filter: ", filter);
     })
   }
 

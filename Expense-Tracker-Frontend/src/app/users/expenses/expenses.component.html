@@ -104,7 +104,7 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
 
-            @for (expense of _expensesList | paginate: {itemsPerPage: _filterOption?.limit, totalItems: _expenses?.totalDocs, currentPage: _expenses?.page }; track expense) {
+            @for (expense of _expensesList | paginate: {itemsPerPage: _expenses?.limit, totalItems: _expenses?.totalDocs, currentPage: _expenses?.page }; track expense) {
             <tr class="hover:bg-gray-50 transition-colors duration-200">
               <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
                 <div
@@ -167,8 +167,8 @@
         @if (true) {
         <div class="pagination-wrap">
           <pagination-controls #pagination [autoHide]="true"
-            (pageChange)="pageChangeEvent($event)" [previousLabel]="''"
-            [nextLabel]="''" [maxSize]="5"></pagination-controls>
+            (pageChange)="pageChangeEvent($event)" [maxSize]="5"
+            [previousLabel]="''" [nextLabel]="''"></pagination-controls>
         </div>
         }
         <div class="flex items-center">
@@ -178,7 +178,6 @@
               class="per-page-select max-w-[78px] !bg-transparent !border-none"
               [(ngModel)]="_filterOption.limit"
               (change)="expenses.reload()">
-              <option [value]="1">1</option>
               <option [value]="2">2</option>
               <option [value]="10">10</option>
               <option [value]="25">25</option>
@@ -189,11 +188,11 @@
           </div>
 
           <div class="__screenLabel">
-            {{ _filterOption.page * _filterOption.limit - _filterOption.limit + 1 }} -
+            {{ _expenses.page * _expenses.limit - _expenses.limit + 1 }} -
             {{
-            _filterOption.page * _filterOption.limit > _expenses?.totalDocs||0
+            _expenses.page * _expenses.limit > _expenses?.totalDocs||0
             ? _expenses?.totalDocs||0
-            : _filterOption.page * _filterOption.limit
+            : _expenses.page * _expenses.limit
             }}
             of {{ _expenses?.totalDocs||0 }}
           </div>
