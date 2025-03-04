@@ -68,9 +68,9 @@ export class RegisterComponent {
       formData.append(key, data[key]);
     })
 
-    for (let [key, value] of Object.entries(formData)) {
-      console.log(key, ": ", value, ";");
-    }
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(key, ": ", value, ";");
+    // }
 
     this.api.post('api/user/register', formData).subscribe({
       next: (res) => {

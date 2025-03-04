@@ -184,7 +184,6 @@ class expenseController {
             const user: ITokenUser = req.user!;
 
             const fetchedExpense: any = (await expenseRepository.getExpenses({ userId: new Types.ObjectId(user.id), _id: new Types.ObjectId(expenseId) }, { page: 1, limit: 0, pagination: false })).docs[0];
-            console.log("fetchedExpense: ", fetchedExpense);
             if (!fetchedExpense) {
                 return res.status(404).json({
                     status: 404,
@@ -207,7 +206,6 @@ class expenseController {
                 type: req.body?.type || fetchedExpense.type,
                 documents: fetchedExpense.documents.map((doc: any) => ({ path: doc.path, originalName: doc.originalName })),
             };
-            console.log("body: ", body);
 
             const files: any[] = req?.files as any || [];
             const basePath: string = `${req.protocol}://${req.get('host')}`;
@@ -222,7 +220,6 @@ class expenseController {
             }
 
             const newExpense: IExpense | null = await expenseRepository.updateExpenses(new Types.ObjectId(expenseId), body);
-            console.log("newExpense: ", newExpense);
             if (!newExpense) {
                 return res.status(404).json({
                     status: 404,

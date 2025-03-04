@@ -1,3 +1,16 @@
+ .main-upper-container {
+   @media (max-width: 1180px) {
+     flex-direction: column !important;
+   }
+
+   .right-card {
+     max-width: 100% !important;
+     @media (min-width: 1180px) {
+       width: 30% !important;
+     }
+   }
+ }
+
  select {
    outline: none !important;
 
@@ -59,7 +72,7 @@
 
          li {
            &.pagination-previous {
-             margin-right: 0px;//16px;
+             margin-right: 0px; //16px;
 
              @media (min-width: 1200px) {
                margin-right: 1vw;
@@ -104,5 +117,34 @@
          }
        }
      }
+   }
+ }
+
+
+ /* Chrome, Safari, Edge, Opera */
+ input[type=number]::-webkit-inner-spin-button,
+ input[type=number]::-webkit-outer-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+ }
+
+ /* Firefox */
+ input[type=number] {
+   appearance: textfield;
+   -moz-appearance: textfield;
+ }
+
+ .error-field {
+   label {
+     color: rgb(255, 81, 81) !important;
+   }
+
+   input,
+   select {
+     border: 1px solid rgb(255, 81, 81) !important;
+   }
+
+   .uploaded-file-list-viewer {
+     border: 1px solid rgb(255, 81, 81) !important;
    }
  }
