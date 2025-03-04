@@ -104,7 +104,7 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
 
-            @for (expense of _expensesList; track expense) {
+            @for (expense of _expensesList | paginate: {itemsPerPage: _filterOption?.limit, totalItems: _expenses?.totalDocs, currentPage: _expenses?.page }; track expense) {
             <tr class="hover:bg-gray-50 transition-colors duration-200">
               <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
                 <div
@@ -146,7 +146,7 @@
     </div>
 
     <div
-      class="mt-4 px-6 py-4 bg-white rounded-lg shadow-lg flex items-center justify-between">
+      class="mt-4 px-6 py-4 bg-white rounded-lg shadow-lg flex flex-col md:flex-row items-center justify-between">
       @if (_filterOption?.type != 'cash-out') {
       <p class="text-gray-700">Credit: {{(_expenses?.report?.totalCashIn || 0) | currency: 'INR' : 'symbol'}}</p>
       } @else { <p class="text-gray-700"></p> }
@@ -162,21 +162,24 @@
 
     <!-- Pagination -->
     <div class="mt-4">
-      <div class="flex justify-between items-center">
+      <div class="flex flex-col-reverse md:flex-row justify-between items-center">
         <div class="w-[100px] h-2 hidden lg:block xl:block 2xl:block"></div>
         @if (true) {
         <div class="pagination-wrap">
-          <pagination-controls #pagination [autoHide]="false"
-            (pageChange)="pageChangeEvent($event)"></pagination-controls>
+          <pagination-controls #pagination [autoHide]="true"
+            (pageChange)="pageChangeEvent($event)" [previousLabel]="''"
+            [nextLabel]="''" [maxSize]="5"></pagination-controls>
         </div>
         }
         <div class="flex items-center">
           <div class="flex justify-center items-center">
             <span>Show:</span>
             <select
-              class="per-page-select max-w-[100px] !bg-transparent !border-none"
+              class="per-page-select max-w-[78px] !bg-transparent !border-none"
               [(ngModel)]="_filterOption.limit"
               (change)="expenses.reload()">
+              <option [value]="1">1</option>
+              <option [value]="2">2</option>
               <option [value]="10">10</option>
               <option [value]="25">25</option>
               <option [value]="50">50</option>
@@ -185,14 +188,14 @@
             </select>
           </div>
 
-          <div class="__screenLabel"> <!-- limit = 10, totalItems=100 -->
-            {{ _filterOption.page * 10 - 10 + 1 }} -
+          <div class="__screenLabel">
+            {{ _filterOption.page * _filterOption.limit - _filterOption.limit + 1 }} -
             {{
-            _filterOption.page * 10 > 100
-            ? 100
-            : _filterOption.page * 10
+            _filterOption.page * _filterOption.limit > _expenses?.totalDocs||0
+            ? _expenses?.totalDocs||0
+            : _filterOption.page * _filterOption.limit
             }}
-            of {{ 100 }}
+            of {{ _expenses?.totalDocs||0 }}
           </div>
         </div>
       </div>

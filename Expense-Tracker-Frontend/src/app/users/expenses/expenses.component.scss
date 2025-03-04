@@ -2,7 +2,7 @@
    outline: none !important;
 
    &:focus {
-    outline: none !important;
+     outline: none !important;
      box-shadow: none !important;
    }
 
@@ -13,5 +13,96 @@
 
    &.per-page-select {
      border: none !important;
+   }
+ }
+
+ .pagination-wrap {
+   pagination-controls {
+     display: flex;
+     justify-content: center;
+     width: 100%;
+
+     ::ng-deep {
+       .ngx-pagination {
+         margin: 0;
+         padding: 0;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+
+         li a,
+         li.current {
+           width: 36px;
+           height: 36px;
+           outline: none;
+           border: none;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           background-color: #f7f8f9;
+           font-size: 16px;
+           font-weight: 400;
+           border-radius: 50%;
+           color: #7c7c7c;
+
+           @media (min-width: 1200px) {
+             width: 2.25vw;
+             height: 2.25vw;
+             font-size: 1vw;
+           }
+         }
+
+         li.current {
+           background-color: #000;
+           color: #ffffff;
+         }
+
+         li {
+           &.pagination-previous {
+             margin-right: 16px;
+
+             @media (min-width: 1200px) {
+               margin-right: 1vw;
+               font-size: 1vw;
+             }
+
+             span {
+               font-size: 16px;
+
+               @media (min-width: 1200px) {
+                 font-size: 1vw;
+               }
+             }
+
+             a {
+               background-color: transparent;
+               width: auto;
+             }
+           }
+
+           &.pagination-next {
+             margin-left: 16px;
+
+             @media (min-width: 1200px) {
+               margin-left: 1vw;
+               font-size: 1vw;
+             }
+
+             span {
+               font-size: 16px;
+
+               @media (min-width: 1200px) {
+                 font-size: 1vw;
+               }
+             }
+
+             a {
+               background-color: transparent;
+               width: auto;
+             }
+           }
+         }
+       }
+     }
    }
  }

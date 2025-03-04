@@ -31,8 +31,6 @@ export class ExpensesComponent {
   protected filterOption = signal({
     limit: 10,
     page: 1,
-    sortOrder: 'desc',
-    sortField: 'createdAt',
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(),
     categoryId: "",
@@ -44,7 +42,10 @@ export class ExpensesComponent {
     request: () => ({ filterOption: this.filterOption() }),
     loader: (e) => {
       const filter = e.request.filterOption;
-      return this.api.get(`api/expense/fetch-by-filter-with-report?startDate=${filter.startDate}&endDate=${filter.endDate}${(filter.categoryId && filter.categoryId.length) ? '&categoryId=' + filter.categoryId : ''}${(filter.type && filter.type.length) ? '&type=' + filter.type : ''}`);
+      let url = `api/expense/fetch-by-filter-with-report?startDate=${filter.startDate}&endDate=${filter.endDate}&limit=${filter?.limit || 10}&page=${filter?.page || 1}`;
+      (filter.categoryId && filter.categoryId.length) && (url += '&categoryId=' + filter.categoryId);
+      (filter.type && filter.type.length) && (url += '&type=' + filter.type);
+      return this.api.get(url);
     },
   });
   protected categories:ResourceRef<any> = rxResource({
@@ -99,8 +100,11 @@ export class ExpensesComponent {
     });
   }
 
-  protected pageChangeEvent(event: any) {
-    console.log("pageChangeEvent: ", event);
+  protected pageChangeEvent(e: number): void {
+    console.log("e: ", e);
+    this.filterOption.update((value) => {
+      return { ...value, page: e };
+    });
   }
 
 }
