@@ -26,14 +26,11 @@ export class ProfileComponent {
       if (_userDetails) {
         this.form.patchValue(_userDetails);
       }
-      console.log("_userDetails: ", _userDetails);
     });
   }
 
   protected handleImageUpload(file: any) {
-    console.log("file: ", file);
     const img: File = file.target.files[0];
-    console.log("img: ", img);
     if (img && this.checkType(img)) {
       this.profile_pic.set({ file: img, url: URL.createObjectURL(img) })
     }
@@ -53,7 +50,6 @@ export class ProfileComponent {
 
   protected save(form: FormGroup) {
     const _userDetails = this.userDetails()!;
-    console.log("_userDetails: ", _userDetails);
     const _profile_pic = this.profile_pic();
     const _form = form.value;
     let isValid: boolean = _userDetails?.name !== _form.name;

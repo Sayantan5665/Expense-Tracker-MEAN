@@ -30,9 +30,7 @@ export class RegisterComponent {
   protected toogleConfirmPassword = signal<'text' | 'password'>('password');
 
   protected handleImageUpload(file: any) {
-    console.log("file: ", file);
     const img: File = file.target.files[0];
-    console.log("img: ", img);
     if (img && this.checkType(img)) {
       this.profile_pic.set({ file: img, url: URL.createObjectURL(img) })
     }

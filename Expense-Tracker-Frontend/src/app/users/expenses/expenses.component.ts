@@ -14,6 +14,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MiddleEllipsisDirective } from '@directives';
 import { IUser } from '@types';
+import { hexToRgba } from '@utils';
 
 @Component({
   selector: 'app-expenses',
@@ -31,6 +32,7 @@ export class ExpensesComponent {
   private readonly event = inject(EventService);
 
   /* Variables */
+  protected hexToRgba = hexToRgba;
   protected user: Signal<IUser | null> = computed(() => this.event.userDetails());
   protected filterOption = signal({
     limit: 10,
@@ -98,7 +100,6 @@ export class ExpensesComponent {
         console.log("error: ", error);
         this.alert.toast('Error fetching your categories', 'error');
       }
-      console.log("value: ", this.ownCategories.value());
     });
   }
 
@@ -119,7 +120,6 @@ export class ExpensesComponent {
       reader.readAsDataURL(file);
     }
     this.documentArray.set(tempDocArr);
-    console.log("tempDocArr: ", tempDocArr);
   }
 
   private checkUploadedFileType(file: File) {
@@ -184,7 +184,6 @@ export class ExpensesComponent {
     // }
     this.api.post('api/expense/add', data).subscribe({
       next: (res) => {
-        console.log("res: ", res);
         this.alert.toast('Expense added successfully', 'success');
         this.form.reset();
         documentInput.value = '';

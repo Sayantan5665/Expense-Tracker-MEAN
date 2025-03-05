@@ -22,7 +22,7 @@ export class CalculatorComponent implements OnInit {
     const matDialogConfig = new MatDialogConfig()
     const rect: DOMRect = this.data.element.getBoundingClientRect();
 
-    matDialogConfig.position = { right: `10px`, top: `${rect.bottom + 2}px` }
+    matDialogConfig.position = { right: `10px`, top: `${(rect.bottom < 0 ? 10 : rect.bottom) + 2}px` }
     this.dialogRef.updatePosition(matDialogConfig.position)
   }
 
