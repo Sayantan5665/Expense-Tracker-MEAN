@@ -135,7 +135,7 @@
                 class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">{{expense?.amount
                 | currency:'INR':'symbol'}}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a
+                <a [routerLink]="'/expense/'+expense?._id"
                   class="mr-2 bg-[#ffe77fbf] py-[8px] px-[15px] rounded-lg shadow-lg">View</a>
                 <a class="bg-[#ff7f7fbf] py-[8px] px-[15px] rounded-lg shadow-lg">Delete</a>
               </td>

@@ -17,12 +17,13 @@ import { IUser } from '@types';
 import { hexToRgba } from '@utils';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCategoryDialog } from 'src/app/modals/add-category/add-category.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-expenses',
   imports: [ReactiveFormsModule, FormsModule, MatFormFieldModule, MatDatepickerModule,
     MatSelectModule, MatInputModule, MatButton, MatNativeDateModule, NgxPaginationModule,
-    NgStyle, MatIcon, DatePipe, CurrencyPipe, MiddleEllipsisDirective],
+    NgStyle, MatIcon, DatePipe, CurrencyPipe, MiddleEllipsisDirective, RouterLink],
   templateUrl: './expenses.component.html',
   styleUrl: './expenses.component.scss',
   providers: [provideNativeDateAdapter()],
