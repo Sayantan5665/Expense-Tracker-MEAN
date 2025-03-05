@@ -165,6 +165,21 @@ route.get('/fetch/all', auth, expenseController.getAllExpenses);
  *         type: string
  *         format: date
  *         description: Filter expenses by end date
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
+ *       - in: query
+ *         name: pagination
+ *         schema:
+ *           type: boolean
+ *         description: Set true if pagination is needed
  *     responses:
  *       200: 
  *         description: Fetched expenses successfully.
@@ -213,6 +228,21 @@ route.get('/fetch-by-filter-with-report', auth, expenseController.getExpensesAnd
  *         type: string
  *         format: date
  *         description: "End date for filtering expenses (YYYY-MM-DD)"
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
+ *       - in: query
+ *         name: pagination
+ *         schema:
+ *           type: boolean
+ *         description: Set true if pagination is needed
  *     responses:
  *       200:
  *         description: Expenses fetched successfully

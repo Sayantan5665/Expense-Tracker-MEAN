@@ -1,4 +1,4 @@
-import { Component, effect, inject, ResourceRef, signal } from '@angular/core';
+import { Component, computed, effect, inject, ResourceRef, Signal, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -7,12 +7,13 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { AlertService, ApiService } from '@services';
+import { AlertService, ApiService, EventService } from '@services';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MiddleEllipsisDirective } from '@directives';
+import { IUser } from '@types';
 
 @Component({
   selector: 'app-expenses',
@@ -24,9 +25,13 @@ import { MiddleEllipsisDirective } from '@directives';
   providers: [provideNativeDateAdapter()],
 })
 export class ExpensesComponent {
+  /* Injected Variables */
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
+  private readonly event = inject(EventService);
 
+  /* Variables */
+  protected user: Signal<IUser | null> = computed(() => this.event.userDetails());
   protected filterOption = signal({
     limit: 10,
     page: 1,
@@ -45,6 +50,7 @@ export class ExpensesComponent {
   });
   protected documentArray = signal<Array<{ file: File, url: string, name: string }>>([]);
 
+  /* Api calls */
   protected expenses: ResourceRef<any> = rxResource({
     request: () => ({ filterOption: this.filterOption() }),
     loader: (e) => {
@@ -58,6 +64,11 @@ export class ExpensesComponent {
   protected categories: ResourceRef<any> = rxResource({
     loader: () => {
       return this.api.get('api/category/fetch/all');
+    },
+  });
+  protected ownCategories: ResourceRef<any> = rxResource({
+    loader: () => {
+      return this.api.get(`api/category/fetch/all?yourOwn=true`);
     },
   });
 
@@ -79,13 +90,15 @@ export class ExpensesComponent {
         this.alert.toast('Error fetching categories', 'error');
       }
     });
-  }
 
-
-  protected pageChangeEvent(e: number): void {
-    console.log("e: ", e);
-    this.filterOption.update((value) => {
-      return { ...value, page: e };
+    /** For Your Own Categories List */
+    effect(() => {
+      const error = this.ownCategories.error();
+      if (error) {
+        console.log("error: ", error);
+        this.alert.toast('Error fetching your categories', 'error');
+      }
+      console.log("value: ", this.ownCategories.value());
     });
   }
 
@@ -108,6 +121,7 @@ export class ExpensesComponent {
     this.documentArray.set(tempDocArr);
     console.log("tempDocArr: ", tempDocArr);
   }
+
   private checkUploadedFileType(file: File) {
     const allowedFiles = [
       'image/jpeg',
@@ -192,4 +206,13 @@ export class ExpensesComponent {
     });
   }
 
+  protected limitChange(): void {
+    this.filterOption.update((values) => ({ ...values, page: 1 }));
+  }
+
+  protected pageChangeEvent(e: number): void {
+    this.filterOption.update((value) => {
+      return { ...value, page: e };
+    });
+  }
 }

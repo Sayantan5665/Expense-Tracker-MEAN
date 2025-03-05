@@ -53,8 +53,12 @@ class categoryController {
         try {
             const search: any = req.query.search || '';
             const user: ITokenUser = req.user!;
+            
+            const isDefault: boolean = !((req.query.yourOwn as string) == 'true' ? true : false);
+            const secondCondition:[{ isDefault: boolean }, ...({ [key: string]: any }[])] = [{ isDefault }];
+            !isDefault && secondCondition.push({ userId: new Types.ObjectId(user.id) });
 
-            const categories: Array<ICategory | null> = await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }], [{ isDefault: true }], search?.length ? search : '');
+            const categories: Array<ICategory | null> = await categoryRepo.getCategoryBy([{ userId: new Types.ObjectId(user.id) }], secondCondition, search?.length ? search : '');
 
             return res.status(200).json({
                 status: 200,

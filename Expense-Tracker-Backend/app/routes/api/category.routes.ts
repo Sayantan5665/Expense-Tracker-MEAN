@@ -54,6 +54,12 @@ route.post('/create', auth, categoryController.createCategory);
  *     security:
  *       - token: []
  *     produces: application/json
+ *     parameters:
+ *       - in: query
+ *         name: yourOwn
+ *         schema:
+ *           type: boolean
+ *         description: Set true if only need users their own category
  *     responses:
  *       200: 
  *         description: All categories fetched successfully

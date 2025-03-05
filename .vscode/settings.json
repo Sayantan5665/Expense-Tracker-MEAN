@@ -19,5 +19,11 @@
     //     "titleBar.inactiveForeground": "#15202b99"
     // },
     // "peacock.color": "#f2dcdd",
-    // "html.validate.styles": false
+    // "html.validate.styles": false,
+    "vscode-better-color-picker.languages": [
+        "python",
+        "javascript",
+        "typescript",
+        "html"
+    ]
 }

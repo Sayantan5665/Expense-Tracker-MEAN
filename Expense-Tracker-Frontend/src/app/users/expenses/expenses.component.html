@@ -2,6 +2,7 @@
 @let _expenses = expenses.value()?.data || {};
 @let _expensesList = _expenses?.docs || [];
 @let _categories = categories.value()?.data || [];
+@let _ownCategories = ownCategories.value()?.data || [];
 
 <div class="mx-auto mb-5 flex flex-col lg:flex-row gap-5 justify-between main-upper-container">
   <!-- Left box -->
@@ -130,8 +131,8 @@
                 | currency:'INR':'symbol'}}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <a
-                  class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">View</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
+                  class="mr-2 bg-[#ffe77fbf] py-[8px] px-[15px] rounded-lg shadow-lg">View</a>
+                <a class="bg-[#ff7f7fbf] py-[8px] px-[15px] rounded-lg shadow-lg">Delete</a>
               </td>
             </tr>
             } @empty {
@@ -183,7 +184,7 @@
             <select
               class="per-page-select max-w-[78px] !bg-transparent !border-none"
               [(ngModel)]="_filterOption.limit"
-              (change)="expenses.reload()">
+              (change)="limitChange()">
               <option [value]="2">2</option>
               <option [value]="10">10</option>
               <option [value]="25">25</option>
@@ -362,10 +363,6 @@
                 class=" text-left text-xs font-medium text-white uppercase tracking-wider"></th>
               <th scope="col"
                 class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                Date
-              </th>
-              <th scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                 Category
               </th>
               <th scope="col"
@@ -374,7 +371,11 @@
               </th>
               <th scope="col"
                 class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
-                Amount
+                Default
+              </th>
+              <th scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                Created By
               </th>
               <th scope="col"
                 class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
@@ -384,41 +385,36 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
 
-            @for (expense of _expensesList | paginate: {itemsPerPage:
-            _expenses?.limit||10, totalItems: _expenses?.totalDocs, currentPage:
-            _expenses?.page }; track expense) {
+            @for (category of _ownCategories; track category) {
             <tr class="hover:bg-gray-50 transition-colors duration-200">
               <td class="pl-6 whitespace-nowrap text-sm text-gray-500">
                 <div
                   class="w-8 h-8 rounded-full flex items-center justify-center"
-                  [ngStyle]="{ 'background': expense?.type === 'cash-in' ? '#9FE2BF' : '#f1958b' }">
-                  <mat-icon class="material-symbols-outlined">{{expense?.type
-                    === 'cash-in'? 'trending_up' : 'trending_down'}}</mat-icon>
+                  [ngStyle]="{ 'background': category?.color?.hexCode || '#E0E0E0' }">
                 </div>
               </td>
               <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{expense?.date
-                | date: 'dd MMMM'}}</td>
-              <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{expense?.category?.name
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{{category?.name
                 || '_'}}</td>
               <td
-                class="px-6 py-4 max-w-50 whitespace-nowrap text-sm text-gray-900 overflow-hidden text-ellipsis">{{expense?.description
+                class="px-6 py-4 max-w-50 whitespace-nowrap text-sm text-gray-900 overflow-hidden text-ellipsis">{{category?.description
                 || '_'}}</td>
               <td
-                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">{{expense?.amount
-                | currency:'INR':'symbol'}}</td>
+              class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <span class=" py-[3px] px-[8px] rounded" [class]="!!category?.isDefault ? 'bg-[#61ff78bf]' : 'bg-[#cececebf]'">{{!!category?.isDefault}}</span>
+              </td>
+              <td
+                class="px-6 py-4 max-w-45 whitespace-nowrap text-sm text-gray-900 overflow-hidden text-ellipsis">{{category?.user?.name || '_'}}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <a
-                  class="mr-2 bg-[#ffe77fbf] py-[5px] px-[10px] rounded">Edit</a>
-                <a class="bg-[#ff7f7fbf] py-[5px] px-[10px] rounded">Delete</a>
+                  class="mr-2 bg-[#ffe77fbf] py-[8px] px-[15px] rounded-lg shadow-lg">Edit</a>
               </td>
             </tr>
             } @empty {
             <tr>
               <td
                 class="pl-6 whitespace-nowrap text-sm text-gray-500 text-center pt-[200px]"
-                colspan="6">No data found!</td>
+                colspan="5">You haven't created any categories yet.</td>
             </tr>
             }
 
