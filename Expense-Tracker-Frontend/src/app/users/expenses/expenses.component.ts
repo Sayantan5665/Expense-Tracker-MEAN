@@ -9,12 +9,14 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { AlertService, ApiService, EventService } from '@services';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
+import { CurrencyPipe, DatePipe, DOCUMENT, NgStyle } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MiddleEllipsisDirective } from '@directives';
 import { IUser } from '@types';
 import { hexToRgba } from '@utils';
+import { MatDialog } from '@angular/material/dialog';
+import { AddCategoryDialog } from 'src/app/modals/add-category/add-category.component';
 
 @Component({
   selector: 'app-expenses',
@@ -30,6 +32,8 @@ export class ExpensesComponent {
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
   private readonly event = inject(EventService);
+  private readonly dialog = inject(MatDialog);
+  private readonly document = inject(DOCUMENT);
 
   /* Variables */
   protected hexToRgba = hexToRgba;
@@ -170,7 +174,7 @@ export class ExpensesComponent {
       form.markAllAsTouched();
 
       /**Scroll to the first invalid field */
-      let _form = document.getElementById('add-expense-form');
+      let _form = this.document.getElementById('add-expense-form');
       if (_form) {
         let firstInvalidControl = _form.getElementsByClassName('ng-invalid')[0];
         firstInvalidControl?.scrollIntoView({ behavior: "smooth" });
@@ -212,6 +216,23 @@ export class ExpensesComponent {
   protected pageChangeEvent(e: number): void {
     this.filterOption.update((value) => {
       return { ...value, page: e };
+    });
+  }
+
+  protected addCategory(isEditing: boolean, categoryData?:any): void {
+    if(!categoryData) isEditing = false;
+    const dialogRef = this.dialog.open(AddCategoryDialog, {
+      panelClass: 'add-category-panel',
+      data: {
+        isEditing,
+        categoryData,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.ownCategories.reload();
+      }
     });
   }
 }

@@ -113,6 +113,50 @@ route.get('/fetch-by-id/:id', auth, categoryController.getCategoryById);
 
 /**
  * @swagger
+ * /api/category/edit/{id}:
+ *   put:
+ *     summary: Edit Categories
+ *     tags:
+ *       - Category
+ *     security:
+ *       - token: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *       - in: body
+ *         name: Edit Category
+ *         description: Edit Categories.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - name
+ *             - colorId
+ *             - description
+ *           properties:
+ *             name:
+ *               type: string
+ *             colorId:
+ *               type: string
+ *             isDefault:
+ *               type: boolean
+ *             description:
+ *               type: string
+ *     responses:
+ *        200:
+ *          description: Category updated successfully
+ *        400:
+ *          description: Bad Request
+ *        500:
+ *          description: Server Error
+*/
+route.put('/edit/:id', auth, categoryController.editCcategory);
+
+/**
+ * @swagger
  * /api/category/delete/{id}:
  *   delete:
  *     summary: Delete Categories (Only themselves)

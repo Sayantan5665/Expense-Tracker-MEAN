@@ -127,10 +127,12 @@ class categoryAdminController {
                 return res.redirect('/expense/categories');
             }
 
-            const color: IColor | null = await colorRepositories.getColorBy({ _id: new Types.ObjectId(body.colorId) });
-            if (!color) {
-                req.flash('message', [{ msg: 'Color not found!', type: 'danger' }] as any);
-                return res.redirect('/expense/category/edit');
+            if (body.colorId) {
+                const color: IColor | null = await colorRepositories.getColorBy({ _id: new Types.ObjectId(body.colorId) });
+                if (!color) {
+                    req.flash('message', [{ msg: 'Color not found!', type: 'danger' }] as any);
+                    return res.redirect('/expense/category/edit');
+                }
             }
 
             if (user.role.role == 'user') {
