@@ -132,8 +132,18 @@ button:focus {
 
 
 .expense-add-datepicker {
-  .mdc-text-field {
+  .mat-mdc-form-field-flex {
     padding: 0px 10px !important;
+  }
+
+  .disable-date-input {
+    .mat-mdc-form-field-flex {
+      background-color: #f3f4f6 !important;
+    }
+  }
+
+  .mdc-text-field {
+    overflow: hidden !important;
   }
 
   .mat-mdc-form-field-subscript-wrapper {
@@ -155,7 +165,6 @@ select {
     border-color: rgb(212 212 216) !important;
   }
 }
-
 
 
 

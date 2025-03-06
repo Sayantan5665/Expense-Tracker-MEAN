@@ -28,6 +28,10 @@ input[type=number] {
 
 
 .disable-date-input {
+  .mat-mdc-form-field-flex {
+    background-color: #f3f4f6 !important;
+  }
+
   .date-input {
     &:disabled {
       color: black !important;
@@ -46,7 +50,13 @@ input[type=number] {
       -webkit-appearance: none !important; // For Safari and older Chrome
       -moz-appearance: none !important; // For Firefox
       background-image: none !important;
-      background-color: transparent !important; //Optional: Remove background
+      background-color: #f3f4f6 !important;
+    }
+  }
+
+  input {
+    &:disabled {
+      background-color: #f3f4f6 !important;
     }
   }
 }

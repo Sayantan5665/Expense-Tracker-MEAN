@@ -264,4 +264,17 @@ export class ExpensesComponent {
       }
     });
   }
+
+  protected deleteExpense(expenseId: string): void {
+    this.api.delete(`api/expense/delete/${expenseId}`).subscribe({
+      next: () => {
+        this.alert.toast('Expense deleted successfully','success');
+        this.filterOption.update((value) => ({...value, page: 1 })); // reset page to 1 so that the expense list is updated and displayed the recent expenses
+      },
+      error: (err) => {
+        console.log("err: ", err);
+        this.alert.toast('Error deleting expense', 'error');
+      },
+    });
+  }
 }

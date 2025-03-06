@@ -7,11 +7,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
+import { MiddleEllipsisDirective } from '@directives';
 import { AlertService, ApiService } from '@services';
 
 @Component({
   selector: 'app-expense-view-edit',
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatDatepickerModule, MatInput, NgStyle],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatDatepickerModule, MatInput, NgStyle, MiddleEllipsisDirective],
   templateUrl: './expense-view-edit.component.html',
   styleUrl: './expense-view-edit.component.scss',
   providers: [provideNativeDateAdapter()],
