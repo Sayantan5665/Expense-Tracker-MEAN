@@ -1,0 +1,30 @@
+
+ /* Chrome, Safari, Edge, Opera */
+ input[type=number]::-webkit-inner-spin-button,
+ input[type=number]::-webkit-outer-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+ }
+
+ /* Firefox */
+ input[type=number] {
+   appearance: textfield;
+   -moz-appearance: textfield;
+ }
+
+ .error-field {
+   label {
+     color: rgb(255, 81, 81) !important;
+   }
+
+   input,
+   select {
+     border: 1px solid rgb(255, 81, 81) !important;
+   }
+
+   .uploaded-file-list-viewer {
+     border: 1px solid rgb(255, 81, 81) !important;
+   }
+ }
+
+

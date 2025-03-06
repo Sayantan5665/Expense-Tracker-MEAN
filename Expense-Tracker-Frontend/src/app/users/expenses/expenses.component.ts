@@ -152,6 +152,34 @@ export class ExpensesComponent {
     }
   }
 
+  protected removeUploadedFiles(index: number, documentInput: HTMLInputElement): void {
+    // Get the current files from the input element
+    const currentFiles = documentInput.files;
+
+    // Create a new DataTransfer object to hold the new files
+    const dataTransfer = new DataTransfer();
+
+    if (currentFiles && currentFiles.length) {
+      // Loop through the current files and add them to the DataTransfer object, except the one at the specified index
+      for (let i = 0; i < currentFiles.length; i++) {
+        if (i !== index) {
+          dataTransfer.items.add(currentFiles[i]);
+        }
+      }
+
+      // Update the files property of the input element with the new FileList
+      documentInput.files = dataTransfer.files;
+    } else {
+      // Reset the input element to its original state
+      documentInput.value = '';
+    }
+
+    // Update the documentArray
+    const tempDocArr = [...this.documentArray()];
+    tempDocArr.splice(index, 1);
+    this.documentArray.set(tempDocArr);
+  }
+
   protected submit(form: FormGroup, documentInput: HTMLInputElement): void {
     if (form.valid) {
       const values = form.value;
@@ -220,8 +248,8 @@ export class ExpensesComponent {
     });
   }
 
-  protected addCategory(isEditing: boolean, categoryData?:any): void {
-    if(!categoryData) isEditing = false;
+  protected addCategory(isEditing: boolean, categoryData?: any): void {
+    if (!categoryData) isEditing = false;
     const dialogRef = this.dialog.open(AddCategoryDialog, {
       panelClass: 'add-category-panel',
       data: {

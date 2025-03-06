@@ -18,5 +18,11 @@
         "titleBar.inactiveBackground": "#fbd1d599",
         "titleBar.inactiveForeground": "#15202b99"
     },
-    "peacock.color": "#fbd1d5"
+    "peacock.color": "#fbd1d5",
+    "vscode-better-color-picker.languages": [
+        "python",
+        "javascript",
+        "typescript",
+        "html"
+    ]
 }

@@ -294,7 +294,7 @@
         </div>
         <!-- File Upload Field -->
         @let _documentArray = documentArray();
-        <div class="input-field"  [class.error-field]="_documentArray.length > 5">
+        <div class="input-field file-input"  [class.error-field]="_documentArray.length > 5">
           <label for="fileUpload"
             class="block text-sm font-medium text-gray-700 mb-2">Upload
             Files</label>
@@ -321,7 +321,7 @@
                     <!-- <span class="text-sm text-gray-700 flex-grow">{{doc?.name}}</span> -->
                     <span MiddleEllipsis class="text-sm text-gray-700">{{doc?.name}}</span>
                   </div>
-                  <a class="text-xs text-red-500 whitespace-nowrap">Remove</a>
+                  <a class="text-xs text-red-500 whitespace-nowrap hover:cursor-pointer" (click)="removeUploadedFiles($index, documentInput)"><span class="material-symbols-outlined" style="font-size: 16px;">delete</span></a>
                 </li>
               } @empty {
               <p class="text-sm text-gray-500 text-center mt-6">No documents

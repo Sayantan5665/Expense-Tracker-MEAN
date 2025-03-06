@@ -99,7 +99,8 @@ button:focus {
 }
 
 
-.expense-range-picker, .expense-add-datepicker {
+.expense-range-picker,
+.expense-add-datepicker {
   .mdc-text-field {
     padding: 0 !important;
   }
@@ -134,13 +135,15 @@ button:focus {
   .mdc-text-field {
     padding: 0px 10px !important;
   }
+
   .mat-mdc-form-field-subscript-wrapper {
     display: none !important;
   }
 }
 
 
-input, select {
+input,
+select {
   &:focus {
     box-shadow: none !important;
     border-color: rgb(212 212 216) !important;
@@ -150,5 +153,39 @@ input, select {
     box-shadow: none !important;
     outline: none !important;
     border-color: rgb(212 212 216) !important;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* ----------- Style the file input field ---------- */
+.file-input {
+  /* Hide the default "Choose files" text */
+  // input[type="file"] {
+  //   color: transparent; //Makes the text transparent
+  // }
+  // /* Optional: Style the file input button */
+  // input[type="file"]::file-selector-button {
+  //   background-color: #4CAF50; //Green background
+  //   color: white; //White text
+  //   padding: 8px 16px;
+  //   border: none;
+  //   border-radius: 4px;
+  //   cursor: pointer;
+
+  //   &:hover {
+  //     background-color: #45a049; //Darker green on hover
+  //   }
+  // }
+
+  input[type="file"]::file-selector-button {
+    padding-right: 5px;
+    border-right: 1px solid #cdcdcd;
   }
 }
