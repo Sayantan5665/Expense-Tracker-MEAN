@@ -227,6 +227,7 @@ export class ExpensesComponent {
       next: (res) => {
         this.alert.toast('Expense added successfully', 'success');
         this.form.reset();
+        this.form.patchValue({ amount: '', description: '', categoryId: '', type: 'cash-in', date: new Date(), });
         documentInput.value = '';
         this.documentArray.set([]);
         this.filterOption.set({ // reset filter so that the expense list is updated and displayed the recent expenses
