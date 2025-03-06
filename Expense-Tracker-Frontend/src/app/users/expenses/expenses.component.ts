@@ -128,6 +128,7 @@ export class ExpensesComponent {
   }
 
   private checkUploadedFileType(file: File) {
+    console.log("file: ", file);
     const allowedFiles = [
       'image/jpeg',
       'image/png',
@@ -145,7 +146,14 @@ export class ExpensesComponent {
       'application/wps-office.docx',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ];
-    if (allowedFiles.includes(file.type)) return true;
+    if (allowedFiles.includes(file.type)) {
+      // Check if the file size is within the limit (25 MB)
+      const maxFileSize = 25 * 1024 * 1024; // 25 MB in bytes
+      if (file.size > maxFileSize) {
+        this.alert.toast('File size exceeds the maximum limit of 25 MB.', 'error');
+        return false;
+      } else return true;
+    }
     else {
       this.alert.toast('Invalid file type. Only images, PDFs, Words, Excels, and CSV are allowed.', 'error');
       return false;
@@ -268,8 +276,8 @@ export class ExpensesComponent {
   protected deleteExpense(expenseId: string): void {
     this.api.delete(`api/expense/delete/${expenseId}`).subscribe({
       next: () => {
-        this.alert.toast('Expense deleted successfully','success');
-        this.filterOption.update((value) => ({...value, page: 1 })); // reset page to 1 so that the expense list is updated and displayed the recent expenses
+        this.alert.toast('Expense deleted successfully', 'success');
+        this.filterOption.update((value) => ({ ...value, page: 1 })); // reset page to 1 so that the expense list is updated and displayed the recent expenses
       },
       error: (err) => {
         console.log("err: ", err);
