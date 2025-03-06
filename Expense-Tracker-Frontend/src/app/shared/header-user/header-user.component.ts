@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RouterLink } from '@angular/router';
 import { EventService } from '@services';
 import { CalculatorComponent } from 'src/app/modals/calculator/calculator.component';
+import { StatementViewExportDialog } from 'src/app/modals/statement-view-export/statement-view-export.component';
 
 @Component({
   selector: 'app-header-user',
@@ -48,6 +49,13 @@ export class HeaderUserComponent implements OnInit {
       data: {
         element: button,
       }
+    });
+  }
+
+  protected openViewStatement():void {
+    this.dialog.open(StatementViewExportDialog, {
+      panelClass: 'get-statement-panel',
+      data: {}
     });
   }
 

@@ -1,1 +1,37 @@
-<p>statement-view-export works!</p>
+@let _step = step();
+<div mat-dialog-title>
+  <div class="dialog_header">
+    <div class="details_wrapper">
+      <h4 class="presentation_name">Get Statement</h4>
+    </div>
+    <div class="btn-wrapper">
+      <div class="btn_holder">
+        <button type="button" class="download_btn">
+          <mat-icon class="material-symbols-outlined">download</mat-icon>
+          <span>Download</span>
+        </button>
+      </div>
+      <button mat-dialog-close class="modal_close_btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <div class="doc-viewer-wrapper">
+    @if(_step == 1) {
+    <div class="doc_wrap h-full">
+      Hi
+      <p>This is a sample GET statement. 1</p>
+      <button (click)="step.set(2)">Next</button>
+    </div>
+    }
+    @if(_step == 2) {
+      <div class="doc_wrap h-full">
+        Hi
+        <p>This is a sample GET statement. 2</p>
+        <button (click)="step.set(1)">Prev</button>
+      </div>
+    }
+  </div>
+</mat-dialog-content>

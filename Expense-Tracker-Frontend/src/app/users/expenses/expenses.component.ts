@@ -29,7 +29,7 @@ import { RouterLink } from '@angular/router';
   providers: [provideNativeDateAdapter()],
 })
 export class ExpensesComponent {
-  /* Injected Variables */
+  /* Dependency Injection */
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
   private readonly event = inject(EventService);
@@ -270,6 +270,7 @@ export class ExpensesComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.ownCategories.reload();
+        this.categories.reload();
       }
     });
   }

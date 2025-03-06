@@ -20,7 +20,7 @@ import { DocViewerDialog } from 'src/app/modals/doc-viewer/doc-viewer.component'
   providers: [provideNativeDateAdapter()],
 })
 export class ExpenseViewEditComponent {
-  /* Injected Variables */
+  /* Dependency Injection */
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
   private readonly document = inject(DOCUMENT);

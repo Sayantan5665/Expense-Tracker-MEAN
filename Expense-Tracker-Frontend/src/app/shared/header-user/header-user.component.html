@@ -32,7 +32,7 @@
         class="text-sm/6 font-semibold text-gray-900">Categories</a> -->
     </div>
     <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-      <a #GetReportBtn
+      <a #GetReportBtn (click)="openViewStatement()"
         class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer mt-2" >Get Statement</a>
       <a #CalculatorBtn
         class="text-sm/6 font-semibold text-gray-900 mr-5 hover:cursor-pointer mt-2"
@@ -98,7 +98,7 @@
               (click)="isMobileMenuOpen.set(false)">Categories</a> -->
           </div>
           <div class="py-6">
-            <a #GetReportBtn1
+            <a #GetReportBtn1  (click)="openViewStatement()"
               class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
               (click)="isMobileMenuOpen.set(false);">Get Statement</a>
             <a #CalculatorBtn1
