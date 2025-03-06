@@ -9,10 +9,12 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
 import Splide from '@splidejs/splide';
 import { Grid } from '@splidejs/splide-extension-grid';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgOptimizedImage, DatePipe, NgStyle, MatIcon, RoundProgressComponent, MatSelectModule, FormsModule, CurrencyPipe, NgClass, NgStyle],
+  imports: [NgOptimizedImage, DatePipe, NgStyle, MatIcon, RoundProgressComponent, MatSelectModule,
+    FormsModule, CurrencyPipe, NgClass, NgStyle, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   providers: [
