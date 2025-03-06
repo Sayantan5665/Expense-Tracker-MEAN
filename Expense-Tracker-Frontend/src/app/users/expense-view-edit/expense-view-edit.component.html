@@ -1,23 +1,34 @@
+@let _editing = editing();
+@let _expense = expense();
 @let _categories = categories.value()?.data || [];
 
 <div
   class="mx-auto mb-10 pb-4 flex flex-col lg:flex-row gap-5 justify-center main-upper-container">
   <div
     class="right-card w-full h-auto rounded-lg px-5 py-10 cards">
-    <h1
-      class="text-3xl text-center font-bold text-gray-800 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
-      Update Expense
-    </h1>
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-center items-center mb-8 relative gap-2">
+      <h1
+        class="text-3xl font-bold text-gray-800 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
+        {{_editing ? 'Edit' : ''}} Expense
+      </h1>
+      <button type="submit" style="background-color: #4FA5FF;" (click)="editing.set(!_editing)"
+        class="w-30 px-6 py-2 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg md:absolute md:top-0 md:right-0">
+        {{_editing ? 'Cancel' : 'Edit'}}
+      </button>
+    </div>
+
     <!-- Add Expense Form -->
     <div class="mt-8 p-6 bg-white rounded-lg shadow-lg">
-      <form class="space-y-6" [formGroup]="form" id="add-expense-form">
+      <form class="space-y-6" [formGroup]="form" id="edit-expense-form">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div class="expense-add-datepicker input-field"
             [class.error-field]="form.controls['date'].touched && form.controls['date'].hasError('required')">
             <label for="date"
               class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-            <mat-form-field appearance="outline" class="w-full">
-              <input matInput placeholder="mm/dd/yyyy" [matDatepicker]="picker2"
+            <mat-form-field appearance="outline" class="w-full" [class.disable-date-input]="!_editing">
+              <input class="date-input" matInput placeholder="mm/dd/yyyy" [matDatepicker]="picker2"
                 readonly (click)="picker2.open()" formControlName="date">
               <mat-datepicker-toggle matIconSuffix
                 [for]="picker2"></mat-datepicker-toggle>
@@ -68,9 +79,13 @@
         <div class="input-field">
           <label for="description"
             class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
-          <input type="text" id="description" formControlName="description"
+          @if(_editing) {
+            <input type="text" id="description" formControlName="description"
             placeholder="Description"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+          } @else {
+            <p class="w-full px-3 py-2 border border-gray-300 rounded-md">{{ _expense.description }}</p>
+          }
         </div>
         <div class="input-field"
           [class.error-field]="form.controls['amount'].touched && (form.controls['amount'].hasError('required') || form.controls['amount'].hasError('pattern'))">
@@ -95,19 +110,19 @@
         <div class="input-field file-input"
           [class.error-field]="_documentArray.length > 5">
           <label for="fileUpload"
-            class="block text-sm font-medium text-gray-700 mb-2">Upload
+            class="block text-sm font-medium text-gray-700 mb-2">{{_editing ? 'Upload' : 'Uploaded'}}
             Files</label>
           <input type="file" id="fileUpload" name="fileUpload" #documentInput
-            [multiple]="true"
+            [multiple]="true" [ngStyle]="{'display' : _editing ? 'block' : 'none'}"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
             accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp,image/apng,application/pdf,application/msword,application/vnd.ms-excel,application/wps-office.xlsx,text/csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/wps-office.docx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             (change)="documentUploadHandeler($event, documentInput)" />
-          <div class="error-msg">
+          <div class="error-msg" [ngStyle]="{'display' : _editing ? 'block' : 'none'}">
             @if(_documentArray.length > 5) {
             <p>Maximum 5 documents can be uploaded</p>
             }
           </div>
-          <p class="text-sm text-gray-500 mt-1">Upload receipts or related
+          <p class="text-sm text-gray-500 mt-1" [ngStyle]="{'display' : _editing ? 'block' : 'none'}">Upload receipts or related
             documents (Image, PDF, DOC, Sheet).</p>
           <div
             class="rounded-lg w-full h-[100px] py-1 overflow-y-auto bg-gray-100 thin-scrollbar uploaded-file-list-viewer">
@@ -124,7 +139,9 @@
                 @if(!doc.file) {
                 <a class="text-xs whitespace-nowrap hover:cursor-pointer" style="color: rgb(8, 150, 84);"><span class="material-symbols-outlined" style="font-size: 15px;">eye_tracking</span></a>
                 }
+                @if(_editing) {
                 <a class="text-xs text-red-500 whitespace-nowrap hover:cursor-pointer" (click)="removeUploadedFiles($index, documentInput)"><span class="material-symbols-outlined" style="font-size: 16px;">delete</span></a>
+                }
               </li>
               } @empty {
               <p class="text-sm text-gray-500 text-center mt-10">No documents
