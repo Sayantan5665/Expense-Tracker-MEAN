@@ -74,6 +74,7 @@
 
     <div
       class="w-full h-174 md:h-[348px] gap-4 flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row  sm:w-full md:w-full lg:w-6/12">
+
       <!-- Semi circular progress bar -->
       <div
         class="w-full h-[348px] sm:w-full md:w-1/2 lg:w-1/2 rounded-[15px] relative cards p-4">
@@ -87,7 +88,7 @@
         <div
           class="w-full h-auto absolute top-30 left-0 flex justify-center items-center p-2">
           <round-progress [current]="expenseDetails?.report?.totalCashOut || 0"
-            [max]="(expenseDetails?.report?.totalCashOut + expenseDetails?.report?.totalCashIn) || 0"
+            [max]="(expenseDetails?.report?.totalCashIn) || 0"
             [color]="'#45ccce'"
             [background]="'#eaeaea'" [radius]="150" [stroke]="20"
             [semicircle]="true" [rounded]="true" [clockwise]="true"
@@ -100,9 +101,8 @@
             || 0) |
             currency:'INR':'symbol'}}</p>
           <p class="text-sm font-light">of
-            {{((expenseDetails?.report?.totalCashOut +
-            expenseDetails?.report?.totalCashIn) || 0) |
-            currency:'INR':'symbol' }} </p>
+            {{((expenseDetails?.report?.totalCashIn) || 0) | currency:'INR':'symbol' }}
+          </p>
         </div>
       </div>
 
@@ -126,6 +126,7 @@
 
   <div
     class="w-full h-140 md:h-70 gap-4 flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row">
+
     <!-- Cash out category wise -->
     <div
       class="w-full md:w-2/3 h-full rounded-[15px] cards p-4 relative flex flex-col">
