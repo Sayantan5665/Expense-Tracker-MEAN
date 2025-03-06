@@ -1,17 +1,11 @@
 @let _fileType = fileType();
-@let _fileName = data?.name || '';
-@let _url = data?.url;
-@let _presentationName = data?.presentation || '_';
-@let _slideName = data?.slideNo || '';
+@let _fileName = data.name || '';
+@let _url = data.url || '';
 
 <div mat-dialog-title>
-  <!-- <button mat-dialog-close class="modal_close_btn">
-    <img src="/images/closeIcon.svg" alt="">
-  </button> -->
   <div class="dialog_header">
     <div class="details_wrapper">
-      <h4 class="presentation_name">{{_presentationName}}</h4>
-      <p>{{_slideName}} {{(_slideName.length && _fileName.length) ? '| ' : ''}} <span MiddleEllipsis [minLength]="24">{{_fileName}}</span></p>
+      <h4 class="presentation_name" >{{_fileName}}</h4>
     </div>
     <div class="btn-wrapper">
       <div class="btn_holder">
@@ -20,7 +14,6 @@
         </button>
       </div>
       <button mat-dialog-close class="modal_close_btn">
-        <!-- <img src="/images/closeIcon.svg" alt=""> -->
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -51,7 +44,7 @@
       </div>
     </div>
     } @else if (_fileType == 'pdf') {
-    @if(showPDFloadingMsg()) {
+    <!-- @if(showPDFloadingMsg()) {
     <div style="width: 100%; text-align: center; margin-top: 100px;">
       <p>We're fetching your file...</p>
       <p>Please wait a moment while we retrieve your file from its home on the Internet</p>
@@ -62,8 +55,12 @@
       <p>Sorry, we couldn't load the file</p>
       <p>It's possible that the file is too large or the server is too slow</p>
     </div>
-    }
+    } -->
     <ngx-doc-viewer [url]="_url" viewer="google" style="width:100%;height:100%;"></ngx-doc-viewer>
+    <!-- <pdf-viewer [src]="_url" [rotation]="0" [original-size]="false" [show-all]="true" [fit-to-page]="false" [zoom]="1"
+      [zoom-scale]="'page-width'" [stick-to-page]="false" [render-text]="true" [external-link-target]="'blank'"
+      [autoresize]="true" [show-borders]="true" style="width: 100%; height: 100%;"
+      (after-load-complete)="showPDFloadingMsg.set(false);" (error)="showPDFloadingMsg.set(false); showPDFerrorMsg.set(true);"></pdf-viewer> -->
     }
   </div>
 </mat-dialog-content>

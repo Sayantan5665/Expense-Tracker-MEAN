@@ -4,11 +4,13 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { ActivatedRoute } from '@angular/router';
 import { MiddleEllipsisDirective } from '@directives';
 import { AlertService, ApiService } from '@services';
+import { DocViewerDialog } from 'src/app/modals/doc-viewer/doc-viewer.component';
 
 @Component({
   selector: 'app-expense-view-edit',
@@ -23,6 +25,7 @@ export class ExpenseViewEditComponent {
   private readonly alert = inject(AlertService);
   private readonly document = inject(DOCUMENT);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly dialog = inject(MatDialog);
 
   /* Api calls */
   protected categories: ResourceRef<any> = rxResource({
@@ -200,11 +203,22 @@ export class ExpenseViewEditComponent {
         documentInput.value = '';
         this.documentArray.set([]);
         this.getCategoryDetails(); // to patch updated data
+        this.editing.set(false);
       },
       error: (err) => {
         console.log("err: ", err);
         this.alert.toast('Error adding expense', 'error');
       },
     });
+  }
+
+  protected viewDocuments(doc:any) {
+    this.dialog.open(DocViewerDialog, {
+      data: {
+        url: doc.url,
+        name: doc.name,
+      },
+      panelClass: 'doc-viewer-dialog',
+    })
   }
 }

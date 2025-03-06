@@ -147,7 +147,7 @@
                     class="text-sm text-gray-700">{{doc?.name}}</span>
                 </div>
                 @if(!doc.file) {
-                <a class="text-xs whitespace-nowrap hover:cursor-pointer"
+                <a class="text-xs whitespace-nowrap hover:cursor-pointer" (click)="viewDocuments(doc)"
                   style="color: rgb(8, 150, 84);"><span
                     class="material-symbols-outlined"
                     style="font-size: 15px;">eye_tracking</span></a>

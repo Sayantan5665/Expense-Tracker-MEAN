@@ -14,15 +14,15 @@ import { NgxDocViewerModule } from 'ngx-doc-viewer';
 export class DocViewerDialog {
   readonly dialogRef = inject(MatDialogRef<DocViewerDialog>);
   private readonly document = inject(DOCUMENT);
-  protected data = inject(MAT_DIALOG_DATA);
+  protected data:{url:string, name:string, fileType?:"doc" | "image" | "video" | "pdf" | "other"} = inject(MAT_DIALOG_DATA);
 
 
   private readonly DOC_EXTENSIONS = ['ppt', 'pptx', 'doc', 'docx', 'xls', 'xlsx'];
   private readonly IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'apng', 'avif'];
   private readonly VIDEO_EXTENSIONS = ['mp4', 'webm', 'ogg', 'avi', 'mov', 'mkv'];
   protected fileType = signal<'doc' | 'image' | 'video' | 'pdf' | 'other'>('doc');
-  protected showPDFloadingMsg = signal<boolean>(true);
-  protected showPDFerrorMsg = signal<boolean>(false);
+  // protected showPDFloadingMsg = signal<boolean>(true);
+  // protected showPDFerrorMsg = signal<boolean>(false);
 
   constructor() {
     if (this.data?.url?.length) {
