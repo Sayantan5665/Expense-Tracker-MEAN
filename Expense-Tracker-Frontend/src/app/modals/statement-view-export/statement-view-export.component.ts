@@ -43,14 +43,6 @@ export class StatementViewExportDialog {
   protected expenses = signal<Array<any>>([]);
 
   constructor() {
-    this.filterSubscriber = this.filterForm.valueChanges.subscribe({
-      next: (value: any) => {
-        console.log("value: ", value);
-      }, error: (err: any) => {
-        console.log("err: ", err);
-      }
-    });
-
     this.destroyRef.onDestroy(() => {
       this.filterSubscriber.unsubscribe();
     });
@@ -58,12 +50,11 @@ export class StatementViewExportDialog {
 
   protected getExpenses(filter: any) {
     let url: string = `api/expense/fetch-by-filter-with-report?limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
-    ((filter.startDate && filter.startDate.length) && (filter.endDate && filter.endDate.length)) && (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}`);
-    (filter.type && filter.type.length) && (url += '&type=' + filter.type);
+    ((filter?.startDate && filter.startDate.toString()?.length) && (filter?.endDate && filter.endDate?.toString()?.length)) && (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}`);
+    (filter?.type && filter.type.length) && (url += '&type=' + filter.type);
 
     this.api.get(url).subscribe({
       next: (res: any) => {
-        console.log("res?.data?.docs: ", res?.data?.docs);
         this.expenses.set(res?.data?.docs || []);
       },
       error: (error: any) => {
@@ -86,6 +77,7 @@ export class StatementViewExportDialog {
             this.filterForm.controls['limit'].patchValue(value);
           } else {
             this.filterForm.controls['pagination'].patchValue(false);
+            this.filterForm.controls['limit'].patchValue(0);
           }
           break;
         case 'byDuration':
@@ -122,6 +114,9 @@ export class StatementViewExportDialog {
                 this.filterForm.controls['endDate'].patchValue(currentDate);
               }
             }
+          } else {
+            this.filterForm.controls['startDate'].patchValue('');
+            this.filterForm.controls['endDate'].patchValue('');
           }
           break;
         default:

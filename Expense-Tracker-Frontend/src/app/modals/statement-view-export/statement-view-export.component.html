@@ -22,7 +22,7 @@
   </div>
 </div>
 <mat-dialog-content>
-  <div class="doc-viewer-wrapper h-full flex flex-col justify-between">
+  <div class="doc-viewer-wrapper h-full flex flex-col justify-between relative">
     @if(_step == 1) {
     <div [formGroup]="filterForm"
       class="doc_wrap w-full flex flex-col justify-center items-center gap-2">
@@ -87,8 +87,8 @@
     </div>
     <div
       class="w-full h-auto bg-[#FAF9FD] flex justify-center items-center mt-5">
-      <button
-        class="bg-black !px-10 py-3 text-white rounded-lg"
+      <button [disabled]="filterForm.controls['limit'].value <= 0 && (!filterForm.controls['startDate'].value?.toString()?.length || !filterForm.controls['endDate'].value?.toString()?.length)"
+        class="bg-black !px-10 py-3 text-white rounded-lg" [class.disabled]="filterForm.controls['limit'].value <= 0 && (!filterForm.controls['startDate'].value?.toString()?.length || !filterForm.controls['endDate'].value?.toString()?.length)"
         (click)="step.set(2); getExpenses(filterForm.value)">Next</button>
     </div>
     }
@@ -96,7 +96,7 @@
     <div
       class="doc_wrap w-full flex flex-col justify-center items-center gap-2">
       <p class="mb-2">Transactions of {{'last week'}}. ({{'Cash out'}})</p>
-      <div class="transaction-table w-full">
+      <div class="transaction-table w-full overflow-auto">
         <table class="w-full">
           <thead>
             <tr>
@@ -114,7 +114,7 @@
               <td class="px-3 py-1 whitespace-nowrap">{{transaction?.date |
                 date: 'dd/MM/yyyy'}}</td>
               <td class="px-3 py-1 whitespace-nowrap"><span
-                  class="inline-block !max-w-150 overflow-hidden !text-ellipsis">{{transaction?.description}}</span></td>
+                  class="inline-block max-w-50 md:max-w-100 lg:max-w-150 overflow-hidden !text-ellipsis">{{transaction?.description}}</span></td>
               <td class="px-3 py-1 whitespace-nowrap"
                 [ngStyle]="{'color': transaction?.type == 'cash-out' ? 'red' : 'green'}">{{transaction?.type
                 == 'cash-out' ? '-' : '+'}} {{(transaction?.amount || 0) |
