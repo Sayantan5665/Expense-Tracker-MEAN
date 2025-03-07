@@ -120,7 +120,7 @@
             Files</label>
           <input type="file" id="fileUpload" name="fileUpload" #documentInput
             [multiple]="true"
-            [ngStyle]="{'display' : _editing ? 'block' : 'none'}"
+            [ngStyle]="{'display' : _editing ? 'block' : 'none'}" [disabled]="!_editing"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
             accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp,image/apng,application/pdf,application/msword,application/vnd.ms-excel,application/wps-office.xlsx,text/csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/wps-office.docx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             (change)="documentUploadHandeler($event, documentInput)" />

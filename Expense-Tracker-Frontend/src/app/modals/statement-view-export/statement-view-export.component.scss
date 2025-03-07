@@ -1,9 +1,14 @@
+.mat-mdc-dialog-content {
+  overflow: hidden !important;
+}
+
 .mat-mdc-dialog-title::before {
   height: 0px !important;
 }
 
 .mat-mdc-dialog-title {
   line-height: 20px;
+  box-shadow: 2px 2px 2px rgb(222, 222, 222) !important;
 }
 
 .dialog_header {
@@ -110,10 +115,147 @@
   width: 100%;
   position: relative;
   padding: 0;
-  // padding-top: 30px;
-  overflow: auto;
+  overflow: auto !important;
   height: 54vh;
   overflow: hidden;
+  padding-top: 30px;
+
+}
 
 
+.divider {
+  width: 100%;
+
+  .line {
+    background-color: gray;
+    height: 1px;
+    width: 100%;
+  }
+
+  .or-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
+
+
+.statement-view-datepicker {
+  ::ng-deep {
+    .mat-mdc-form-field-infix {
+      width: 100%;
+
+    }
+
+    .mdc-text-field--outlined {
+      padding-left: 0 !important;
+    }
+
+    .mat-date-range-input-wrapper {
+      width: auto !important;
+      min-width: 110px !important;
+
+      input {
+        width: auto !important;
+        font-size: 16px !important;
+        background-color: #FAF9FD !important;
+      }
+    }
+
+    .mat-mdc-form-field-flex {
+      padding: 0px 10px !important;
+    }
+
+    .disable-date-input {
+      .mat-mdc-form-field-flex {
+        background-color: #f3f4f6 !important;
+      }
+    }
+
+    .mdc-text-field {
+      overflow: hidden !important;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none !important;
+    }
+  }
+}
+
+
+.by-duration {
+  ::ng-deep {
+
+    // mat-chip
+    .mdc-evolution-chip-set__chips {
+      @media (max-width: 530px) {
+        flex-flow: column !important;
+      }
+    }
+
+    // date-picker
+    @media (max-width: 490px) {
+      .mat-datepicker-toggle {
+        display: none !important;
+      }
+
+      .mat-date-range-input-wrapper {
+        min-width: 90px !important;
+
+        input {
+          font-size: 14px !important;
+        }
+      }
+    }
+    @media (max-width: 376px) {
+      .mat-mdc-form-field-flex {
+        padding: 0 !important;
+      }
+      .mdc-text-field--outlined .mat-mdc-form-field-infix, .mdc-text-field--no-label .mat-mdc-form-field-infix {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+      }
+      .mat-mdc-form-field-infix {
+        min-height: 0 !important;
+      }
+    }
+  }
+}
+.by-limit {
+  @media (max-width: 478px) {
+    flex-direction: column !important;
+  }
+}
+.by-type {
+  ::ng-deep {
+    // mat-chip
+    .mdc-evolution-chip-set__chips {
+      flex-wrap: wrap;
+
+      @media (max-width: 370px) {
+        flex-direction: column !important;
+      }
+    }
+  }
+}
+
+// horizontal double line divider
+.divider-doubleline {
+  width: 60%;
+  padding: 1px;
+  border-bottom: 1px solid gray;
+  border-top: 1px solid gray;
+
+  margin: 10px 0;
+
+  @media (max-width: 625px) {
+    width: 100%;
+  }
 }

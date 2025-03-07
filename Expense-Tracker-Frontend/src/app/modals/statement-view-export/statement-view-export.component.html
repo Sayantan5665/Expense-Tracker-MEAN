@@ -1,16 +1,20 @@
 @let _step = step();
+@let _expenses = expenses();
+
 <div mat-dialog-title>
   <div class="dialog_header">
     <div class="details_wrapper">
-      <h4 class="presentation_name">Get Statement</h4>
+      <h4 class="presentation_name">Statement Details</h4>
     </div>
     <div class="btn-wrapper">
+      @if(_step == 2) {
       <div class="btn_holder">
         <button type="button" class="download_btn">
           <mat-icon class="material-symbols-outlined">download</mat-icon>
           <span>Download</span>
         </button>
       </div>
+      }
       <button mat-dialog-close class="modal_close_btn">
         <mat-icon>close</mat-icon>
       </button>
@@ -18,20 +22,99 @@
   </div>
 </div>
 <mat-dialog-content>
-  <div class="doc-viewer-wrapper">
+  <div class="doc-viewer-wrapper h-full flex flex-col justify-between">
     @if(_step == 1) {
-    <div class="doc_wrap h-full">
-      Hi
-      <p>This is a sample GET statement. 1</p>
-      <button (click)="step.set(2)">Next</button>
+    <div
+      class="doc_wrap w-full flex flex-col justify-center items-center gap-2">
+      <div
+        class="by-limit-duration w-auto flex flex-col justify-center items-center gap-2">
+        <div class="by-limit flex justify-center items-center gap-2">
+          <p class="text-lg">Show last</p>
+          <input type="number" class="w-30 h-10 border border-blue-600 rounded"
+            min="0">
+          <p class="text-lg">transactions</p>
+        </div>
+        <div class="divider flex justify-center items-center gap-2">
+          <span class="line"></span>
+          <div class="or-circle">OR</div>
+          <span class="line"></span>
+        </div>
+        <div
+          class="by-duration flex flex-col justify-center items-center gap-2">
+          <mat-chip-listbox aria-label="Transaction by duration">
+            @for (item of byDuration; track item) {
+            <mat-chip-option>{{item}}</mat-chip-option>
+            }
+          </mat-chip-listbox>
+          <div class="statement-view-datepicker">
+            <mat-form-field appearance="outline">
+              <mat-date-range-input [rangePicker]="rangePicker"
+                (click)="rangePicker.open()">
+                <input matStartDate placeholder="Start date" readonly>
+                <input matEndDate placeholder="End date" readonly>
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix
+                [for]="rangePicker"></mat-datepicker-toggle>
+              <mat-date-range-picker #rangePicker>
+                <mat-date-range-picker-actions>
+                  <button mat-button matDateRangePickerCancel>Cancel</button>
+                  <button mat-raised-button
+                    matDateRangePickerApply>Apply</button>
+                </mat-date-range-picker-actions>
+              </mat-date-range-picker>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+      <div class="divider-doubleline"></div>
+      <div
+        class="by-type w-auto flex flex-col justify-center items-center gap-2">
+        <h4>Transaction type</h4>
+        <mat-chip-listbox aria-label="Transaction by type">
+          <mat-chip-option selected>All</mat-chip-option>
+          <mat-chip-option>Cash in</mat-chip-option>
+          <mat-chip-option>Cash out</mat-chip-option>
+        </mat-chip-listbox>
+      </div>
+    </div>
+    <div
+      class="w-full h-auto bg-[#FAF9FD] flex justify-center items-center mt-5">
+      <button
+        class="bg-black !px-10 py-3 text-white rounded-lg"
+        (click)="step.set(2)">Next</button>
     </div>
     }
     @if(_step == 2) {
-      <div class="doc_wrap h-full">
-        Hi
-        <p>This is a sample GET statement. 2</p>
-        <button (click)="step.set(1)">Prev</button>
+    <div class="doc_wrap w-full flex flex-col justify-center items-center gap-2">
+      <p class="mb-2">Transactions of {{'last week'}}. ({{'Cash out'}})</p>
+      <div class="transaction-table w-full">
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-left px-3 py-2" style="background-color: rgb(217, 217, 217);">Date</th>
+              <th class="text-left px-3 py-2" style="background-color: rgb(217, 217, 217);">Description</th>
+              <th class="text-left px-3 py-2" style="background-color: rgb(217, 217, 217);">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (transaction of _expenses; track transaction) {
+            <tr style="border-top: 1px solid rgb(221, 221, 221);">
+              <td class="px-3 py-1 whitespace-nowrap">{{transaction?.date | date: 'dd/MM/yyyy'}}</td>
+              <td class="px-3 py-1 whitespace-nowrap"><span class="inline-block !max-w-150 overflow-hidden !text-ellipsis">{{transaction?.description}}</span></td>
+              <td class="px-3 py-1 whitespace-nowrap"[ngStyle]="{'color': transaction?.type == 'cash-out' ? 'green' : 'red'}">{{transaction?.type == 'cash-out' ? '-' : '+'}} {{(transaction?.amount || 0) | currency:'INR':'symbol'}}</td>
+            </tr>
+            }
+          </tbody>
+        </table>
       </div>
+    </div>
+    <div
+      class="w-full h-auto bg-[#FAF9FD] flex justify-center items-center mt-5">
+      <button
+        class="bg-black !px-10 py-3 text-white rounded-lg"
+        (click)="step.set(1)">Back</button>
+    </div>
     }
   </div>
 </mat-dialog-content>
