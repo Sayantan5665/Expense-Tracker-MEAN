@@ -25,7 +25,6 @@ export class StatementViewExportDialog {
   protected DIALOG_DATA: any = inject(MAT_DIALOG_DATA);
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
-  private readonly destroyRef = inject(DestroyRef);
 
   /* Variables */
   protected step = signal<1 | 2>(1);
@@ -39,14 +38,9 @@ export class StatementViewExportDialog {
     pagination: new FormControl(false),
     byDuration: new FormControl<'last-week' | 'last-month' | 'custom-date-range' | ''>(''),
   });
-  private filterSubscriber!: Subscription;
   protected expenses = signal<Array<any>>([]);
 
-  constructor() {
-    this.destroyRef.onDestroy(() => {
-      this.filterSubscriber.unsubscribe();
-    });
-  }
+  constructor() {}
 
   protected getExpenses(filter: any) {
     let url: string = `api/expense/fetch-by-filter-with-report?limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
@@ -59,6 +53,7 @@ export class StatementViewExportDialog {
       },
       error: (error: any) => {
         console.log("error: ", error);
+        this.alert.toast('Failed to fetch statement', 'error');
       }
     });
   }

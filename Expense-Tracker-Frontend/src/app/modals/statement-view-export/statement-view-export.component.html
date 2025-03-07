@@ -43,9 +43,11 @@
         <div
           class="by-duration flex flex-col justify-center items-center gap-2">
           <mat-chip-listbox aria-label="Transaction by duration"
-            formControlName="byDuration" (change)="formValueChange('byDuration')">
+            formControlName="byDuration"
+            (change)="formValueChange('byDuration')">
             <mat-chip-option [value]="'last-week'">Last 7 Days</mat-chip-option>
-            <mat-chip-option [value]="'last-month'">Last 30 Days</mat-chip-option>
+            <mat-chip-option [value]="'last-month'">Last 30
+              Days</mat-chip-option>
             <mat-chip-option [value]="'custom-date-range'">Custom Date
               Range</mat-chip-option>
           </mat-chip-listbox>
@@ -87,15 +89,34 @@
     </div>
     <div
       class="w-full h-auto bg-[#FAF9FD] flex justify-center items-center mt-5">
-      <button [disabled]="filterForm.controls['limit'].value <= 0 && (!filterForm.controls['startDate'].value?.toString()?.length || !filterForm.controls['endDate'].value?.toString()?.length)"
-        class="bg-black !px-10 py-3 text-white rounded-lg" [class.disabled]="filterForm.controls['limit'].value <= 0 && (!filterForm.controls['startDate'].value?.toString()?.length || !filterForm.controls['endDate'].value?.toString()?.length)"
+      <button
+        [disabled]="filterForm.controls['limit'].value <= 0 && (!filterForm.controls['startDate'].value?.toString()?.length || !filterForm.controls['endDate'].value?.toString()?.length)"
+        class="bg-black !px-10 py-3 text-white rounded-lg"
+        [class.disabled]="filterForm.controls['limit'].value <= 0 && (!filterForm.controls['startDate'].value?.toString()?.length || !filterForm.controls['endDate'].value?.toString()?.length)"
         (click)="step.set(2); getExpenses(filterForm.value)">Next</button>
     </div>
     }
     @if(_step == 2) {
     <div
       class="doc_wrap w-full flex flex-col justify-center items-center gap-2">
-      <p class="mb-2">Transactions of {{'last week'}}. ({{'Cash out'}})</p>
+      <p class="mb-2">  <!-- do this from ts -->
+        {{
+        (filterForm.controls['limit'].value > 0) ? 'Last '+filterForm.controls['limit'].value+' transactions' :
+        (
+          filterForm.controls['byDuration'].value?.length ?
+          (
+            filterForm.controls['byDuration'].value == 'last-week' ? 'Transactions of last 7 days' :
+            (
+              filterForm.controls['byDuration'].value == 'last-month' ? 'Transactions of last 30 days' : 'Transactions'
+            )
+          ) : ''
+        )
+        }}.
+        {{
+        filterForm.controls['type'].value?.length ?
+        (filterForm.controls['type'].value=='cash-out' ? '(Cash out)' :
+        '(Cash in)') : ''
+        }}</p>
       <div class="transaction-table w-full overflow-auto">
         <table class="w-full">
           <thead>
