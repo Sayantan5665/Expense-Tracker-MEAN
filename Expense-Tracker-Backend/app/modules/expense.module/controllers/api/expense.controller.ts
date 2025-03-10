@@ -324,15 +324,17 @@ class expenseController {
 
 
             let msg: string = '';
-            if (limit > 0) msg = 'Last ' + limit + (limit > 1 ? ' transactions' : ' transaction');
+            if (limit > 0) msg = 'last ' + limit + (limit > 1 ? ' transactions' : ' transaction');
             else if (dateRange?.startDate && dateRange?.endDate) {
-                msg = 'Transactions between ' + new Date(dateRange.startDate as string).toLocaleDateString() + ' and ' + new Date(dateRange.endDate as string).toLocaleDateString();
+                msg = 'transactions between ' + new Date(dateRange.startDate as string).toLocaleDateString() + ' and ' + new Date(dateRange.endDate as string).toLocaleDateString();
             }
             if (req.query?.type && req.query?.type.length) {
-                if (matchConditions.type == 'cash-out') msg += ' - ( Cash Out )';
-                else msg += ' - ( Cash In )';
+                if (matchConditions.type == 'cash-out') msg += ' ( Cash Out )';
+                else msg += ' ( Cash In )';
             }
-            const pdf: Buffer<ArrayBufferLike> = await generateStatementPdf(expenses.docs, msg, 'generated');
+
+            const basePath: string = `${req.protocol}://${req.get('host')}`
+            const pdf: Buffer<ArrayBufferLike> = await generateStatementPdf(expenses.docs, msg, basePath, 'generated');
 
             // Set the response headers for PDF download
             res.setHeader('Content-Type', 'application/pdf');
