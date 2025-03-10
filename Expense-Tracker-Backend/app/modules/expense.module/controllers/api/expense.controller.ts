@@ -2,7 +2,7 @@ import expenseRepository from "../../repositories/expense.repository";
 import { IExpense, ITokenUser } from "../../../../interfaces";
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import { deleteUploadedDoc } from "../../../../utils";
+import { deleteUploadedDoc, generateStatementPdf } from "../../../../utils";
 
 class expenseController {
     async createExpense(req: Request, res: Response): Promise<any> {
@@ -114,7 +114,7 @@ class expenseController {
             const matchConditions: { userId: Types.ObjectId } & Record<string, any> = { userId: new Types.ObjectId(user.id) };
             req.query?.type && (matchConditions.type = req.query.type as string);
             req.query?.categoryId && (matchConditions.categoryId = new Types.ObjectId(req.query.categoryId as string));
-            
+
             const dateRange: { startDate?: string, endDate?: string } = {};
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
@@ -123,7 +123,7 @@ class expenseController {
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
             const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
 
-            const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, {page, limit, pagination});
+            const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, { page, limit, pagination });
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",
@@ -161,7 +161,7 @@ class expenseController {
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
             const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
 
-            const expenses = await expenseRepository.getExpensesCategoryWise(matchConditions, dateRange, {page, limit, pagination});
+            const expenses = await expenseRepository.getExpensesCategoryWise(matchConditions, dateRange, { page, limit, pagination });
             return res.status(200).json({
                 status: 200,
                 message: "Expenses fetched successfully",
@@ -288,6 +288,45 @@ class expenseController {
                 status: 200,
                 message: "Expense deleted successfully",
             });
+
+        } catch (error: any) {
+            console.error("error: ", error);
+            return res.status(500).json({
+                status: 500,
+                message: error.message || "Something went wrong! Please try again.",
+                error: error,
+            });
+        }
+    }
+
+
+    async exportStatememt(req: Request, res: Response): Promise<any> {
+        try {
+            const user: ITokenUser = req.user!;
+
+            const matchConditions: { userId: Types.ObjectId } & Record<string, any> = { userId: new Types.ObjectId(user.id) };
+            req.query?.type && (matchConditions.type = req.query.type as string);
+            req.query?.categoryId && (matchConditions.categoryId = new Types.ObjectId(req.query.categoryId as string));
+
+            const dateRange: { startDate?: string, endDate?: string } = {};
+            req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
+            req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
+
+            const page: number = parseInt(req.query.page as string, 10) || 1;
+            const limit: number = parseInt(req.query.limit as string, 10) || 0;
+            const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
+
+            const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, { page, limit, pagination });
+            const pdf = await generateStatementPdf(expenses.docs);
+
+            console.log("pdf: ", pdf);
+
+            // Set the response headers for PDF download
+            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', `attachment; filename=statement-${Date.now()}.pdf`);
+
+            // Send the PDF buffer as the response
+            return res.send(pdf);
 
         } catch (error: any) {
             console.error("error: ", error);

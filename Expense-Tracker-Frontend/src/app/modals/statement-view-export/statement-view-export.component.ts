@@ -134,7 +134,7 @@ export class StatementViewExportDialog {
     const type = this.filterForm.controls['type'].value;
     let msg: string = '';
 
-    if(limit > 0) msg = 'Last '+limit+' transactions';
+    if(limit > 0) msg = 'Last '+limit+(limit > 1 ? ' transactions' : ' transaction');
     else if(duration.length) {
       switch (duration) {
         case 'last-week':

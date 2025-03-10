@@ -416,4 +416,67 @@ route.put('/edit/:id', auth, uploadDoc.array('documents', 5), expenseController.
 route.delete('/delete/:id', auth, expenseController.deleteExpense);
 
 
+/**
+ * @swagger
+ * /api/expense/export-statement:
+ *   get:
+ *     summary: Export statement by filter by type, category, start date, end date
+ *     tags:
+ *       - Expenses
+ *     security: 
+ *       - token: []
+ *     parameters:
+ *       - in: query
+ *         name: categoryId
+ *         type: string
+ *         description: Filter expenses by category
+ *       - in: query
+ *         name: type
+ *         type: string
+ *         enum: [cash-in, cash-out]
+ *         description: Filter expenses by type
+ *       - in: query
+ *         name: startDate
+ *         type: string
+ *         format: date
+ *         description: Filter expenses by start date
+ *       - in: query
+ *         name: endDate
+ *         type: string
+ *         format: date
+ *         description: Filter expenses by end date
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of items per page
+ *       - in: query
+ *         name: pagination
+ *         schema:
+ *           type: boolean
+ *         description: Set true if pagination is needed
+ *     responses:
+ *       200: 
+ *         description: Statement exported successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Statement exported successfully.
+ *       400:
+ *         description: Bad Request
+ *       500:
+ *         description: Server Error
+ */
+route.get('/export-statement', auth, expenseController.exportStatememt);
+
+
 export default route;
