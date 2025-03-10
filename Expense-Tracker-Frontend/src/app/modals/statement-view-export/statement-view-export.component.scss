@@ -214,27 +214,34 @@
         }
       }
     }
+
     @media (max-width: 376px) {
       .mat-mdc-form-field-flex {
         padding: 0 !important;
       }
-      .mdc-text-field--outlined .mat-mdc-form-field-infix, .mdc-text-field--no-label .mat-mdc-form-field-infix {
+
+      .mdc-text-field--outlined .mat-mdc-form-field-infix,
+      .mdc-text-field--no-label .mat-mdc-form-field-infix {
         padding-top: 10px !important;
         padding-bottom: 10px !important;
       }
+
       .mat-mdc-form-field-infix {
         min-height: 0 !important;
       }
     }
   }
 }
+
 .by-limit {
   @media (max-width: 478px) {
     flex-direction: column !important;
   }
 }
+
 .by-type {
   ::ng-deep {
+
     // mat-chip
     .mdc-evolution-chip-set__chips {
       flex-wrap: wrap;
@@ -263,4 +270,10 @@
 .disabled {
   pointer-events: none !important;
   opacity: 0.8;
+}
+
+.transaction-table {
+  width: 100%;
+  border: 1px solid #dadada;
+  border-radius: 5px;
 }
