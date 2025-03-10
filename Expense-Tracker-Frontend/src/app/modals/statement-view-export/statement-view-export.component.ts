@@ -160,19 +160,26 @@ export class StatementViewExportDialog {
   }
 
   protected exportStatement(): void {
+    const _expenses = this.expenses();
+    if(!_expenses.length) {
+      this.alert.toast('No transactions found to export', 'warning');
+      return;
+    }
+
     const filter = {...this.filterForm.value };
     let url: string = `api/expense/export-statement?limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
     ((filter?.startDate && filter.startDate.toString()?.length) && (filter?.endDate && filter.endDate?.toString()?.length)) && (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}`);
     (filter?.type && filter.type.length) && (url += '&type=' + filter.type);
 
-    this.api.get(url).subscribe({
-      next: (res: any) => {
-        console.log("res: ", res);
-        const blob = new Blob([res.data], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
+    this.api.downloadPdf(url).subscribe({
+      next: (res:Blob) => {
+        const blob = new Blob([res], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
         const a = this.document.createElement('a');
         a.href = url;
+        a.download = `statement-${new Date().toISOString()}.pdf`;
         a.click();
+        URL.revokeObjectURL(url);
       },
       error: (error: any) => {
         console.log("error: ", error);

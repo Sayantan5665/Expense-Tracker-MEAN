@@ -339,12 +339,7 @@ class expenseController {
             res.setHeader('Content-Disposition', `attachment; filename=statement-${Date.now()}.pdf`);
 
             // Send the PDF buffer as the response
-            // return res.send(pdf);
-            return res.status(200).json({
-                status: 200,
-                message: 'Successfully generated statement PDF',
-                data: pdf,
-            })
+            return res.send(pdf);
 
         } catch (error: any) {
             console.error("error: ", error);

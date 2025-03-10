@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '@env';
 import { AlertService } from '@services';
 
@@ -37,4 +37,9 @@ export class ApiService {
     return this.http.delete(`${this.BASE_API_ENDPOINT}/${url}`).pipe(catchError(this.errHandler));
   }
 
+  public downloadPdf(url:string): Observable<Blob> {
+    return this.http.get(`${this.BASE_API_ENDPOINT}/${url}`, {
+      responseType: 'blob', // Specify the response type as 'blob' for binary data
+    });
+  }
 }

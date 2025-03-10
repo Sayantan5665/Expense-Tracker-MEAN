@@ -9,9 +9,9 @@
     <div class="btn-wrapper">
       @if(_step == 2) {
       <div class="btn_holder">
-        <button type="button" class="download_btn" (click)="exportStatement()" [disabled]="!_expenses.length">
-          <mat-icon class="material-symbols-outlined">download</mat-icon>
-          <span>Download</span>
+        <button type="button" class="download_btn" (click)="exportStatement()">
+          <mat-icon class="material-symbols-outlined">upload</mat-icon>
+          <span>Export</span>
         </button>
       </div>
       }
@@ -107,6 +107,8 @@
               <th class="text-left px-3 py-2"
                 style="background-color: rgb(217, 217, 217);">Date</th>
               <th class="text-left px-3 py-2"
+                style="background-color: rgb(217, 217, 217);">Category</th>
+              <th class="text-left px-3 py-2"
                 style="background-color: rgb(217, 217, 217);">Description</th>
               <th class="text-left px-3 py-2"
                 style="background-color: rgb(217, 217, 217);">Amount</th>
@@ -117,18 +119,20 @@
             <tr style="border-top: 1px solid rgb(221, 221, 221);">
               <td class="px-3 py-1 whitespace-nowrap">{{transaction?.date |
                 date: 'dd/MM/yyyy'}}</td>
+              <td class="px-3 py-1 whitespace-nowrap">{{transaction?.category?.name || ''}}</td>
               <td class="px-3 py-1 whitespace-nowrap"><span
-                  class="inline-block max-w-50 md:max-w-100 lg:max-w-150 overflow-hidden !text-ellipsis">{{transaction?.description}}</span></td>
+                  class="inline-block max-w-50 md:max-w-100 lg:max-w-150 overflow-hidden !text-ellipsis">{{transaction?.description || ''}}</span></td>
               <td class="px-3 py-1 whitespace-nowrap"
                 [ngStyle]="{'color': transaction?.type == 'cash-out' ? 'red' : 'green'}">{{transaction?.type
                 == 'cash-out' ? '-' : '+'}} {{(transaction?.amount || 0) |
                 currency:'INR':'symbol'}}</td>
             </tr>
             } @empty {
-              <tr>
-                <td colspan="3" class="px-3 py-10 text-center">No transactions found
-                  for the given criteria.</td>
-              </tr>
+            <tr>
+              <td colspan="3" class="px-3 py-10 text-center">No transactions
+                found
+                for the given criteria.</td>
+            </tr>
             }
           </tbody>
         </table>
