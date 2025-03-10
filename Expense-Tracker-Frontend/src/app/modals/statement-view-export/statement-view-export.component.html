@@ -99,24 +99,7 @@
     @if(_step == 2) {
     <div
       class="doc_wrap w-full flex flex-col justify-center items-center gap-2">
-      <p class="mb-2">  <!-- do this from ts -->
-        {{
-        (filterForm.controls['limit'].value > 0) ? 'Last '+filterForm.controls['limit'].value+' transactions' :
-        (
-          filterForm.controls['byDuration'].value?.length ?
-          (
-            filterForm.controls['byDuration'].value == 'last-week' ? 'Transactions of last 7 days' :
-            (
-              filterForm.controls['byDuration'].value == 'last-month' ? 'Transactions of last 30 days' : 'Transactions'
-            )
-          ) : ''
-        )
-        }}.
-        {{
-        filterForm.controls['type'].value?.length ?
-        (filterForm.controls['type'].value=='cash-out' ? '(Cash out)' :
-        '(Cash in)') : ''
-        }}</p>
+      <p class="mb-2">{{getHeading()}}</p>
       <div class="transaction-table w-full overflow-auto">
         <table class="w-full">
           <thead>
@@ -141,6 +124,11 @@
                 == 'cash-out' ? '-' : '+'}} {{(transaction?.amount || 0) |
                 currency:'INR':'symbol'}}</td>
             </tr>
+            } @empty {
+              <tr>
+                <td colspan="3" class="px-3 pt-20 text-center">No transactions found
+                  for the given criteria.</td>
+              </tr>
             }
           </tbody>
         </table>

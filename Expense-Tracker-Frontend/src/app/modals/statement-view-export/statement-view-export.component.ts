@@ -17,7 +17,7 @@ import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
     MatDatepickerModule, MatNativeDateModule, DatePipe, MatButton, CurrencyPipe, NgStyle],
   templateUrl: './statement-view-export.component.html',
   styleUrl: './statement-view-export.component.scss',
-  providers: [provideNativeDateAdapter()]
+  providers: [provideNativeDateAdapter(), DatePipe]
 })
 export class StatementViewExportDialog {
   /* Dependency Injection */
@@ -25,6 +25,7 @@ export class StatementViewExportDialog {
   protected DIALOG_DATA: any = inject(MAT_DIALOG_DATA);
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
+  private readonly datePipe = inject(DatePipe);
 
   /* Variables */
   protected step = signal<1 | 2>(1);
@@ -40,7 +41,7 @@ export class StatementViewExportDialog {
   });
   protected expenses = signal<Array<any>>([]);
 
-  constructor() {}
+  constructor() { }
 
   protected getExpenses(filter: any) {
     let url: string = `api/expense/fetch-by-filter-with-report?limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
@@ -125,6 +126,36 @@ export class StatementViewExportDialog {
     if (byDurationValue == 'custom-date-range') {
       rangePicker.open();
     }
+  }
+
+  protected getHeading(): string {
+    const limit = this.filterForm.controls['limit'].value;
+    const duration = this.filterForm.controls['byDuration'].value;
+    const type = this.filterForm.controls['type'].value;
+    let msg: string = '';
+
+    if(limit > 0) msg = 'Last '+limit+' transactions';
+    else if(duration.length) {
+      switch (duration) {
+        case 'last-week':
+          msg = 'Last 7 day\'s transactions';
+          break;
+        case 'last-month':
+          msg = 'Last 30 day\'s transactions';
+          break;
+        case 'custom-date-range':
+          msg = 'Transactions between '+this.datePipe.transform(this.filterForm.controls['startDate'].value, 'dd/MM/yyyy')+' and '+this.datePipe.transform(this.filterForm.controls['endDate'].value, 'dd/MM/yyyy');
+          break;
+        default:
+          break;
+      }
+    }
+
+    if(type.length) {
+      if(type == 'cash-out') msg +=' - ( Cash Out )';
+      else msg +=' - ( Cash In )';
+    }
+    return msg;
   }
 
   public exportStatement(): void { }
