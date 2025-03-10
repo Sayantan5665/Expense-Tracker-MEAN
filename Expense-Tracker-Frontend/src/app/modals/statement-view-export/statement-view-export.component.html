@@ -9,7 +9,7 @@
     <div class="btn-wrapper">
       @if(_step == 2) {
       <div class="btn_holder">
-        <button type="button" class="download_btn">
+        <button type="button" class="download_btn" (click)="exportStatement()" [disabled]="!_expenses.length">
           <mat-icon class="material-symbols-outlined">download</mat-icon>
           <span>Download</span>
         </button>

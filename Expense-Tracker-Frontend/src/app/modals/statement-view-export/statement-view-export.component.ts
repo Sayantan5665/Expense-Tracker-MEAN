@@ -9,7 +9,7 @@ import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datep
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
-import { CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
+import { CurrencyPipe, DatePipe, DOCUMENT, NgStyle } from '@angular/common';
 
 @Component({
   selector: 'app-statement-view-export',
@@ -26,6 +26,7 @@ export class StatementViewExportDialog {
   private readonly api = inject(ApiService);
   private readonly alert = inject(AlertService);
   private readonly datePipe = inject(DatePipe);
+  private readonly document = inject(DOCUMENT);
 
   /* Variables */
   protected step = signal<1 | 2>(1);
@@ -158,5 +159,25 @@ export class StatementViewExportDialog {
     return msg;
   }
 
-  public exportStatement(): void { }
+  protected exportStatement(): void {
+    const filter = {...this.filterForm.value };
+    let url: string = `api/expense/export-statement?limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
+    ((filter?.startDate && filter.startDate.toString()?.length) && (filter?.endDate && filter.endDate?.toString()?.length)) && (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}`);
+    (filter?.type && filter.type.length) && (url += '&type=' + filter.type);
+
+    this.api.get(url).subscribe({
+      next: (res: any) => {
+        console.log("res: ", res);
+        const blob = new Blob([res.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const a = this.document.createElement('a');
+        a.href = url;
+        a.click();
+      },
+      error: (error: any) => {
+        console.log("error: ", error);
+        this.alert.toast('Failed to export statement', 'error');
+      }
+    })
+  }
 }
