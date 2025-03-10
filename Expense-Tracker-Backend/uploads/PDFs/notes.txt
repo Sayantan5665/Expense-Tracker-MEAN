@@ -1,0 +1,1 @@
+This folder for saving temporarily generated statement pdf. These pdf will be automatically deleted after exporting it.

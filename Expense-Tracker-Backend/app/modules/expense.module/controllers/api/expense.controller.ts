@@ -306,20 +306,33 @@ class expenseController {
 
             const matchConditions: { userId: Types.ObjectId } & Record<string, any> = { userId: new Types.ObjectId(user.id) };
             req.query?.type && (matchConditions.type = req.query.type as string);
-            req.query?.categoryId && (matchConditions.categoryId = new Types.ObjectId(req.query.categoryId as string));
 
             const dateRange: { startDate?: string, endDate?: string } = {};
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
 
-            const page: number = parseInt(req.query.page as string, 10) || 1;
+            const page: number =  1;
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
             const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
 
-            const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, { page, limit, pagination });
-            const pdf = await generateStatementPdf(expenses.docs);
+            if(limit) {
+                delete dateRange.startDate;
+                delete dateRange.endDate;
+            }
 
-            console.log("pdf: ", pdf);
+            const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, { page, limit, pagination });
+
+
+            let msg: string = '';
+            if (limit > 0) msg = 'Last ' + limit + (limit > 1 ? ' transactions' : ' transaction');
+            else if (dateRange?.startDate && dateRange?.endDate) {
+                msg = 'Transactions between ' + new Date(dateRange.startDate as string).toLocaleDateString() + ' and ' + new Date(dateRange.endDate as string).toLocaleDateString();
+            }
+            if (req.query?.type && req.query?.type.length) {
+                if (matchConditions.type == 'cash-out') msg += ' - ( Cash Out )';
+                else msg += ' - ( Cash In )';
+            }
+            const pdf: Buffer<ArrayBufferLike> = await generateStatementPdf(expenses.docs, msg, 'generated');
 
             // Set the response headers for PDF download
             res.setHeader('Content-Type', 'application/pdf');
