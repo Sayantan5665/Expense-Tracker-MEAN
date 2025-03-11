@@ -29,6 +29,10 @@
             {
                 "name": "Expenses",
                 "description": "Expenses APIs"
+            },
+            {
+                "name": "Contact-Us",
+                "description": "Contact-Us APIs"
             }
         ],
         "schemes": [

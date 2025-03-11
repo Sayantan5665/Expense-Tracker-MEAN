@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('../layouts/head.ejs') %>
+
+<body>
+  <div class="container-scroller">
+    <!-- navbar -->
+    <%- include('../layouts/navbar.ejs') %>
+
+    <div class="container-fluid page-body-wrapper">
+      <!-- Flash message -->
+      <%- include('../layouts/flash.ejs') %>
+
+      <!-- sidebar -->
+      <%- include('../layouts/sidebar.ejs') %>
+
+      <!-- main-panel starts -->
+      <div class="content-wrapper">
+        <div class="page-header">
+          <h3 class="page-title">
+            <span class="page-title-icon bg-gradient-secondary text-white me-2">
+              <i class="mdi mdi-phone-classic"></i>
+            </span> Contact Requests
+          </h3>
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/cms/contact-requests">CMS</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Contact Requests</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="row">
+          Write your code
+        </div>
+      </div>
+      <!-- main-panel ends -->
+
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+
+  <!-- scripts -->
+  <%- include('../layouts/scripts.ejs') %>
+</body>
+
+</html>

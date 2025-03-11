@@ -1,0 +1,15 @@
+.error-field {
+  label {
+    color: rgb(255, 81, 81) !important;
+  }
+
+  input,
+  select,
+  textarea {
+    border: 1px solid rgb(255, 81, 81) !important;
+  }
+
+  .uploaded-file-list-viewer {
+    border: 1px solid rgb(255, 81, 81) !important;
+  }
+}
