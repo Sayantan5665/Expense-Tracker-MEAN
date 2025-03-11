@@ -163,7 +163,7 @@ export class StatementViewExportDialog {
   protected exportOrEmailStatement(sendMail: boolean = false): void {
     const _expenses = this.expenses();
     if (!_expenses.length) {
-      this.alert.toast('No transactions found to export', 'warning');
+      this.alert.toast('No transactions found', 'warning');
       return;
     }
 
