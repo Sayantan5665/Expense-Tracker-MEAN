@@ -180,12 +180,6 @@ export class StatementViewExportDialog {
             console.log("res: ", res);
             this.alert.toast(res.message, 'success');
             this.sendingMailLoader.set(false);
-            const blob = new Blob([res.data], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            const a = this.document.createElement('a');
-            a.href = url;
-            a.click();
-            URL.revokeObjectURL(url);
           } else {
             console.log("error: ", res);
             this.alert.toast(res.message, 'error');
