@@ -10,7 +10,7 @@
       @if(_step == 2) {
       <div class="btn_holder">
         @let _sendingMailLoader = sendingMailLoader();
-        <button type="button" class="send_email_btn" (click)="exportOrEmailStatement(true)">
+        <button type="button" class="send_email_btn" (click)="exportOrEmailStatement(true)" [disabled]="_sendingMailLoader">
           @if(_sendingMailLoader) {
             <mat-spinner class="spinner" diameter="20"></mat-spinner>
             <span>Sending...</span>
