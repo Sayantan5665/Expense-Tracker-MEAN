@@ -4,5 +4,5 @@ export interface IContact extends Document {
     name: string,
     email: string,
     message: string,
-    status: 'complete' | 'ignored' | 'due'
+    status: 'pending' | 'in-progress' | 'resolved'
 }

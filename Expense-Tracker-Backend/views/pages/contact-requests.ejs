@@ -1,48 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<%- include('../layouts/head.ejs') %>
+  <%- include('../layouts/head.ejs') %>
 
-<body>
-  <div class="container-scroller">
-    <!-- navbar -->
-    <%- include('../layouts/navbar.ejs') %>
+  <body>
+    <div class="container-scroller">
+      <!-- navbar -->
+      <%- include('../layouts/navbar.ejs') %>
 
-    <div class="container-fluid page-body-wrapper">
-      <!-- Flash message -->
-      <%- include('../layouts/flash.ejs') %>
+      <div class="container-fluid page-body-wrapper">
+        <!-- Flash message -->
+        <%- include('../layouts/flash.ejs') %>
 
-      <!-- sidebar -->
-      <%- include('../layouts/sidebar.ejs') %>
+        <!-- sidebar -->
+        <%- include('../layouts/sidebar.ejs') %>
 
-      <!-- main-panel starts -->
-      <div class="content-wrapper">
-        <div class="page-header">
-          <h3 class="page-title">
-            <span class="page-title-icon bg-gradient-secondary text-white me-2">
-              <i class="mdi mdi-phone-classic"></i>
-            </span> Contact Requests
-          </h3>
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="/cms/contact-requests">CMS</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Contact Requests</li>
-            </ol>
-          </nav>
+        <!-- main-panel starts -->
+        <div class="content-wrapper">
+          <div class="page-header">
+            <h3 class="page-title">
+              <span
+                class="page-title-icon bg-gradient-secondary text-white me-2">
+                <i class="mdi mdi-phone-classic"></i>
+              </span> Contact Requests
+            </h3>
+          </div>
+          <div class="row">
+
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <!-- Search & Add button -->
+                  <div
+                    class="d-flex flex-wrap flex-md-nowrap flex-lg-row justify-content-between align-items-center d-md-block d-lg-flex">
+                    <h4 class="card-title">All Requests</h4>
+                  </div>
+                  <hr>
+                  <div class="users-list-card"
+                    style="height: calc(100vh - 405px) !important;">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th> Name </th>
+                          <th> Email </th>
+                          <th> Message </th>
+                          <th> Status </th>
+                          <th> Action </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for(let contact of data?.contactList || []) { %>
+                        <tr>
+                          <td> <%= contact?.name || '_' %> </td>
+                          <td> <%= contact?.email || '_' %> </td>
+                          <td
+                            style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <%= contact?.message || '_' %>
+                          </td>
+                          <td>
+                            <select class="status-select"
+                              style="background-color: transparent; border: none; outline: none;"
+                              data-id="<%= contact?._id.toString() %>">
+                              <option value="pending" <%=contact?.status ===
+                                'pending' ? 'selected' : '' %>>Pending</option>
+                              <option value="in-progress" <%=contact?.status ===
+                                'in-progress' ? 'selected' : '' %>>In
+                                Progress</option>
+                              <option value="resolved" <%=contact?.status ===
+                                'resolved' ? 'selected' : ''
+                                %>>Resolved</option>
+                            </select>
+                          </td>
+                          <td>
+                            <a class="btn btn-sm text-light bg-danger"
+                              style="width: 100px;"
+                              onclick="confirmDelete('<%= contact?._id.toString() %>')">
+                              Delete
+                            </a>
+                          </td>
+                        </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-        <div class="row">
-          Write your code
-        </div>
+        <!-- main-panel ends -->
+
       </div>
-      <!-- main-panel ends -->
-
+      <!-- page-body-wrapper ends -->
     </div>
-    <!-- page-body-wrapper ends -->
-  </div>
-  <!-- container-scroller -->
+    <!-- container-scroller -->
 
-  <!-- scripts -->
-  <%- include('../layouts/scripts.ejs') %>
-</body>
+    <!-- scripts -->
+    <%- include('../layouts/scripts.ejs') %>
+    <script>
+    // Function to confirm and delete a contact
+    async function confirmDelete(contactId) {
+      if (confirm('Are you sure you want to delete this contact?')) {
+        // Proceed with deletion
+        try {
+          const response = await fetch(`/contact/delete/${contactId}`, { method: 'DELETE' });
+            if (response.status !== 200) {
+              throw new Error('Failed to update status');
+            }
+            // Reload the page or update the UI dynamically
+            window.location.reload();
+        } catch (error) {
+          console.log("error: ", error);
+          alert('Failed to delete contact.');
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add event listeners to all status dropdowns
+      const statusSelects = document.querySelectorAll('.status-select');
+      statusSelects.forEach((select) => {
+        select.addEventListener('change', async function(event) {
+          const contactId = event.target.getAttribute('data-id'); // Get the contact request ID
+          const newStatus = event.target.value; // Get the new status
+
+          // Confirm before proceeding
+          // if (confirm('Are you sure you want to update the status of this contact?')) {
+          try {
+            // Call the API to update the status
+            const response = await fetch(`/contact/update-status/${contactId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                status: newStatus
+              }),
+            });
+
+            if (response.status !== 200) {
+              throw new Error('Failed to update status');
+            }
+
+            // Reload the page or update the UI dynamically
+            window.location.reload();
+          } catch (error) {
+            console.error('Error updating status:', error);
+            alert('Failed to update status. Please try again.');
+          }
+          //   } else {
+          //     // Reset the dropdown to its previous value if the user cancels
+          //     event.target.value = event.target.getAttribute('data-previous-status');
+          //   }
+        });
+
+        // // Store the initial status of each dropdown
+        // select.setAttribute('data-previous-status', select.value);
+      });
+    });
+  </script>
+  </body>
 
 </html>

@@ -16,6 +16,7 @@ import aboutAdminRouter from "./admin/about.routes";
 import contactUsAdminRouter from "./admin/contact-us.routes";
 import colorAdminRouter from "./admin/color.routes";
 import categoryAdminRouter from "./admin/category.routes";
+import contactAdminRouter from "./admin/contacts.routes";
 
 
 
@@ -38,6 +39,7 @@ router.use(aboutAdminRouter);
 router.use(contactUsAdminRouter);
 router.use(colorAdminRouter);
 router.use(categoryAdminRouter);
+router.use(contactAdminRouter);
 
 
 

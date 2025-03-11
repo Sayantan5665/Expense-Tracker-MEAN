@@ -2,6 +2,12 @@
     height: calc(100vh - 70px);
     overflow-y: auto !important;
 }
+
+.content-wrapper_full {
+    height: 100vh !important;
+    overflow-y: hidden !important;
+}
+
 .content-wrapper.cms {
     height: calc(100vh - 145px) !important;
 }
@@ -16,6 +22,7 @@
     max-height: calc(100vh - 70px) !important;
     /* overflow-y: auto; */
 }
+
 .sidebar .nav {
     height: 100%;
     overflow-y: auto;
@@ -29,12 +36,13 @@
 
 
 .profile-image-wrapper {
-    width: 150px; 
+    width: 150px;
     height: 150px;
     margin: 0 auto 20px auto;
-    
+
     img {
-        cursor: pointer !important;;
+        cursor: pointer !important;
+        ;
     }
 }
 
@@ -82,17 +90,21 @@ select.form-select-custom {
     width: 6px;
     height: 6px;
 }
+
 .users-list-card::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
 }
+
 .users-list-card::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 10px;
 }
+
 .users-list-card::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
 /* For Firefox */
 .users-list-card {
     scrollbar-width: thin;

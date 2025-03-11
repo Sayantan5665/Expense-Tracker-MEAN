@@ -25,8 +25,8 @@ const contactSchema: Schema<IContact> = new Schema({
     },
     status: {
         type: String,
-        enum: ['complete', 'ignored', 'due'],
-        default: 'due'
+        enum: ['pending', 'in-progress', 'resolved'],
+        default: 'pending'
     }
 }, { timestamps: true, versionKey: false });
 

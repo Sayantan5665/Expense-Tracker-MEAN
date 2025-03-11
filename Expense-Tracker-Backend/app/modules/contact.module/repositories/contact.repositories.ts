@@ -5,7 +5,7 @@ import { contactModel, contactValidator } from "../models/contact.model";
 class contactRepo {
     async addContact(body: IContact): Promise<IContact> {
         try {
-            body.status = 'due';
+            body.status = 'pending';
             const { error } = contactValidator.validate(body);
             if (error) throw error;
 
@@ -17,7 +17,7 @@ class contactRepo {
         }
     }
 
-    async updateContact(id: string, body: {status: 'complete'|'ignored'|'due'}): Promise<IContact> {
+    async updateContact(id: string, body: {status: 'pending' | 'in-progress' | 'resolved'}): Promise<IContact> {
         try {
             const contact: IContact | null = await contactModel.findByIdAndUpdate(id, body, { new: true });
             if (!contact) throw new Error("Contact not found");
