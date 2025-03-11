@@ -446,6 +446,11 @@ route.delete('/delete/:id', auth, expenseController.deleteExpense);
  *         schema:
  *           type: integer
  *         description: Number of items per page
+ *       - in: query
+ *         name: sendMail
+ *         schema:
+ *           type: boolean
+ *         description: Set true if You want to send the statement in mail
  *     responses:
  *       200: 
  *         description: Statement exported successfully.
@@ -462,7 +467,7 @@ route.delete('/delete/:id', auth, expenseController.deleteExpense);
  *       500:
  *         description: Server Error
  */
-route.get('/export-statement', auth, expenseController.exportStatememt);
+route.get('/export-statement', auth, expenseController.exportOrMailStatememt);
 
 
 export default route;

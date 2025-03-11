@@ -9,7 +9,17 @@
     <div class="btn-wrapper">
       @if(_step == 2) {
       <div class="btn_holder">
-        <button type="button" class="download_btn" (click)="exportStatement()">
+        @let _sendingMailLoader = sendingMailLoader();
+        <button type="button" class="send_email_btn" (click)="exportOrEmailStatement(true)">
+          @if(_sendingMailLoader) {
+            <mat-spinner class="spinner" diameter="20"></mat-spinner>
+            <span>Sending...</span>
+          } @else {
+          <mat-icon class="material-symbols-outlined">mail</mat-icon>
+          <span>Send over mail</span>
+          }
+        </button>
+        <button type="button" class="download_btn" (click)="exportOrEmailStatement()">
           <mat-icon class="material-symbols-outlined">upload</mat-icon>
           <span>Export</span>
         </button>

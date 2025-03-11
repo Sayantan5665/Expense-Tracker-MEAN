@@ -1,8 +1,8 @@
 import expenseRepository from "../../repositories/expense.repository";
-import { IExpense, ITokenUser } from "../../../../interfaces";
+import { IExpense, IMailOptions, ITokenUser } from "../../../../interfaces";
 import { Request, Response } from "express";
 import { Types } from "mongoose";
-import { deleteUploadedDoc, generateStatementPdf } from "../../../../utils";
+import { deleteUploadedDoc, generateStatementPdf, sendEmail } from "../../../../utils";
 
 class expenseController {
     async createExpense(req: Request, res: Response): Promise<any> {
@@ -300,7 +300,7 @@ class expenseController {
     }
 
 
-    async exportStatememt(req: Request, res: Response): Promise<any> {
+    async exportOrMailStatememt(req: Request, res: Response): Promise<any> {
         try {
             const user: ITokenUser = req.user!;
 
@@ -311,11 +311,14 @@ class expenseController {
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
 
-            const page: number =  1;
+            const page: number = 1;
             const limit: number = parseInt(req.query.limit as string, 10) || 0;
             const pagination: boolean = (req.query.pagination as string) == 'false' ? false : true;
 
-            if(limit) {
+            const sendMail = req.query?.sendMail && (req.query.sendMail as string) == 'true' ? true : false;
+            console.log("sendMail: ", sendMail);
+
+            if (limit > 0) {
                 delete dateRange.startDate;
                 delete dateRange.endDate;
             }
@@ -340,8 +343,53 @@ class expenseController {
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', `attachment; filename=statement-${Date.now()}.pdf`);
 
-            // Send the PDF buffer as the response
-            return res.send(pdf);
+            if (sendMail) {
+                const mailOptions: IMailOptions = {
+                    from: 'no-reply@sayantan.com',
+                    to: user.email,
+                    subject: 'Cashlytics E-statement',
+                    html: `
+                        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px;">
+
+                            <p style="margin-bottom: 15px;">
+                                Dear <strong>${user.name}</strong>,
+                            </p>
+
+                            <p style="margin-bottom: 15px;">
+                                Your Cashlytics e-statement is now being sent to you as a PDF document.
+                                To open this file, you need <strong>Adobe Acrobat Reader</strong>. If you do not have Adobe Acrobat Reader, please visit the following link to download it:
+                                <a href="http://www.adobe.com/products/acrobat/readstep2.html" style="color: #007bff; text-decoration: none;">www.adobe.com/products/acrobat/readstep2.html</a>.
+                            </p>
+
+
+                            <p style="margin-bottom: 15px;">
+                                Add <strong>estatement@cashlytics.com</strong> to your <strong>white list / safe sender list</strong>. Else, your mailbox filter or ISP (Internet Service Provider) may stop you from receiving your e-mail account statement.
+                            </p>
+
+                            <p style="margin-bottom: 15px;">
+                                Sincerely,
+                                <br>
+                                <strong>Team Cashlytics</strong>
+                            </p>
+
+                        </body>
+                    `,
+                    attachments: [{
+                        filename: "statement-${Date.now()}.pdf",
+                        content: pdf,
+                        contentType: "application/pdf"
+                    }]
+                };
+                await sendEmail(mailOptions);
+                return res.status(200).json({
+                    status: 200,
+                    message: "E-statement sent successfully",
+                    pdf: pdf,
+                })
+            } else {
+                // Send the PDF buffer as the response
+                return res.send(pdf);
+            }
 
         } catch (error: any) {
             console.error("error: ", error);

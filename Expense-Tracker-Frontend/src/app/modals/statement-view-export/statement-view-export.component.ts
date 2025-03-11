@@ -1,20 +1,20 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { AlertService, ApiService } from '@services';
-import { Subscription } from 'rxjs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButton } from '@angular/material/button';
 import { CurrencyPipe, DatePipe, DOCUMENT, NgStyle } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-statement-view-export',
   imports: [MatIcon, MatDialogModule, ReactiveFormsModule, MatFormFieldModule, MatChipsModule,
-    MatDatepickerModule, MatNativeDateModule, DatePipe, MatButton, CurrencyPipe, NgStyle],
+    MatDatepickerModule, MatNativeDateModule, DatePipe, MatButton, CurrencyPipe, NgStyle, MatProgressSpinner],
   templateUrl: './statement-view-export.component.html',
   styleUrl: './statement-view-export.component.scss',
   providers: [provideNativeDateAdapter(), DatePipe]
@@ -41,12 +41,13 @@ export class StatementViewExportDialog {
     byDuration: new FormControl<'last-week' | 'last-month' | 'custom-date-range' | ''>(''),
   });
   protected expenses = signal<Array<any>>([]);
+  protected sendingMailLoader = signal<boolean>(false);
 
   constructor() { }
 
   protected getExpenses(filter: any) {
-    let url: string = `api/expense/fetch-by-filter-with-report?limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
-    ((filter?.startDate && filter.startDate.toString()?.length) && (filter?.endDate && filter.endDate?.toString()?.length)) && (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}`);
+    let url: string = `api/expense/fetch-by-filter-with-report?page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
+    ((filter?.startDate && filter.startDate.toString()?.length) && (filter?.endDate && filter.endDate?.toString()?.length)) ? (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}&limit=0`) : (url += `&limit=${filter?.limit || 10}`);
     (filter?.type && filter.type.length) && (url += '&type=' + filter.type);
 
     this.api.get(url).subscribe({
@@ -135,8 +136,8 @@ export class StatementViewExportDialog {
     const type = this.filterForm.controls['type'].value;
     let msg: string = '';
 
-    if(limit > 0) msg = 'Last '+limit+(limit > 1 ? ' transactions' : ' transaction');
-    else if(duration.length) {
+    if (limit > 0) msg = 'Last ' + limit + (limit > 1 ? ' transactions' : ' transaction');
+    else if (duration.length) {
       switch (duration) {
         case 'last-week':
           msg = 'Last 7 day\'s transactions';
@@ -145,46 +146,74 @@ export class StatementViewExportDialog {
           msg = 'Last 30 day\'s transactions';
           break;
         case 'custom-date-range':
-          msg = 'Transactions between '+this.datePipe.transform(this.filterForm.controls['startDate'].value, 'dd/MM/yyyy')+' and '+this.datePipe.transform(this.filterForm.controls['endDate'].value, 'dd/MM/yyyy');
+          msg = 'Transactions between ' + this.datePipe.transform(this.filterForm.controls['startDate'].value, 'dd/MM/yyyy') + ' and ' + this.datePipe.transform(this.filterForm.controls['endDate'].value, 'dd/MM/yyyy');
           break;
         default:
           break;
       }
     }
 
-    if(type.length) {
-      if(type == 'cash-out') msg +=' - ( Cash Out )';
-      else msg +=' - ( Cash In )';
+    if (type.length) {
+      if (type == 'cash-out') msg += ' - ( Cash Out )';
+      else msg += ' - ( Cash In )';
     }
     return msg;
   }
 
-  protected exportStatement(): void {
+  protected exportOrEmailStatement(sendMail: boolean = false): void {
     const _expenses = this.expenses();
-    if(!_expenses.length) {
+    if (!_expenses.length) {
       this.alert.toast('No transactions found to export', 'warning');
       return;
     }
 
-    const filter = {...this.filterForm.value };
-    let url: string = `api/expense/export-statement?limit=${filter?.limit || 10}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
-    ((filter?.startDate && filter.startDate.toString()?.length) && (filter?.endDate && filter.endDate?.toString()?.length)) && (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}`);
+    const filter = { ...this.filterForm.value };
+    let url: string = `api/expense/export-statement?sendMail=${sendMail}&page=${filter?.page || 1}&pagination=${!!filter?.pagination}`;
+    ((filter?.startDate && filter.startDate.toString()?.length) && (filter?.endDate && filter.endDate?.toString()?.length)) ? (url += `&startDate=${filter.startDate}&endDate=${filter.endDate}&limit=0`) : (url += `&limit=${filter?.limit || 10}`);
     (filter?.type && filter.type.length) && (url += '&type=' + filter.type);
 
-    this.api.downloadPdf(url).subscribe({
-      next: (res:Blob) => {
-        const blob = new Blob([res], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        const a = this.document.createElement('a');
-        a.href = url;
-        a.download = `statement-${new Date().toISOString()}.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
-      },
-      error: (error: any) => {
-        console.log("error: ", error);
-        this.alert.toast('Failed to export statement', 'error');
-      }
-    })
+    if (sendMail) {
+      this.sendingMailLoader.set(true)
+      this.api.get(url).subscribe({
+        next: (res: any) => {
+          if (res.status == 200) {
+            console.log("res: ", res);
+            this.alert.toast(res.message, 'success');
+            this.sendingMailLoader.set(false);
+            const blob = new Blob([res.data], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = this.document.createElement('a');
+            a.href = url;
+            a.click();
+            URL.revokeObjectURL(url);
+          } else {
+            console.log("error: ", res);
+            this.alert.toast(res.message, 'error');
+            this.sendingMailLoader.set(false);
+          }
+        },
+        error: (error: any) => {
+          console.log("error: ", error);
+          this.alert.toast('Failed to send e-statement on mail', 'error');
+          this.sendingMailLoader.set(false);
+        }
+      });
+    } else {
+      this.api.downloadPdf(url).subscribe({
+        next: (res: Blob) => {
+          const blob = new Blob([res], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = this.document.createElement('a');
+          a.href = url;
+          a.download = `statement-${new Date().toISOString()}.pdf`;
+          a.click();
+          URL.revokeObjectURL(url);
+        },
+        error: (error: any) => {
+          console.log("error: ", error);
+          this.alert.toast('Failed to export statement', 'error');
+        }
+      })
+    }
   }
 }
