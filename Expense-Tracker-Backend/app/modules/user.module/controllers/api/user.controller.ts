@@ -1,3 +1,4 @@
+import { agenda } from "../../../../configs";
 import { ITokenUser, IUser } from "../../../../interfaces/index";
 import userRepo from "../../repositories/user.repositories";
 import { Request, Response } from "express";
@@ -10,6 +11,10 @@ class userController {
             const body: IUser = req.body;
 
             const newUser: IUser = await userRepo.addUser(req, body);
+
+            // Schedule daily and monthly reports
+            await agenda.every('0 20 * * *', 'sendDailyReport', { userId: newUser._id });
+            await agenda.every('0 9 1 * *', 'sendMonthlyReport', { userId: newUser._id });
 
             return res.status(200).json({
                 status: 200,

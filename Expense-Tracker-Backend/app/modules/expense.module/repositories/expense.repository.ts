@@ -663,20 +663,20 @@ class expenseRepository {
   //             }),
   //           }
   //         : {};
-  
+
   //     // Ensure the type filter is included in matchConditions
   //     const typeFilter = matchConditions.type ? { type: matchConditions.type } : {};
-  
+
   //     // Merge filters into match conditions
   //     const fullMatchConditions = {
   //       ...matchConditions,
   //       ...typeFilter, // Add type filter explicitly
   //       ...(Object.keys(dateFilter).length && { date: dateFilter }),
   //     };
-  
+
   //     const aggregationPipeline: any = [
   //       { $match: fullMatchConditions }, // Ensure filtering by user, date, and type
-  
+
   //       // Lookup category details
   //       {
   //         $lookup: {
@@ -687,7 +687,7 @@ class expenseRepository {
   //         },
   //       },
   //       { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
-  
+
   //       // Lookup color details
   //       {
   //         $lookup: {
@@ -698,7 +698,7 @@ class expenseRepository {
   //         },
   //       },
   //       { $unwind: { path: "$category.color", preserveNullAndEmptyArrays: true } },
-  
+
   //       {
   //         $facet: {
   //           // **Totals Pipeline**
@@ -728,7 +728,7 @@ class expenseRepository {
   //               },
   //             },
   //           ],
-  
+
   //           // **Expenses Pipeline**
   //           expenses: [
   //             { $match: fullMatchConditions }, // Ensure filtering applies
@@ -760,25 +760,25 @@ class expenseRepository {
   //           ],
   //         },
   //       },
-  
+
   //       { $unwind: "$totals" },
   //     ];
-  
+
   //     // Disable pagination if limit is not provided or invalid
   //     if (!options.limit || options.limit <= 0) {
   //       options.pagination = false;
   //     }
-  
+
   //     // Execute aggregation pipeline
   //     const [result] = await expenseModel.aggregate(aggregationPipeline);
-  
+
   //     // Paginate the expenses array correctly
   //     const expenses: any = await expenseModel.aggregatePaginate(
   //       [{ $match: fullMatchConditions }], // Ensure correct filtering
   //       options,
   //       result?.expenses || []
   //     );
-  
+
   //     return {
   //       ...expenses,
   //       report: result?.totals || [],
@@ -789,7 +789,7 @@ class expenseRepository {
   // }
   async getExpensesReport(
     matchConditions: { userId: Types.ObjectId; type?: "cash-in" | "cash-out" } & Record<string, any>,
-    dateRange: { startDate?: string; endDate?: string },
+    dateRange: { startDate?: string | Date; endDate?: string | Date },
     options: PaginateOptions
   ): Promise<any> {
     try {
@@ -797,27 +797,27 @@ class expenseRepository {
       const dateFilter =
         dateRange && (dateRange.startDate || dateRange.endDate)
           ? {
-              ...(dateRange.startDate && { $gte: new Date(dateRange.startDate) }),
-              ...(dateRange.endDate && {
-                // Add one day to include the entire end date
-                $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
-              }),
-            }
+            ...(dateRange.startDate && { $gte: new Date(dateRange.startDate) }),
+            ...(dateRange.endDate && {
+              // Add one day to include the entire end date
+              $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
+            }),
+          }
           : {};
-  
+
       // Ensure the type filter is included if provided
       const typeFilter = matchConditions.type ? { type: matchConditions.type } : {};
-  
+
       // Merge filters into match conditions
       const fullMatchConditions = {
         ...matchConditions,
         ...typeFilter,
         ...(Object.keys(dateFilter).length && { date: dateFilter }),
       };
-  
+
       // --- Report Pipeline ---
       // This pipeline calculates the totals (cash-in, cash-out, and remaining cash)
-      const reportPipeline:any = [
+      const reportPipeline: any = [
         { $match: fullMatchConditions },
         {
           $lookup: {
@@ -857,12 +857,12 @@ class expenseRepository {
           },
         },
       ];
-  
+
       const [reportResult] = await expenseModel.aggregate(reportPipeline);
-  
+
       // --- Expenses Pipeline ---
       // This pipeline returns the expense documents with lookup details and sorted by date.
-      const expensesPipeline:any = [
+      const expensesPipeline: any = [
         { $match: fullMatchConditions },
         {
           $lookup: {
@@ -908,15 +908,15 @@ class expenseRepository {
           },
         },
       ];
-  
+
       // Disable pagination if limit is missing or invalid
       if (!options.limit || options.limit <= 0) {
         options.pagination = false;
       }
-  
+
       // Use aggregatePaginate with the full expenses pipeline that includes lookup stages.
       const expenses = await expenseModel.aggregatePaginate(expensesPipeline, options);
-  
+
       // Return the final result with paginated expenses and the totals report.
       return {
         ...expenses,
@@ -926,7 +926,7 @@ class expenseRepository {
       throw new Error(error.message || "Something went wrong");
     }
   }
-  
+
 
 
   async updateExpenses(expenseId: Types.ObjectId, body: IExpense): Promise<IExpense | null> {

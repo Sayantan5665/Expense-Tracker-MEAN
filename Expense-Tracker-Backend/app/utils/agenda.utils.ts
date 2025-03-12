@@ -3,84 +3,86 @@ import userRepositories from '../modules/user.module/repositories/user.repositor
 // import Expense from '../models/Expense.js';
 import { Types } from 'mongoose';
 import { IMailOptions, IUser } from '../interfaces/index';
-import { sendEmail } from './index';
+import { generateStatementPdf, sendEmail } from './index';
+import expenseRepository from '../modules/expense.module/repositories/expense.repository';
 
-export const sendDailyExpenseReport = async (userId: string) => {
-    const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId), isActive: true });
-    if (!user) return;
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+export const sendDailyMonthlyExpenseReport = async (userId: string, basePath:string, period: 'daily' | 'monthly'): Promise<any> => {
+    try {
+        const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId), isActive: true });
+        if (!user) return;
 
-    //   const expenses = await Expense.find({
-    //     user: userId,
-    //     date: {
-    //       $gte: today,
-    //       $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
-    //     }
-    //   }).populate('category');
+        const matchConditions: { userId: Types.ObjectId } & Record<string, any> = { userId: new Types.ObjectId(user.id) };
 
-    //   const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+        const dateRange: { startDate?: Date, endDate?: Date } = {};
 
-    //   const report = generateExpenseReport(expenses, total, 'Daily');
+        const currentDate = new Date();
 
-    const mailOptions:IMailOptions = {
-        from: 'no-reply@sayantan.com',
-        to: user.email,
-        subject: 'Daily Expense Report',
-        html: '' //report
+        if (period === 'daily') {
+            // For daily report, set the start date to the beginning of the day (00:00:00) and end date to the end of the day (23:59:59.999)
+            const startOfDay = new Date(currentDate);
+            startOfDay.setHours(0, 0, 0, 0); // Set to 00:00:00.000
+
+            const endOfDay = new Date(currentDate);
+            endOfDay.setHours(23, 59, 59, 999); // Set to 23:59:59.999
+
+            dateRange.startDate = startOfDay;
+            dateRange.endDate = endOfDay;
+        } else if (period === 'monthly') {
+            // For monthly report, set the start date to the first day of the month at 00:00:00 and end date to the last day of the month at 23:59:59.999
+            const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0); // First day of the month at 00:00:00
+            const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999); // Last day of the month at 23:59:59.999
+
+            dateRange.startDate = firstDayOfMonth;
+            dateRange.endDate = lastDayOfMonth;
+        }
+
+        const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, { page: 1, limit: 0, pagination: false });
+
+        let msg: string = '';
+        if (period === 'daily') msg = 'today\'s expenses';
+        else if (period ==='monthly') msg = 'this month\'s expenses';
+
+        const pdf: Buffer<ArrayBufferLike> = await generateStatementPdf(expenses.docs, msg, basePath, period);
+
+        const mailOptions: IMailOptions = {
+            from: 'no-reply@sayantan.com',
+            to: user.email,
+            subject: 'Cashlytics E-statement',
+            html: `
+                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px;">
+
+                    <p style="margin-bottom: 15px;">
+                        Dear <strong>${user.name}</strong>,
+                    </p>
+
+                    <p style="margin-bottom: 15px;">
+                        Your Cashlytics e-statement of ${msg} is now being sent to you as a PDF document.
+                        To open this file, you need <strong>Adobe Acrobat Reader</strong>. If you do not have Adobe Acrobat Reader, please visit the following link to download it:
+                        <a href="http://www.adobe.com/products/acrobat/readstep2.html" style="color: #007bff; text-decoration: none;">www.adobe.com/products/acrobat/readstep2.html</a>.
+                    </p>
+
+                    <p style="margin-bottom: 15px;">
+                        Add <strong>estatement@cashlytics.com</strong> to your <strong>white list / safe sender list</strong>. Else, your mailbox filter or ISP (Internet Service Provider) may stop you from receiving your e-mail account statement.
+                    </p>
+
+                    <p style="margin-bottom: 15px;">
+                        Sincerely,
+                        <br>
+                        <strong>Team Cashlytics</strong>
+                    </p>
+
+                </body>
+            `,
+            attachments: [{
+                filename: `statement-${Date.now()}.pdf`,
+                content: pdf,
+                contentType: "application/pdf"
+            }]
+        };
+        await sendEmail(mailOptions);
+
+    } catch (error: any) {
+        console.error("error: ", error);
     }
-
-    await sendEmail(mailOptions);
-};
-
-export const sendMonthlyExpenseReport = async (userId:string) => {
-    const user: IUser | null = await userRepositories.findOneBy({ _id: new Types.ObjectId(userId), isActive: true });
-    if (!user) return;
-
-    const firstDayOfMonth = new Date();
-    firstDayOfMonth.setDate(1);
-    firstDayOfMonth.setHours(0, 0, 0, 0);
-
-    // const expenses = await Expense.find({
-    //     user: userId,
-    //     date: {
-    //         $gte: firstDayOfMonth,
-    //         $lt: new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 1)
-    //     }
-    // }).populate('category');
-
-    // const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-
-    // const report = generateExpenseReport(expenses, total, 'Monthly');
-
-    const mailOptions:IMailOptions = {
-        from: 'no-reply@sayantan.com',
-        to: user.email,
-        subject: 'Monthly Expense Report',
-        html: '' //report
-    }
-    await sendEmail(mailOptions);
-};
-
-// const generateExpenseReport = (expenses, total, type) => {
-//     const categoryTotals = expenses.reduce((acc, expense) => {
-//         const categoryName = expense.category.name;
-//         acc[categoryName] = (acc[categoryName] || 0) + expense.amount;
-//         return acc;
-//     }, {});
-
-//     let html = `
-//     <h2>${type} Expense Report</h2>
-//     <p>Total Expenses: $${total.toFixed(2)}</p>
-//     <h3>Breakdown by Category:</h3>
-//     <ul>
-//   `;
-
-//     Object.entries(categoryTotals).forEach(([category, amount]) => {
-//         html += `<li>${category}: $${amount.toFixed(2)}</li>`;
-//     });
-
-//     html += `</ul>`;
-//     return html;
-// };
+}

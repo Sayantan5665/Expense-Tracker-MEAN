@@ -69,7 +69,7 @@ const generateHtml = (data: TableRow[], tableHeading:string, basePath:string): s
     `;
 };
 
-export const generateStatementPdf = async (data: Array<TableRow>, tableHeading:string, basePath:string, reportType: 'generated' | 'monthly' | 'yearly') => {
+export const generateStatementPdf = async (data: Array<TableRow>, tableHeading:string, basePath:string, reportType: 'generated' | 'daily' | 'monthly') => {
     const browser:Browser = await puppeteer.launch({ headless: true });
     const page:Page = await browser.newPage();
     const htmlContent = generateHtml(data, tableHeading, basePath);

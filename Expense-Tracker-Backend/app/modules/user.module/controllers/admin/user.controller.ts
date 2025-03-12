@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { Types } from "mongoose";
 import { IUser } from "../../../../interfaces";
 import { generateToken } from "../../../../utils";
+import { agenda } from "../../../../configs";
 
 class UserAdminController {
     async loginPage(req: Request, res: Response): Promise<any> {
@@ -231,9 +232,9 @@ class UserAdminController {
 
     async activeDeactiveUser(req: Request, res: Response): Promise<any> {
         try {
-            const userId:string = req.params.userId;
+            const userId: string = req.params.userId;
 
-            const user: IUser | null = await userRepo.findOneBy({_id: new Types.ObjectId(userId)});
+            const user: IUser | null = await userRepo.findOneBy({ _id: new Types.ObjectId(userId) });
             if (!user) {
                 req.flash('message', [{ msg: "User not found!", type: 'danger' }] as any);
                 return res.redirect('/users-list');
@@ -243,6 +244,18 @@ class UserAdminController {
             if (!userWithChangedStatus) {
                 req.flash('message', [{ msg: "Failed to update user status!", type: 'danger' }] as any);
                 return res.redirect('/users-list');
+            }
+
+            if (!user.isActive) {
+                // Reschedule reports for re-activated user
+                await agenda.every('0 20 * * *', 'sendDailyReport', { userId: user._id });
+                await agenda.every('0 9 1 * *', 'sendMonthlyReport', { userId: user._id });
+            } else {
+                // Cancel all scheduled reports for this user
+                await agenda.cancel({
+                    'data.userId': user._id.toString(),
+                    name: { $in: ['sendDailyReport', 'sendMonthlyReport'] }
+                });
             }
 
             req.flash('message', [{ msg: `Account ${!user.isActive ? 'activated' : 'deactivated'} successfully!`, type: 'success' }] as any);
