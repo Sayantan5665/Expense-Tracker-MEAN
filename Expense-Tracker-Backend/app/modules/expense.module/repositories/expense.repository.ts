@@ -218,7 +218,7 @@ class expenseRepository {
     try {
       const dateFilter = dateRange && (dateRange?.startDate || dateRange?.endDate)
         ? {
-          ...(dateRange?.startDate && { $gte: new Date(dateRange?.startDate) }),
+          ...(dateRange?.startDate && { $gte: new Date(new Date(dateRange.startDate).setHours(0, 0, 0, 0)) }),
           ...(dateRange?.endDate && {
             // Add 1 day to endDate and use $lt to include the full day
             $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
@@ -325,7 +325,7 @@ class expenseRepository {
   //     // Construct the date filter based on optional startDate and endDate
   //     const dateFilter = dateRange && (dateRange?.startDate || dateRange?.endDate) ?
   //       {
-  //         ...(dateRange?.startDate && { $gte: new Date(dateRange?.startDate) }),
+  //         ...(dateRange?.startDate && { $gte: new Date(new Date(dateRange.startDate).setHours(0, 0, 0, 0)) }),
   //         ...(dateRange?.endDate && {
   //           // Add 1 day to endDate and use $lt to include the full day
   //           $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000)
@@ -657,7 +657,7 @@ class expenseRepository {
   //     const dateFilter =
   //       dateRange && (dateRange.startDate || dateRange.endDate)
   //         ? {
-  //             ...(dateRange.startDate && { $gte: new Date(dateRange.startDate) }),
+  //             ...(dateRange.startDate && { $gte: new Date(new Date(dateRange.startDate).setHours(0, 0, 0, 0)) }),
   //             ...(dateRange.endDate && {
   //               $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
   //             }),
@@ -797,7 +797,7 @@ class expenseRepository {
       const dateFilter =
         dateRange && (dateRange.startDate || dateRange.endDate)
           ? {
-            ...(dateRange.startDate && { $gte: new Date(dateRange.startDate) }),
+            ...(dateRange.startDate && { $gte: new Date(new Date(dateRange.startDate).setHours(0, 0, 0, 0)) }),
             ...(dateRange.endDate && {
               // Add one day to include the entire end date
               $lt: new Date(new Date(dateRange.endDate).getTime() + 24 * 60 * 60 * 1000),
