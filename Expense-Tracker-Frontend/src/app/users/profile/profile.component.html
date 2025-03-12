@@ -2,34 +2,37 @@
 @let _editing = editing();
 @let _profile_pic = profile_pic().url;
 
-<div class="mx-auto py-10">
-  <div class="rounded-lg cards mt-10" style="color: rgba(255, 255, 255, 0.724); min-height: 250px;">
+<div class="mx-auto pb-25">
+  <div class="rounded-lg cards" style="color: rgba(255, 255, 255, 0.724); min-height: 250px;">
     <div class="p-8">
       <!-- Profile Header -->
-      <div class="flex items-start gap-6">
-        <div class="img-wrapper">
-          {{_profile_pic?.length}}
-          <img [src]="_profile_pic?.length ? _profile_pic : user && user?.image ? user.image : '/images/add_picture.jpg'"
-            alt="Profile picture" class="h-42 w-42 rounded-full object-cover border-4 border-white shadow-lg"
-            onerror="this.src='/images/add_picture.jpg'">
-          @if(_editing) {
-          <input type="file" class="hidden" #profilePicInput (change)="handleImageUpload($event)">
-          <button class="edit_pic" (click)="profilePicInput.click();"><span
-              class="material-symbols-outlined">edit</span></button>
-          }
+      <div class="flex flex-col-reverse md:flex-row justify-between items-start gap-6">
+        <div class="flex flex-col md:flex-row">
+          <div class="img-wrapper">
+            {{_profile_pic?.length}}
+            <img [src]="_profile_pic?.length ? _profile_pic : user && user?.image ? user.image : '/images/add_picture.jpg'"
+              alt="Profile picture" class="h-42 w-42 rounded-full object-cover border-4 border-white shadow-lg"
+              onerror="this.src='/images/add_picture.jpg'">
+            @if(_editing) {
+            <input type="file" class="hidden" #profilePicInput (change)="handleImageUpload($event)">
+            <button class="edit_pic" (click)="profilePicInput.click();"><span
+                class="material-symbols-outlined">edit</span></button>
+            }
+          </div>
+          <div class="flex-1 mt-8">
+            @if(_editing) {
+            <form [formGroup]="form">
+              <input type="text" class="form-control text-2xl font-bold text-gray-900" style="outline: none; border: none; background: transparent; border-bottom: 1px solid black;" formControlName="name" required />
+            </form>
+            } @else {
+            <h1 class="text-2xl font-bold text-gray-900">{{ user?.name || '-' }}</h1>
+            }
+            <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-sm font-medium text-blue-700 mt-2">
+              {{ user?.role || '-' }}
+            </span>
+          </div>
         </div>
-        <div class="flex-1 mt-8">
-          @if(_editing) {
-          <form [formGroup]="form">
-            <input type="text" class="form-control text-2xl font-bold text-gray-900 outline-none border-b" formControlName="name" required />
-          </form>
-          } @else {
-          <h1 class="text-2xl font-bold text-gray-900">{{ user?.name || '-' }}</h1>
-          }
-          <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-sm font-medium text-blue-700 mt-2">
-            {{ user?.role || '-' }}
-          </span>
-        </div>
+
         @if(_editing) {
         <button (click)="save(form)" style="background-color: #00b487; padding: 5px 10px;"
           class="mt-8 rounded-md bg-sky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 flex items-center">
@@ -44,12 +47,12 @@
       </div>
     </div>
   </div>
-  <div class="rounded-lg cards mt-5" style="color: rgba(255, 255, 255, 0.724); min-height: 200px;">
+  <div class="rounded-lg cards mt-5 mb-20" style="color: rgba(255, 255, 255, 0.724); min-height: 200px;">
     <div class="p-8">
       <!-- Personal Information -->
       <div class="mt-8">
         <h2 class="text-lg font-semibold text-gray-900">Personal Information</h2>
-        <div class="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div class="mt-4 flex flex-col md:flex-row justify-between gap-5">
           <div>
             <label class="block text-sm font-medium text-gray-500">Email Address</label>
             <div class="mt-1 text-sm text-gray-900">{{ user?.email || '_' }}</div>
