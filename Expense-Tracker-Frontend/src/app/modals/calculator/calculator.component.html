@@ -3,10 +3,8 @@
 <div class="calculator" #calculator>
   <div class="calculator__wrap">
     <div class="calculator__display">
-      <input #calcInput type="text" inputmode="none" [class.has-result]="_result.length" [(ngModel)]="currentInput" (keydown)="numbersOnly($event)">
-      @if(_result.length) {
-      <p class="result">{{ _result }}</p>
-      }
+      <input #calcInput type="text" inputmode="none" [class.has-result]="!!_result.length" [(ngModel)]="currentInput" (keydown)="numbersOnly($event)">
+      <p class="result" id="resultElement" [ngStyle]="{'display': _result.length ? 'block' : 'none'}">{{ _result }}</p>
     </div>
     <div class="calculator__functions">
       <button (click)="clear('all', calcInput)" class="btn--opaque">AC</button>

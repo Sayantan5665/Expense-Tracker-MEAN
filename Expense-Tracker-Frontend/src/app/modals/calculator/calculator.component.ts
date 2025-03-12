@@ -1,3 +1,4 @@
+import { DOCUMENT, NgStyle } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule, MatDialogConfig } from '@angular/material/dialog';
@@ -6,13 +7,14 @@ import { evaluate, format } from 'mathjs';
 
 @Component({
   selector: 'app-calculator',
-  imports: [MatDialogModule, FormsModule, MatIcon],
+  imports: [MatDialogModule, FormsModule, MatIcon, NgStyle],
   templateUrl: './calculator.component.html',
   styleUrl: './calculator.component.scss',
 })
 export class CalculatorComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<CalculatorComponent>);
   readonly data: { element: HTMLElement } = inject(MAT_DIALOG_DATA);
+  private readonly document = inject(DOCUMENT);
 
   protected currentInput = signal<string>('');
   protected result = signal<string>('');
@@ -56,7 +58,18 @@ export class CalculatorComponent implements OnInit {
     const _currentInput = this.currentInput();
     try {
       let _result = evaluate(_currentInput).toString() || '';
-      _result.length > 13 && (_result = format(Number(_result), { notation: 'exponential', precision: 2 }));
+      // _result.length > 13 && (_result = format(Number(_result), { notation: 'exponential', precision: 2 }));
+
+      const resultEle = this.document.getElementById('resultElement');
+      console.log("resultEle: ", resultEle);
+      if (resultEle) {
+        if (_result.length > 13 && _result.length < 18) {
+          resultEle.style.fontSize = "2rem";
+        } else if (_result.length >= 18) {
+          resultEle.style.fontSize = "1.6rem";
+        }
+      }
+
       this.result.set(_result);
     } catch (error) {
       this.result.set('Error');

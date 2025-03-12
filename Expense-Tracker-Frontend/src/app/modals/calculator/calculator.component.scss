@@ -44,6 +44,9 @@ body {
     color: #fff;
     margin: 0px;
     text-align: end;
+    width: 100%;
+    overflow-x: auto;
+    user-select: text !important;
   }
 }
 
