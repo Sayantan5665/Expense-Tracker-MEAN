@@ -1,6 +1,8 @@
 import Agenda, { Job } from 'agenda';
 import dotenv from "dotenv";
 import { sendDailyMonthlyExpenseReport } from '../utils';
+import { IUser } from '../interfaces';
+import userRepositories from '../modules/user.module/repositories/user.repositories';
 dotenv.config();
 
 // MongoDB connection
@@ -33,4 +35,38 @@ agenda.define('sendMonthlyReport', async (job: Job) => {
   }
 });
 
-export { agenda };
+// Function to start agenda and recover existing jobs
+const startAgenda = async () => {
+  // Start Agenda
+  await agenda.start();
+
+  // Find all active users and ensure they have scheduled reports
+  const activeUsers: Array<IUser> = await userRepositories.fetchAllUsers({ isActive: true });
+
+  for (const user of activeUsers) {
+    // Check if jobs already exist for this user
+    const existingDailyJobs = await agenda.jobs({
+      name: 'sendDailyReport',
+      'data.userId': user._id.toString()
+    });
+
+    const existingMonthlyJobs = await agenda.jobs({
+      name: 'sendMonthlyReport',
+      'data.userId': user._id.toString()
+    });
+
+    // Schedule daily report if not exists
+    if (existingDailyJobs.length === 0) {
+      await agenda.every('0 20 * * *', 'sendDailyReport', { userId: user._id });
+    }
+
+    // Schedule monthly report if not exists
+    if (existingMonthlyJobs.length === 0) {
+      await agenda.every('0 9 1 * *', 'sendMonthlyReport', { userId: user._id });
+    }
+  }
+
+  console.log('Agenda started and jobs recovered');
+};
+
+export { agenda, startAgenda };

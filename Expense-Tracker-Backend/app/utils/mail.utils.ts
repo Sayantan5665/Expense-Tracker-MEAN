@@ -21,7 +21,7 @@ export const sendEmail = async (mailOptions:IMailOptions): Promise<void> => {
     try {
         const transporter = await mailTransporter();
         const info = await transporter.sendMail(mailOptions);
-        console.log("Verification email sent successfully!", info);
+        console.log("Mail sent successfully!", info);
     } catch (error: any) {
         throw new Error(error.message || 'Failed to send verification email!');
     }

@@ -1,5 +1,5 @@
 import { connect } from "mongoose";
-import { agenda } from "./index";
+import { startAgenda } from "./index";
 
 export const connectDB = () => {
     const pass = ':' + (process.env.MONGO_PASS)  //?.replace(/[\/\\-]/g, '')
@@ -7,7 +7,7 @@ export const connectDB = () => {
 
     connect(mongodb_uri).then((res) => {
         console.log('Database connected successfully... 🎉');
-        agenda.start();
+        startAgenda();
     }).catch((err) => {
         console.log('Error while connecting database... 😢', err);
     });

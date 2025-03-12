@@ -912,6 +912,7 @@ class expenseRepository {
       // Disable pagination if limit is missing or invalid
       if (!options.limit || options.limit <= 0) {
         options.pagination = false;
+        console.log("pagination = false");
       }
 
       // Use aggregatePaginate with the full expenses pipeline that includes lookup stages.

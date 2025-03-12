@@ -37,7 +37,9 @@ export const sendDailyMonthlyExpenseReport = async (userId: string, basePath:str
             dateRange.endDate = lastDayOfMonth;
         }
 
-        const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, { page: 1, limit: 0, pagination: false });
+        console.log("sendDailyMonthlyExpenseReport dateRange: ", dateRange);
+        const expenses = await expenseRepository.getExpensesReport(matchConditions, dateRange, { page:1, limit:0, pagination: false });
+        console.log("sendDailyMonthlyExpenseReport expenses: ", expenses);
 
         let msg: string = '';
         if (period === 'daily') msg = 'today\'s expenses';

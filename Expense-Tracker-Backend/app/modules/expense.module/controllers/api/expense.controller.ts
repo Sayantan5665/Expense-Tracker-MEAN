@@ -115,7 +115,7 @@ class expenseController {
             req.query?.type && (matchConditions.type = req.query.type as string);
             req.query?.categoryId && (matchConditions.categoryId = new Types.ObjectId(req.query.categoryId as string));
 
-            const dateRange: { startDate?: string, endDate?: string } = {};
+            const dateRange: { startDate?: string | Date, endDate?: string | Date } = {};
             req.query?.startDate && (dateRange.startDate = req.query.startDate as string);
             req.query?.endDate && (dateRange.endDate = req.query.endDate as string);
 
