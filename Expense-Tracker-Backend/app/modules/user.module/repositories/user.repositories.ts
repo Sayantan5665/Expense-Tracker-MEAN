@@ -290,7 +290,7 @@ class userRepo {
         try {
             const verificationToken: string = await generateToken(body);
 
-            let forgotPasswordMail: string = `http://${req.headers.host}/admin/user/confirm/forgot-password/${verificationToken}`;
+            let forgotPasswordMail: string = `http://${req.headers.host}/api/user/confirm/forgot-password/${verificationToken}`;
             const mailOptions: IMailOptions = {
                 from: 'no-reply@sayantan.com',
                 to: body.email,

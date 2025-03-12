@@ -24,7 +24,7 @@ export class RegisterComponent {
     password: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9!@#$%^&*())]{6,}/)]),
     confirmPassword: new FormControl('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9!@#$%^&*())]{6,}/)]),
   },
-    [PasswordMatchValidator('password', 'confirm_password')]
+    [PasswordMatchValidator('password', 'confirmPassword')]
   );
   protected profile_pic = signal<{ file: File | undefined, url: string }>({ file: undefined, url: '' });
   protected tooglePassword = signal<'text' | 'password'>('password');

@@ -212,7 +212,10 @@ class userController {
                 });
             }
             await userRepo.forgotPassword(req, { email, password });
-            return res.redirect('/verified');
+            return res.status(200).json({
+                status: 200,
+                message: "A compfirmation mail has been sent to your mail. Please confirm.",
+            });
         } catch (error: any) {
             console.error("error: ", error);
             return res.status(500).json({
@@ -238,10 +241,8 @@ class userController {
                     message: "Invalid token! Please request a new password reset link.",
                 });
             }
-            return res.status(200).json({
-                status: 200,
-                message: "Password changed successfully! Please login with your new password.",
-            });
+            
+            return res.redirect('http://localhost:5504/login');
         } catch (error: any) {
             console.error("error: ", error);
             return res.status(500).json({
