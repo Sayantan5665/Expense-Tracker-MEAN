@@ -290,7 +290,7 @@ button {
     height: 70px;
     border-radius: 50%;
     overflow: hidden !important;
-    object-fit: covers;
+    object-fit: cover;
 
     &::before {
       content: "";

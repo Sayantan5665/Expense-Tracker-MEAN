@@ -7,10 +7,9 @@
         @let _profile_pic = this.profile_pic().url;
         <div class="input-field">
           <div class="input_group image-wrap">
+            <input class="profile-image" #profileImageInput [ngStyle]="{'display': _profile_pic?.length ? 'none' : 'block'}" type="file" placeholder=" Enter Name" (change)="handleImageUpload($event)" />
             @if(_profile_pic?.length) {
-              <img [src]="_profile_pic" alt="" class="profile-image" />
-            } @else {
-            <input class="profile-image" type="file" placeholder=" Enter Name" (change)="handleImageUpload($event)" />
+              <img [src]="_profile_pic" alt="" class="profile-image" (click)="profileImageInput.click()"/>
             }
           </div>
         </div>

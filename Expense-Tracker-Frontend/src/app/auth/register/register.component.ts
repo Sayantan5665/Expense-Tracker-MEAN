@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -7,7 +8,7 @@ import { PasswordMatchValidator } from '@utils';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, NgStyle],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
