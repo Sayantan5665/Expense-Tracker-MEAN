@@ -96,11 +96,16 @@
           </div>
         </div>
       </div>
-      <button (click)="submit(form)">
+      @let _loading = loading();
+      <button (click)="submit(form)" [disabled]="_loading" [class.disabled]="_loading">
+        @if(_loading) {
+        <mat-spinner class="spinner" style="margin-right: 10px !important;" diameter="20"></mat-spinner> <span>Registering...</span>
+        } @else {
         <span>Register</span>
+        }
       </button>
       <div class="auth_btm">
-        <p>Already have an account? <a class="link" routerLink="/login">Sign In</a></p>
+        <p>Already have an account? <a class="link" routerLink="/login">Log In</a></p>
       </div>
     </form>
     <img src="images/auth-page-img2.png" alt="" class="image-2">

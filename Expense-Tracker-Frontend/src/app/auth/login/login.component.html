@@ -56,8 +56,13 @@
           <a class="link" routerLink="/forgot-password">Forgot Password</a>
         </div>
       </div>
-      <button (click)="submit(form)">
+      @let _loading = loading();
+      <button (click)="submit(form)" [disabled]="_loading" [class.disabled]="_loading">
+        @if(_loading) {
+        <mat-spinner class="spinner" style="margin-right: 10px !important;" diameter="20"></mat-spinner> <span>Logging in...</span>
+        } @else {
         <span>Login</span>
+        }
       </button>
       <div class="auth_btm">
         <p>Do not have an account? <a class="link" routerLink="/register">Create Account</a></p>

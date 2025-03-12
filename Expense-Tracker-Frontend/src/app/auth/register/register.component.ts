@@ -5,10 +5,11 @@ import { Router, RouterLink } from '@angular/router';
 import { AlertService, ApiService } from '@services';
 import { IRegister } from '@types';
 import { PasswordMatchValidator } from '@utils';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink, NgStyle],
+  imports: [ReactiveFormsModule, RouterLink, NgStyle, MatProgressSpinner],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -29,6 +30,7 @@ export class RegisterComponent {
   protected profile_pic = signal<{ file: File | undefined, url: string }>({ file: undefined, url: '' });
   protected tooglePassword = signal<'text' | 'password'>('password');
   protected toogleConfirmPassword = signal<'text' | 'password'>('password');
+  protected loading = signal<boolean>(false);
 
   protected handleImageUpload(file: any) {
     const img: File = file.target.files[0];
@@ -58,6 +60,7 @@ export class RegisterComponent {
   }
 
   private register(data: any) {
+    this.loading.set(true);
     const _profile_pic = this.profile_pic();
     data.email = data.email.toLowerCase();
 
@@ -73,10 +76,12 @@ export class RegisterComponent {
 
     this.api.post('api/user/register', formData).subscribe({
       next: (res) => {
+        this.loading.set(false);
         this.alert.toast("Registration successful! Please login.", 'success');
         this.router.navigate(['/login']);
       },
       error: (err) => {
+        this.loading.set(false);
         console.error("err: ", err);
         this.alert.toast(err.message || "Something went wrong!", 'error');
       }

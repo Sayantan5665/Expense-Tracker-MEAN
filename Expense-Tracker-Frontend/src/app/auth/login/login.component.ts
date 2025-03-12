@@ -3,10 +3,11 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AlertService, ApiService, EventService, StorageService } from '@services';
 import { ILogin } from '@types';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, MatProgressSpinner],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -23,6 +24,7 @@ export class LoginComponent {
     rememberMe: new FormControl(true)
   });
   protected tooglePassword = signal<'text' | 'password'>('password');
+  protected loading = signal<boolean>(false);
 
   constructor() {
     afterNextRender(() => {
@@ -52,9 +54,11 @@ export class LoginComponent {
   }
 
   private login(data: ILogin): void {
+    this.loading.set(true);
     data.email = data.email.toLowerCase();
     this.api.post('api/user/login', data).subscribe({
       next: (res:any) => {
+        this.loading.set(false);
         // console.log("res: ", res);
         if (res.status === 200) {
           this.setDataAfterLogin(res.data);
@@ -66,6 +70,7 @@ export class LoginComponent {
         }
       },
       error: (error: any) => {
+        this.loading.set(false);
         console.error("error: ", error);
         this.alert.toast(error.error.message || 'Invalid email or password', 'error');
       }
