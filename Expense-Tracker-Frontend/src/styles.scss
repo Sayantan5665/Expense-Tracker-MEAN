@@ -172,6 +172,12 @@ select {
   margin: 30px;
 }
 
+.calculator-panel {
+  @media (max-height:530px) {
+    scale: 0.8 !important;
+    margin-top: -20px !important;
+  }
+}
 
 
 

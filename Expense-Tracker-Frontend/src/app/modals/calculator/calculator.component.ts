@@ -61,7 +61,6 @@ export class CalculatorComponent implements OnInit {
       // _result.length > 13 && (_result = format(Number(_result), { notation: 'exponential', precision: 2 }));
 
       const resultEle = this.document.getElementById('resultElement');
-      console.log("resultEle: ", resultEle);
       if (resultEle) {
         if (_result.length > 13 && _result.length < 18) {
           resultEle.style.fontSize = "2rem";
