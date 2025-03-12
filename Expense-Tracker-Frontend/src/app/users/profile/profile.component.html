@@ -31,12 +31,12 @@
           </span>
         </div>
         @if(_editing) {
-        <button (click)="save(form)"
+        <button (click)="save(form)" style="background-color: #00b487; padding: 5px 10px;"
           class="mt-8 rounded-md bg-sky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 flex items-center">
           <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 5px;">save</span> Save
         </button>
         } @else {
-        <button (click)="editing.set(true)"
+        <button (click)="editing.set(true)" style="background-color: #4994ff; padding: 5px 10px;"
           class="mt-8 rounded-md bg-sky-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 flex items-center">
           <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 5px;">edit</span> Edit
         </button>
