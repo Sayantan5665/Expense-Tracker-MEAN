@@ -73,6 +73,30 @@ The **Cashlytics** is a user-friendly application designed to help individuals t
 
 * Protect sensitive user data and prevent unauthorized access using JWT.
 
+### Tech Stack
+
+##### Frontend:
+
+* Angular 19 (UI Development)
+* Angular Material and Tailwind CSS (UI components and styling)
+* Chart js (for data visualization in reports)
+
+##### Backend:
+
+* Node.js (TypeScript) with Express.js (Server-Side Logic)
+* MongoDB (Database with Mongoose for object modeling)
+
+##### Tools and Libraries:
+
+* Postman (API Testing)
+* Multer (File uploads for receipt images, optional)
+* EJS (Admin Panel)
+* bcrypt (Password hashing)
+* JSON Web Token (Authentication)
+* nodemailer (Sending mail)
+* puppeteer (Generating report PDF)
+* swagger (API Documentaion)
+
 ## Start the Project
 
 1. First clone the repository
