@@ -13,7 +13,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
       <h1
         class="text-3xl font-bold text-gray-800 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
-        Expense List
+        Transaction History
       </h1>
     </div>
 
@@ -217,7 +217,7 @@
   <div class="right-card w-full md:min-w-[350px] lg:max-w-130 h-auto rounded-lg px-5 py-10 cards">
     <h1
       class="text-3xl text-center font-bold text-gray-800 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
-      Add New Expense
+      Add New Transaction
     </h1>
     <!-- Add Expense Form -->
     <div class="mt-8 p-6 bg-white rounded-lg shadow-lg">
@@ -332,7 +332,7 @@
         </div>
         <button type="submit" (click)="submit(form, documentInput)"
           class="w-full px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-all duration-300 shadow-md hover:shadow-lg">
-          Add Expense
+          Add
         </button>
       </form>
     </div>
@@ -345,13 +345,17 @@
 <div class="mx-auto mb-10 pb-4 main-lower-container">
   <div class="left-card w-full h-auto rounded-lg py-10 px-5 cards">
     <!-- Page Header -->
-    <div class="flex flex-col md:flex-row justify-center items-center mb-8 relative gap-2">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 relative gap-2">
       <h1
         class="text-3xl font-bold text-gray-800 bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent">
         Your Categories
       </h1>
+      <div class="search-box">
+        <input type="text" placeholder="Search Categories" [(ngModel)]="searchCategoryText"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500" />
+      </div>
       <button type="submit" style="background-color: #4FA5FF;" (click)="addCategory(false)"
-        class="w-30 px-6 py-2 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg md:absolute md:top-0 md:right-0">
+        class="w-30 px-6 py-2 text-white rounded-lg transition-all duration-300 shadow-md hover:shadow-lg">
         Add New
       </button>
     </div>

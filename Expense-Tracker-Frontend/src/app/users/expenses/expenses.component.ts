@@ -56,6 +56,7 @@ export class ExpensesComponent {
     date: new FormControl(new Date(), Validators.required),
   });
   protected documentArray = signal<Array<{ file: File, url: string, name: string }>>([]);
+  protected searchCategoryText = signal<string>('');
 
   /* Api calls */
   protected expenses: ResourceRef<any> = rxResource({
@@ -74,8 +75,10 @@ export class ExpensesComponent {
     },
   });
   protected ownCategories: ResourceRef<any> = rxResource({
-    loader: () => {
-      return this.api.get(`api/category/fetch/all?yourOwn=true`);
+    request: () => ({ search: this.searchCategoryText() }),
+    loader: (e) => {
+      const search = e.request.search || '';
+      return this.api.get(`api/category/fetch/all?yourOwn=true&search=${search}`);
     },
   });
 
@@ -271,6 +274,9 @@ export class ExpensesComponent {
       if (result) {
         this.ownCategories.reload();
         this.categories.reload();
+        if (isEditing) {
+          this.expenses.reload();
+        }
       }
     });
   }
