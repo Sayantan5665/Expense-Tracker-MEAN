@@ -75,18 +75,18 @@ The **Cashlytics** is a user-friendly application designed to help individuals t
 
 ### Tech Stack
 
-##### Frontend:
+##### *Frontend*:
 
 * Angular 19 (UI Development)
 * Angular Material and Tailwind CSS (UI components and styling)
 * Chart js (for data visualization in reports)
 
-##### Backend:
+##### *Backend:*
 
 * Node.js (TypeScript) with Express.js (Server-Side Logic)
 * MongoDB (Database with Mongoose for object modeling)
 
-##### Tools and Libraries:
+##### *Tools and Libraries:*
 
 * Postman (API Testing)
 * Multer (File uploads for receipt images, optional)
