@@ -11,3 +11,38 @@
 .set-margin {
   margin: 0 5px;
 }
+
+.text-ellipsis {
+  white-space: nowrap;
+  width: 6vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 1050px) {
+    width: 8vw;
+  }
+
+  @media (max-width: 900px) {
+    width: 9vw;
+  }
+
+  @media (max-width: 767px) {
+    width: 14vw;
+  }
+
+  @media (max-width: 527px) {
+    width: 13vw;
+  }
+
+  @media (max-width: 480px) {
+    width: 15vw;
+  }
+
+  @media (max-width: 380px) {
+    width: 18vw;
+  }
+
+  @media (max-width: 380px) {
+    width: 20vw;
+  }
+}

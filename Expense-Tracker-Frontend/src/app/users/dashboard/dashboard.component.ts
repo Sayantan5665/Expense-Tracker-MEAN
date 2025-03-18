@@ -25,274 +25,276 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class DashboardComponent implements OnInit {
-  _expenseCategoryWise = [
-    {
-      "_id": "67af3466ef2d50ecaf18b05d",
-      "totalAmount": 1260,
-      "category": {
+  __expenseCategoryWise = {
+    docs: [
+      {
         "_id": "67af3466ef2d50ecaf18b05d",
-        "name": "Category-2",
-        "description": "Category-2 description",
-        "color": {
-          "_id": "67a4b823df6cedadaaaac3f3",
-          "name": "DarkRed",
-          "hexCode": "#8B0000"
+        "totalAmount": 1260,
+        "category": {
+          "_id": "67af3466ef2d50ecaf18b05d",
+          "name": "Category-2(Hello!HowAreYou.)",
+          "description": "Category-2 description",
+          "color": {
+            "_id": "67a4b823df6cedadaaaac3f3",
+            "name": "DarkRed",
+            "hexCode": "#8B0000"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c10493b",
-      "totalAmount": 10600,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c10493b",
-        "name": "Category-1",
-        "description": "Category-1 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3c3",
-          "name": "IndianRed",
-          "hexCode": "#CD5C5C"
+        "totalAmount": 10600,
+        "category": {
+          "_id": "67a5b3488f61c4642c10493b",
+          "name": "Category-1(Hello!HowAreYou.)",
+          "description": "Category-1 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3c3",
+            "name": "IndianRed",
+            "hexCode": "#CD5C5C"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104940",
-      "totalAmount": 8000,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104940",
-        "name": "Category-3",
-        "description": "Category-3 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3c4",
-          "name": "Crimson",
-          "hexCode": "#DC143C"
+        "totalAmount": 8000,
+        "category": {
+          "_id": "67a5b3488f61c4642c104940",
+          "name": "Category-3(Hello!HowAreYou.)",
+          "description": "Category-3 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3c4",
+            "name": "Crimson",
+            "hexCode": "#DC143C"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104941",
-      "totalAmount": 5400,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104941",
-        "name": "Category-4",
-        "description": "Category-4 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3c5",
-          "name": "FireBrick",
-          "hexCode": "#B22222"
+        "totalAmount": 5400,
+        "category": {
+          "_id": "67a5b3488f61c4642c104941",
+          "name": "Category-4(Hello!HowAreYou.)",
+          "description": "Category-4 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3c5",
+            "name": "FireBrick",
+            "hexCode": "#B22222"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104942",
-      "totalAmount": 9200,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104942",
-        "name": "Category-5",
-        "description": "Category-5 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3c6",
-          "name": "Salmon",
-          "hexCode": "#FA8072"
+        "totalAmount": 9200,
+        "category": {
+          "_id": "67a5b3488f61c4642c104942",
+          "name": "Category-5(Hello!HowAreYou.)",
+          "description": "Category-5 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3c6",
+            "name": "Salmon",
+            "hexCode": "#FA8072"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104943",
-      "totalAmount": 7000,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104943",
-        "name": "Category-6",
-        "description": "Category-6 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3c7",
-          "name": "Tomato",
-          "hexCode": "#FF6347"
+        "totalAmount": 7000,
+        "category": {
+          "_id": "67a5b3488f61c4642c104943",
+          "name": "Category-6(Hello!HowAreYou.)",
+          "description": "Category-6 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3c7",
+            "name": "Tomato",
+            "hexCode": "#FF6347"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104944",
-      "totalAmount": 3600,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104944",
-        "name": "Category-7",
-        "description": "Category-7 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3c8",
-          "name": "Coral",
-          "hexCode": "#FF7F50"
+        "totalAmount": 3600,
+        "category": {
+          "_id": "67a5b3488f61c4642c104944",
+          "name": "Category-7(Hello!HowAreYou.)",
+          "description": "Category-7 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3c8",
+            "name": "Coral",
+            "hexCode": "#FF7F50"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104945",
-      "totalAmount": 6400,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104945",
-        "name": "Category-8",
-        "description": "Category-8 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3c9",
-          "name": "OrangeRed",
-          "hexCode": "#FF4500"
+        "totalAmount": 6400,
+        "category": {
+          "_id": "67a5b3488f61c4642c104945",
+          "name": "Category-8(Hello!HowAreYou.)",
+          "description": "Category-8 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3c9",
+            "name": "OrangeRed",
+            "hexCode": "#FF4500"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104946",
-      "totalAmount": 5000,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104946",
-        "name": "Category-9",
-        "description": "Category-9 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d0",
-          "name": "Gold",
-          "hexCode": "#FFD700"
+        "totalAmount": 5000,
+        "category": {
+          "_id": "67a5b3488f61c4642c104946",
+          "name": "Category-9(Hello!HowAreYou.)",
+          "description": "Category-9 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d0",
+            "name": "Gold",
+            "hexCode": "#FFD700"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104947",
-      "totalAmount": 7200,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104947",
-        "name": "Category-10",
-        "description": "Category-10 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d1",
-          "name": "Yellow",
-          "hexCode": "#FFFF00"
+        "totalAmount": 7200,
+        "category": {
+          "_id": "67a5b3488f61c4642c104947",
+          "name": "Category-10(Hello!HowAreYou.)",
+          "description": "Category-10 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d1",
+            "name": "Yellow",
+            "hexCode": "#FFFF00"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104948",
-      "totalAmount": 4500,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104948",
-        "name": "Category-11",
-        "description": "Category-11 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d2",
-          "name": "Lime",
-          "hexCode": "#00FF00"
+        "totalAmount": 4500,
+        "category": {
+          "_id": "67a5b3488f61c4642c104948",
+          "name": "Category-11(Hello!HowAreYou.)",
+          "description": "Category-11 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d2",
+            "name": "Lime",
+            "hexCode": "#00FF00"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104949",
-      "totalAmount": 3800,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104949",
-        "name": "Category-12",
-        "description": "Category-12 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d3",
-          "name": "Green",
-          "hexCode": "#008000"
+        "totalAmount": 3800,
+        "category": {
+          "_id": "67a5b3488f61c4642c104949",
+          "name": "Category-12(Hello!HowAreYou.)",
+          "description": "Category-12 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d3",
+            "name": "Green",
+            "hexCode": "#008000"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104950",
-      "totalAmount": 6200,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104950",
-        "name": "Category-13",
-        "description": "Category-13 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d4",
-          "name": "Teal",
-          "hexCode": "#008080"
+        "totalAmount": 6200,
+        "category": {
+          "_id": "67a5b3488f61c4642c104950",
+          "name": "Category-13(Hello!HowAreYou.)",
+          "description": "Category-13 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d4",
+            "name": "Teal",
+            "hexCode": "#008080"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104951",
-      "totalAmount": 7800,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104951",
-        "name": "Category-14",
-        "description": "Category-14 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d5",
-          "name": "Aqua",
-          "hexCode": "#00FFFF"
+        "totalAmount": 7800,
+        "category": {
+          "_id": "67a5b3488f61c4642c104951",
+          "name": "Category-14(Hello!HowAreYou.)",
+          "description": "Category-14 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d5",
+            "name": "Aqua",
+            "hexCode": "#00FFFF"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104952",
-      "totalAmount": 5400,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104952",
-        "name": "Category-15",
-        "description": "Category-15 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d6",
-          "name": "Navy",
-          "hexCode": "#000080"
+        "totalAmount": 5400,
+        "category": {
+          "_id": "67a5b3488f61c4642c104952",
+          "name": "Category-15(Hello!HowAreYou.)",
+          "description": "Category-15 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d6",
+            "name": "Navy",
+            "hexCode": "#000080"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104953",
-      "totalAmount": 8900,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104953",
-        "name": "Category-16",
-        "description": "Category-16 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d7",
-          "name": "Blue",
-          "hexCode": "#0000FF"
+        "totalAmount": 8900,
+        "category": {
+          "_id": "67a5b3488f61c4642c104953",
+          "name": "Category-16(Hello!HowAreYou.)",
+          "description": "Category-16 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d7",
+            "name": "Blue",
+            "hexCode": "#0000FF"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104954",
-      "totalAmount": 6700,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104954",
-        "name": "Category-17",
-        "description": "Category-17 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d8",
-          "name": "Purple",
-          "hexCode": "#800080"
+        "totalAmount": 6700,
+        "category": {
+          "_id": "67a5b3488f61c4642c104954",
+          "name": "Category-17(Hello!HowAreYou.)",
+          "description": "Category-17 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d8",
+            "name": "Purple",
+            "hexCode": "#800080"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104955",
-      "totalAmount": 4300,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104955",
-        "name": "Category-18",
-        "description": "Category-18 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3d9",
-          "name": "Fuchsia",
-          "hexCode": "#FF00FF"
+        "totalAmount": 4300,
+        "category": {
+          "_id": "67a5b3488f61c4642c104955",
+          "name": "Category-18(Hello!HowAreYou.)",
+          "description": "Category-18 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3d9",
+            "name": "Fuchsia",
+            "hexCode": "#FF00FF"
+          }
         }
-      }
-    },
-    {
-      "_id": "67a5b3488f61c4642c104956",
-      "totalAmount": 5600,
-      "category": {
+      },
+      {
         "_id": "67a5b3488f61c4642c104956",
-        "name": "Category-19",
-        "description": "Category-19 description",
-        "color": {
-          "_id": "67a4b6c4df6cedadaaaac3e0",
-          "name": "Pink",
-          "hexCode": "#FFC0CB"
+        "totalAmount": 5600,
+        "category": {
+          "_id": "67a5b3488f61c4642c104956",
+          "name": "Category-19(Hello!HowAreYou.)",
+          "description": "Category-19 description",
+          "color": {
+            "_id": "67a4b6c4df6cedadaaaac3e0",
+            "name": "Pink",
+            "hexCode": "#FFC0CB"
+          }
         }
       }
-    }
-  ]
+    ]
+  }
 
 
   private readonly api = inject(ApiService);

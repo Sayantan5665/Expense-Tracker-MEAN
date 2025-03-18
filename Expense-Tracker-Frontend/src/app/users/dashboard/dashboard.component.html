@@ -129,20 +129,21 @@
 
     <!-- Cash out category wise -->
     <div
-      class="w-full md:w-2/3 h-full rounded-[15px] cards p-4 relative flex flex-col">
+      class="sm:w-full md:w-2/3 lg:w-2/3 xl:w-2/3 h-full rounded-[15px] cards p-4 relative flex flex-col">
       <p class="text-2xl font-light mb-2">Category Wise Expenses</p>
       <div id="splide" class="splide w-full">
         <div class="splide__track">
           <ul class="splide__list">
-            @if(expenseCategoryWise.docs?.length > 18) {
+            @if(expenseCategoryWise.docs && expenseCategoryWise.docs.length > 18) {
             @for (category of expenseCategoryWise.docs; track $index) {
-            @if ($index < 17) { <li class="splide__slide">
+            @if ($index < 17) {
+            <li class="splide__slide">
               <div
                 class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
                 <div class="w-[20px] h-[20px] rounded-full"
                   [ngStyle]="{ 'background': category?.category?.color?.hexCode}"></div>
                 <h3
-                  class="text-sm font-semibold">{{category?.category?.name}}</h3>
+                  class="text-sm font-semibold text-ellipsis">{{category?.category?.name}}</h3>
                 <p class="text-xs text-gray-600">{{category?.totalAmount}}</p>
               </div>
             </li>
@@ -151,7 +152,7 @@
             <li class="splide__slide">
               <div
                 class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col justify-center items-center">
-                <h3 class="text-sm font-semibold">View All</h3>
+                <h3 class="text-sm font-semibold text-ellipsis">View All</h3>
                 <mat-icon
                   class="material-symbols-outlined">arrow_right_alt</mat-icon>
               </div>
@@ -159,13 +160,13 @@
             } @else {
             @for (category of expenseCategoryWise.docs; track $index) {
             <li class="splide__slide"
-              [ngClass]="expenseCategoryWise.docs?.length < 5 ? 'set-margin' : ''">
+              [ngClass]="expenseCategoryWise.docs && expenseCategoryWise.docs.length < 5 ? 'set-margin' : ''">
               <div
                 class="bg-white rounded-lg shadow-md p-2 aspect-square flex flex-col">
                 <div class="w-[20px] h-[20px] rounded-full"
                   [ngStyle]="{ 'background': category?.category?.color?.hexCode}"></div>
                 <h3
-                  class="text-sm font-semibold">{{category?.category?.name}}</h3>
+                  class="text-sm font-semibold text-ellipsis">{{category?.category?.name}}</h3>
                 <p class="text-xs text-gray-600">{{category?.totalAmount |
                   currency:'INR':'symbol'}}</p>
               </div>
@@ -181,7 +182,7 @@
     </div>
 
     <!-- Recent transaction -->
-    <div class="w-full md:w-1/3 h-full rounded-[15px] cards p-4">
+    <div class="sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-full rounded-[15px] cards p-4">
       <p class="text-2xl font-light mb-2">Recent Transactions</p>
 
       <!-- Transaction List -->
